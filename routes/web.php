@@ -176,11 +176,17 @@ Route::middleware(['auth', 'role:super_admin,admin'])->prefix('admin')->name('ad
         ->name('users.bulk-action');
 
     // Role Management
+    Route::get('roles/stats', [RoleController::class, 'stats'])->name('roles.stats');
+    Route::get('roles/data', [RoleController::class, 'data'])->name('roles.data');
+    Route::post('roles/{role}/toggle-status', [RoleController::class, 'toggleStatus'])->name('roles.toggle-status');
     Route::resource('roles', RoleController::class);
     Route::post('/roles/{role}/clone', [RoleController::class, 'cloneToBranch'])
         ->name('roles.clone');
 
     // Permission Management
+    Route::get('permissions/stats', [PermissionController::class, 'stats'])->name('permissions.stats');
+    Route::get('permissions/data', [PermissionController::class, 'data'])->name('permissions.data');
+    Route::post('permissions/{permission}/toggle-status', [PermissionController::class, 'toggleStatus'])->name('permissions.toggle-status');
     Route::resource('permissions', PermissionController::class)->except(['show']);
 
     // Branch Management

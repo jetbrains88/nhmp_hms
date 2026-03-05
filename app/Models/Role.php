@@ -23,6 +23,7 @@ class Role extends Model
         'name',
         'display_name',
         'level',
+        'is_active',
     ];
 
     /**
@@ -32,6 +33,7 @@ class Role extends Model
      */
     protected $casts = [
         'level' => 'integer',
+        'is_active' => 'boolean',
     ];
 
 

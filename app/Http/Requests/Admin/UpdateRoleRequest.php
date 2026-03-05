@@ -12,7 +12,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasRole('admin');
+        return auth()->user()->hasPermission('edit_roles');
     }
 
     /**
@@ -20,32 +20,20 @@ class UpdateRoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('id');
+        $roleId = $this->route('role')?->id ?? $this->input('id');
 
-        if (!$userId && $this->has('id')) {
-            $userId = $this->input('id');
-        }
-
-        $rules = [
-            'name' => 'required|string|max:255',
-            'role_ids' => 'required|array|min:1', // Changed from role_id to role_ids
-            'role_ids.*' => 'exists:roles,id', // Validate each role ID
-            'is_active' => 'boolean',
-        ];
-
-        if ($userId) {
-            $rules['email'] = [
+        return [
+            'name' => [
                 'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($userId)
-            ];
-        } else {
-            $rules['email'] = 'required|email';
-        }
-
-        $rules['password'] = 'nullable|string|min:8|confirmed';
-
-        return $rules;
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')->ignore($roleId),
+            ],
+            'display_name' => 'required|string|max:255',
+            'branch_id' => 'nullable|exists:branches,id',
+            'permissions' => 'sometimes|array',
+            'permissions.*' => 'exists:permissions,id',
+        ];
     }
 
     /**
@@ -59,16 +47,5 @@ class UpdateRoleRequest extends FormRequest
             'display_name.required' => 'The display name is required.',
             'permissions.*.exists' => 'One or more selected permissions are invalid.'
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        // Ensure permissions is always an array
-        if ($this->has('permissions') && empty($this->permissions)) {
-            $this->merge(['permissions' => []]);
-        }
     }
 }

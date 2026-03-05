@@ -150,16 +150,16 @@
 
         /* Thicker circle strokes */
         .circular-progress circle {
-            transition: stroke-dashoffset 1.5s ease-in-out;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .circular-progress circle:first-child {
-            stroke-width: 16px;
+            stroke-width: 24px;
             /* Thicker background circle */
         }
 
         .circular-progress circle:last-child {
-            stroke-width: 16px;
+            stroke-width: 24px;
             /* Thicker progress circle */
         }
 
@@ -368,12 +368,10 @@
                 <div class="circular-progress-container">
                     <svg class="circular-progress" viewBox="0 0 200 200">
                         <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.2)"
-                            stroke-width="16" />
-                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="16"
+                            stroke-width="24" />
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="24"
                             stroke-linecap="round" stroke-dasharray="502.4"
-                            :stroke-dashoffset="502.4 * (1 - {{ $outOfStockPercentage }} / 100)" x-ref="outOfStockCircle">
-                            <animate attributeName="stroke-dashoffset" values="502.4;0" dur="2s" fill="freeze"
-                                calcMode="spline" keySplines="0.4 0 0.2 1" />
+                            :stroke-dashoffset="502.4 * (1 - outOfStockPercentage / 100)" x-ref="outOfStockCircle">
                         </circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -394,12 +392,10 @@
                 <div class="circular-progress-container">
                     <svg class="circular-progress" viewBox="0 0 200 200">
                         <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.2)"
-                            stroke-width="16" />
-                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="16"
+                            stroke-width="24" />
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="24"
                             stroke-linecap="round" stroke-dasharray="502.4"
-                            :stroke-dashoffset="502.4 * (1 - {{ $lowStockPercentage }} / 100)">
-                            <animate attributeName="stroke-dashoffset" values="502.4;0" dur="2s" fill="freeze"
-                                calcMode="spline" keySplines="0.4 0 0.2 1" />
+                            :stroke-dashoffset="502.4 * (1 - lowStockPercentage / 100)">
                         </circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -420,12 +416,10 @@
                 <div class="circular-progress-container">
                     <svg class="circular-progress" viewBox="0 0 200 200">
                         <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.2)"
-                            stroke-width="16" />
-                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="16"
+                            stroke-width="24" />
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="24"
                             stroke-linecap="round" stroke-dasharray="502.4"
-                            :stroke-dashoffset="502.4 * (1 - {{ $inStockPercentage }} / 100)">
-                            <animate attributeName="stroke-dashoffset" values="502.4;0" dur="2s" fill="freeze"
-                                calcMode="spline" keySplines="0.4 0 0.2 1" />
+                            :stroke-dashoffset="502.4 * (1 - inStockPercentage / 100)">
                         </circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -446,12 +440,10 @@
                 <div class="circular-progress-container">
                     <svg class="circular-progress" viewBox="0 0 200 200">
                         <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.2)"
-                            stroke-width="16" />
-                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="16"
+                            stroke-width="24" />
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width="24"
                             stroke-linecap="round" stroke-dasharray="502.4"
-                            :stroke-dashoffset="502.4 * (1 - {{ $criticalStockPercentage }} / 100)">
-                            <animate attributeName="stroke-dashoffset" values="502.4;0" dur="2s" fill="freeze"
-                                calcMode="spline" keySplines="0.4 0 0.2 1" />
+                            :stroke-dashoffset="502.4 * (1 - criticalStockPercentage / 100)">
                         </circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -726,10 +718,16 @@
                 isLoading: true,
                 outOfStockCount: {{ $outOfStockMedicines->count() }},
                 lowStockCount: {{ $lowStockMedicines->count() }},
-                outOfStockPercentage: {{ $outOfStockPercentage ?? 0 }},
-                lowStockPercentage: {{ $lowStockPercentage ?? 0 }},
-                inStockPercentage: {{ $inStockPercentage ?? 0 }},
-                criticalStockPercentage: {{ $criticalStockPercentage ?? 0 }},
+                targetPercentages: {
+                    outOfStock: {{ $outOfStockPercentage ?? 0 }},
+                    lowStock: {{ $lowStockPercentage ?? 0 }},
+                    inStock: {{ $inStockPercentage ?? 0 }},
+                    criticalStock: {{ $criticalStockPercentage ?? 0 }}
+                },
+                outOfStockPercentage: 0,
+                lowStockPercentage: 0,
+                inStockPercentage: 0,
+                criticalStockPercentage: 0,
                 medicineStockByCategory: @json($medicineStockByCategory ?? []),
                 labReportsByType: @json($labReportsByType ?? []),
 
@@ -739,6 +737,15 @@
                     // Simulate loading
                     setTimeout(() => {
                         this.isLoading = false;
+                        
+                        // Animate percentages
+                        setTimeout(() => {
+                            this.outOfStockPercentage = this.targetPercentages.outOfStock;
+                            this.lowStockPercentage = this.targetPercentages.lowStock;
+                            this.inStockPercentage = this.targetPercentages.inStock;
+                            this.criticalStockPercentage = this.targetPercentages.criticalStock;
+                        }, 100);
+
                         this.$nextTick(() => {
                             if (!this.chartsInitialized) {
                                 this.setupCharts();

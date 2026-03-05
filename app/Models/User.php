@@ -126,7 +126,7 @@ class User extends Authenticatable
     {
         return $this->roles->flatMap(function ($role) {
             return $role->permissions;
-        })->unique('id');
+        })->unique('id')->values();
     }
 
     /**

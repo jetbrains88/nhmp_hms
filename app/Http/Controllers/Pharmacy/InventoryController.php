@@ -182,12 +182,15 @@ class InventoryController extends Controller
             ->where('medicine_batches.branch_id', $branchId);
             
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = trim($request->search);
             $query->where(function($q) use ($search) {
                 $q->whereHas('medicine', function($mq) use ($search) {
                     $mq->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('generic_name', 'LIKE', "%{$search}%")
                       ->orWhere('code', 'LIKE', "%{$search}%")
                       ->orWhere('brand', 'LIKE', "%{$search}%");
+                    
+                    // Priority for exact matches (this doesn't change the set, but we could sort by it later)
                 })->orWhere('batch_number', 'LIKE', "%{$search}%");
             });
         }
@@ -201,13 +204,13 @@ class InventoryController extends Controller
         if ($request->filled('stock_status') && $request->stock_status !== 'All') {
             if ($request->stock_status === 'low') {
                 $query->whereHas('medicine', function($q) {
-                    $q->whereColumn('medicine_batches.remaining_quantity', '<=', 'medicines.reorder_level');
+                    $q->whereRaw('medicine_batches.remaining_quantity <= medicines.reorder_level');
                 });
             } elseif ($request->stock_status === 'out') {
                 $query->where('medicine_batches.remaining_quantity', '<=', 0);
             } elseif ($request->stock_status === 'near_expiry') {
                 $query->where('expiry_date', '<=', now()->addDays(30))
-                      ->where('expiry_date', '>=', now())
+                      ->where('expiry_date', '>=', now()->startOfDay())
                       ->where('remaining_quantity', '>', 0);
             }
         }

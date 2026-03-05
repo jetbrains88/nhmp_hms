@@ -24,12 +24,13 @@ class MedicineController extends Controller
                   ->orWhere('is_global', true);
             });
         
-        if ($request->has('search')) {
-            $search = $request->search;
+        if ($request->filled('search')) {
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                  ->orWhere('brand', 'LIKE', "%{$search}%");
+                  ->orWhere('brand', 'LIKE', "%{$search}%")
+                  ->orWhere('code', 'LIKE', "%{$search}%");
             });
         }
         
@@ -131,11 +132,20 @@ class MedicineController extends Controller
             ->where('is_active', true);
 
         if ($search) {
+            $search = trim($search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                  ->orWhere('brand', 'LIKE', "%{$search}%");
+                  ->orWhere('brand', 'LIKE', "%{$search}%")
+                  ->orWhere('code', 'LIKE', "%{$search}%");
             });
+            
+            // Optional: Order by exact match first if needed by using a raw statement
+            $query->orderByRaw("CASE 
+                WHEN name = ? THEN 1 
+                WHEN generic_name = ? THEN 2
+                ELSE 3 
+            END", [$search, $search]);
         }
 
         $medicines = $query->limit(20)->get();
@@ -157,11 +167,12 @@ class MedicineController extends Controller
             });
             
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                  ->orWhere('brand', 'LIKE', "%{$search}%");
+                  ->orWhere('brand', 'LIKE', "%{$search}%")
+                  ->orWhere('code', 'LIKE', "%{$search}%");
             });
         }
         
