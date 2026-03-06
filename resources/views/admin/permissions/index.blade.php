@@ -12,16 +12,19 @@
     ═══════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
         <!-- Total Permissions Card -->
-        <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-400 shadow-lg shadow-blue-900/30 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+        <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 shadow-lg shadow-blue-900/30 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-shield-alt text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-blue-600 uppercase">Total Permissions</p>
-                <h4 class="text-3xl font-bold text-blue-900 drop-shadow-sm font-mono" x-text="stats.total">0</h4>
+                <p class="text-xs font-bold tracking-wider text-sky-500 uppercase">Total Permissions</p>
+                <h4 class="text-3xl font-bold text-sky-700 drop-shadow-sm font-mono" x-text="stats.total">0</h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-blue-200 pt-2">
-                <span class="text-[10px] text-blue-700 font-bold uppercase tracking-tight">System-wide Access Points</span>
+            <div class="mx-4 mb-4 border-t border-sky-200 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-sky-600 animate-pulse"></span>
+                    <span class="text-[10px] text-sky-700 font-bold uppercase tracking-tight">System-wide Access Points</span>
+                </div>
             </div>
         </div>
 
@@ -31,11 +34,14 @@
                 <i class="fas fa-check-circle text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-emerald-600 uppercase">Active</p>
-                <h4 class="text-3xl font-bold text-emerald-900 drop-shadow-sm font-mono" x-text="stats.active">0</h4>
+                <p class="text-xs font-bold tracking-wider text-teal-500 uppercase">Active</p>
+                <h4 class="text-3xl font-bold text-teal-700 drop-shadow-sm font-mono" x-text="stats.active">0</h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-emerald-200 pt-2">
-                <span class="text-[10px] text-emerald-700 font-bold uppercase tracking-tight">Currently Functional</span>
+            <div class="mx-4 mb-4 border-t border-teal-200 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-teal-600 animate-pulse"></span>
+                    <span class="text-[10px] text-teal-700 font-bold uppercase tracking-tight">Currently Functional</span>
+                </div>
             </div>
         </div>
 
@@ -45,25 +51,31 @@
                 <i class="fas fa-ban text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-rose-600 uppercase">Inactive</p>
-                <h4 class="text-3xl font-bold text-rose-900 drop-shadow-sm font-mono" x-text="stats.inactive">0</h4>
+                <p class="text-xs font-bold tracking-wider text-rose-500 uppercase">Inactive</p>
+                <h4 class="text-3xl font-bold text-rose-700 drop-shadow-sm font-mono" x-text="stats.inactive">0</h4>
             </div>
             <div class="mx-4 mb-4 border-t border-rose-200 pt-2 text-rose-700">
-                <span class="text-[10px] font-bold uppercase tracking-tight">Disabled Access</span>
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight">Disabled Access</span>
+                </div>
             </div>
         </div>
 
         <!-- Groups Card -->
-        <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/20 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-400 shadow-lg shadow-purple-900/30 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
+        <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl shadow-lg shadow-purple-500/20 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-900/30 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-layer-group text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-fuchsia-600 uppercase">Module Groups</p>
-                <h4 class="text-3xl font-bold text-fuchsia-900 drop-shadow-sm font-mono" x-text="stats.groups">0</h4>
+                <p class="text-xs font-bold tracking-wider text-fuchsia-500 uppercase">Module Groups</p>
+                <h4 class="text-3xl font-bold text-fuchsia-700 drop-shadow-sm font-mono" x-text="stats.groups">0</h4>
             </div>
             <div class="mx-4 mb-4 border-t border-purple-200 pt-2 text-fuchsia-700">
-                <span class="text-[10px] font-bold uppercase tracking-tight">Logical Categories</span>
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-fuchsia-600 animate-pulse"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight">Logical Categories</span>
+                </div>
             </div>
         </div>
     </div>
@@ -137,7 +149,7 @@
 
                     <button @click="showAdvancedFilters = !showAdvancedFilters"
                         class="px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
-                        :class="showAdvancedFilters ? 'bg-slate-800 text-white shadow-xl' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'">
+                        :class="showAdvancedFilters ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-xl' : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-xl'">
                         <i class="fas fa-sliders-h"></i> Filters
                     </button>
                 </div>
@@ -268,7 +280,7 @@
                                     <td class="px-5 py-4">
                                         <div class="flex items-center gap-3">
                                             <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform"
-                                                 :class="permission.is_active ? 'bg-gradient-to-br from-blue-400 to-indigo-500 text-white' : 'bg-gradient-to-br from-rose-400 to-maroon-500 text-white'">
+                                                 :class="permission.is_active ? 'bg-indigo-600 text-white' : 'bg-maroon-600 text-white'">
                                                 <i class="fas fa-shield-alt text-sm"></i>
                                             </div>
                                             <div>
@@ -278,10 +290,12 @@
                                         </div>
                                     </td>
                                     <td class="px-5 py-4 whitespace-nowrap">
-                                        <i class="fas fa-cube text-xs text-blue-600"></i>
-                                        <span class="px-3 py-1 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-slate-200" x-text="permission.group">
+                                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold"
+                                            :class="getGroupClass(permission.group)">
+                                            <i class="fas mr-2" :class="getGroupIcon(permission.group)"></i>
+                                            <span x-text="formatGroupName(permission.group)"></span>
                                         </span>
-                                    </td> 
+                                    </td>
                                     <td class="px-5 py-4">
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all"
                                               :class="permission.is_active ? 'text-emerald-700' : 'text-rose-700'">
@@ -316,22 +330,27 @@
                 <div class="space-y-12">
                     <template x-for="(groupPerms, groupName) in groupedPermissions" :key="groupName">
                         <div>
-                            <div class="flex items-center gap-4 mb-6 sticky top-0 z-10 bg-white py-2">
+                            <div class="flex items-center gap-4 mb-6 sticky top-0 z-10 bg-white py-2 border-b border-slate-50">
                                 <div class="w-2 h-8 bg-indigo-600 rounded-full"></div>
+                                <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 shadow-sm">
+                                    <i :class="getGroupIcon(groupName)" class="text-lg"></i>
+                                </div>
                                 <h3 class="text-lg font-black text-slate-800 uppercase tracking-[0.2em]" x-text="formatGroupName(groupName)"></h3>
-                                <span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-xs font-black" x-text="groupPerms.length"></span>
+                                <div class="flex-1 border-b border-dashed border-slate-200"></div>
+                                <span class="bg-indigo-600 text-white px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20" x-text="groupPerms.length + ' points'"></span>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
                                 <template x-for="p in groupPerms" :key="p.id">
-                                    <div class="bg-white border-2 border-slate-100 rounded-3xl p-5 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all group relative overflow-hidden"
+                                    <div class="bg-white border-2 border-indigo-500 rounded-3xl p-5 hover:border-frusia-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all group relative overflow-hidden"
                                         :class="selectedIds.includes(p.id) ? 'border-indigo-500 bg-indigo-50/30' : ''">
                                         
                                         <div class="absolute top-0 right-0 p-3">
-                                            <input type="checkbox" :value="p.id" x-model="selectedIds" class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                                            <input type="checkbox" :value="p.id" x-model="selectedIds" class="w-5 h-5 rounded border-indigo-500 text-indigo-600 focus:ring-frusia-500">
                                         </div>
 
                                         <div class="flex items-center gap-4 mb-4">
-                                            <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
+                                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white transition-all shadow-inner"
+                                            :class="p.is_active ? 'bg-indigo-600' : 'bg-maroon-600'">
                                                 <i class="fas fa-shield-alt text-lg"></i>
                                             </div>
                                             <div class="flex-1">
@@ -343,15 +362,15 @@
                                         <div class="flex items-center justify-between pt-4 border-t border-slate-100">
                                             <div class="flex items-center gap-2">
                                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all"
-                                                      :class="p.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'">
+                                                      :class="p.is_active ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'">
                                                     <i class="fas" :class="p.is_active ? 'fa-check-circle' : 'fa-clock'"></i>
                                                     <span x-text="p.is_active ? 'Authorized' : 'Locked'"></span>
                                                 </span>
                                             </div>
                                             <div class="flex gap-1">
-                                                <button @click="editPermission(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm" title="Edit"><i class="fas fa-edit text-[10px]"></i></button>
-                                                <button @click="toggleStatus(p)" class="w-8 h-8 flex items-center justify-center rounded-lg transition-all shadow-sm" :class="p.is_active ? 'bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white'" :title="p.is_active ? 'Deactivate' : 'Activate'"><i class="fas text-[10px]" :class="p.is_active ? 'fa-ban' : 'fa-check-circle'"></i></button>
-                                                <button @click="confirmDelete(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm" title="Delete"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                                                <button @click="editPermission(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white hover:bg-indigo-600 hover:text-white transition-all shadow-sm" title="Edit"><i class="fas fa-edit text-[10px]"></i></button>
+                                                <button @click="toggleStatus(p)" class="w-8 h-8 flex items-center justify-center rounded-lg transition-all shadow-sm" :class="p.is_active ? 'bg-amber-600 text-white hover:bg-amber-500 hover:text-white' : 'bg-emerald-600 text-white hover:bg-emerald-500 hover:text-white'" :title="p.is_active ? 'Deactivate' : 'Activate'"><i class="fas text-[10px]" :class="p.is_active ? 'fa-ban' : 'fa-check-circle'"></i></button>
+                                                <button @click="confirmDelete(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-rose-600 text-white hover:bg-rose-500 hover:text-white transition-all shadow-sm" title="Delete"><i class="fas fa-trash-alt text-[10px]"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -595,10 +614,6 @@
                     
                     // Always refresh grouped permissions for grid view
                     this.updateGroupedPermissions();
-                    
-                    if (this.availableGroups.length === 0) {
-                        this.availableGroups = [...new Set(this.permissions.map(p => p.group))];
-                    }
                 } catch (e) {
                     this.showToast('Logic synchronization failed', 'error');
                 } finally {
@@ -618,7 +633,14 @@
             async fetchStats() {
                 try {
                     const response = await fetch('/admin/permissions/stats');
-                    this.stats = await response.json();
+                    const data = await response.json();
+                    this.stats = {
+                        total: data.total,
+                        active: data.active,
+                        inactive: data.inactive,
+                        groups: data.groups
+                    };
+                    this.availableGroups = data.available_groups || [];
                 } catch (e) {}
             },
             
@@ -835,6 +857,80 @@
                 }
             },
             
+            getGroupClass(group) {
+                if (!group) return 'bg-gray-50 text-gray-700 border border-gray-200';
+                const lowerGroup = group.toLowerCase();
+                const colors = {
+                    'medicine': 'text-green-600 border border-green-200',
+                    'permission': 'text-indigo-600 border border-indigo-200',
+                    'lab': 'text-purple-600 border border-purple-200',
+                    'patient': 'text-rose-600 border border-rose-200',
+                    'user': 'text-sky-600 border border-sky-200',
+                    'branch': 'text-cyan-600 border border-cyan-200',
+                    'reports': 'text-emerald-600 border border-emerald-200',
+                    'office': 'text-jade-600 border border-jade-200',
+                    'api': 'text-amber-600 border border-amber-200',
+                    'designations': 'text-fuchsia-600 border border-fuchsia-200',
+                    'consultation': 'text-violet-600 border border-violet-200',
+                    'diagnosis': 'text-green-600 border border-green-200',
+                    'alert': 'text-rose-600 border border-rose-200',
+                    'visits': 'text-blue-600 border border-blue-200',
+                    'vitals': 'text-maroon-600 border border-maroon-200',
+                    'dashboard': 'text-blue-600 border border-blue-200',
+                    'role': 'text-orange-600 border border-orange-200',
+                    'audit': 'text-yellow-600 border border-yellow-200',
+                    'prescription': 'text-teal-600 border border-teal-200',
+                    'setting': 'text-maroon-600 border border-maroon-200',
+                    'notification': 'text-red-600 border border-red-200'
+                };
+                for (const key in colors) {
+                    if (lowerGroup.includes(key)) return colors[key];
+                }
+                return 'bg-gray-50 text-gray-700 border border-gray-100';
+            },
+
+            getGroupIcon(group) {
+                if (!group) return 'fas fa-cube';
+                const lowerGroup = group.toLowerCase();
+                const icons = {
+                    'pharmacy': 'fas fa-pills',
+                    'permission' : 'fas fa-fingerprint',
+                    'reception': 'fas fa-id-badge',
+                    'laboratory': 'fas fa-microscope',
+                    'doctor': 'fas fa-user-md',
+                    'patient': 'fas fa-user-injured',
+                    'inventory': 'fas fa-boxes',
+                    'user': 'fas fa-users-cog',
+                    'admin': 'fas fa-user-shield',
+                    'branch': 'fas fa-code-branch',
+                    'reports': 'fas fa-chart-line',
+                    'settings': 'fas fa-cog',
+                    'appointment': 'fas fa-calendar-alt',
+                    'prescription': 'fas fa-file-prescription',
+                    'office': 'fas fa-building',
+                    'api': 'fas fa-gears',
+                    'designations': 'fas fa-user-tag',
+                    'nurse': 'fas fa-user-nurse',
+                    'consultation': 'fas fa-stethoscope',
+                    'diagnosis': 'fas fa-notes-medical',
+                    'lab': 'fas fa-flask',
+                    'alert': 'fas fa-bell',
+                    'medicine': 'fas fa-pills',
+                    'visits': 'fas fa-hospital',
+                    'vitals': 'fas fa-heartbeat',
+                    'dashboard': 'fas fa-gauge-high',
+                    'role': 'fas fa-user-lock',
+                    'audit': 'fas fa-clipboard-list',
+                    'notification': 'fas fa-bell'
+                };
+                
+                for (const key in icons) {
+                    if (lowerGroup.includes(key)) return icons[key];
+                }
+                
+                return 'fas fa-cube';
+            },
+
             formatGroupName(group) {
                 if (!group) return 'General';
                 return group.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');

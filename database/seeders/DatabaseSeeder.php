@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LaboratorySeeder::class,
             MedicineFormSeeder::class,
+            PharmacySeeder::class,         // Categories and Views
         ]);
 
         // PHASE 3: TEST DATA (all tied to CMO branch)
@@ -43,6 +44,10 @@ class DatabaseSeeder extends Seeder
             LabReportSeeder::class,           // Lab orders (CMO)
             PrescriptionSeeder::class,        // Prescriptions and Dispensations (CMO)
         ]);
+
+        // Sync stock alerts after medicines and prescriptions are seeded
+        $this->command->info('🔄 Synchronizing Stock Alerts...');
+        \Illuminate\Support\Facades\Artisan::call('pharmacy:sync-alerts');
 
         // PHASE 4: NOTIFICATIONS
         $this->command->info('');

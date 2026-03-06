@@ -14,23 +14,9 @@ class PharmacySeeder extends Seeder
     public function run(): void
     {
         $this->seedMedicineCategories();
-        $this->seedMedicines();
-        $this->seedInventoryLogs();
-        $this->seedStockAlerts();
         $this->createViews();
 
-        $this->command->info('💊 Pharmacy module seeded successfully!');
-        $this->command->info('');
-        $this->command->info('💊 Sample Medicines Inventory Created:');
-        $this->command->info('   • Paracetamol 500mg - Stock: 1000 (Batch: BATCH2024001)');
-        $this->command->info('   • Amoxicillin 250mg - Stock: 500 (Batch: BATCH2024002)');
-        $this->command->info('   • Ibuprofen 400mg - Stock: 50 (Batch: BATCH2024003)');
-        $this->command->info('   • Loratadine 10mg - Stock: 300 (Batch: BATCH2024004)');
-        $this->command->info('   • Multivitamin - Stock: 0 (Batch: BATCH2024005)');
-        $this->command->info('');
-        $this->command->info('⚠️  Stock Alerts Created:');
-        $this->command->info('   • Ibuprofen: LOW STOCK (50 units)');
-        $this->command->info('   • Multivitamin: OUT OF STOCK');
+        $this->command->info('💊 Pharmacy module infrastructure (Categories and Views) initialized!');
     }
 
     /**

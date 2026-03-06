@@ -233,4 +233,53 @@ class InventoryService
             throw $e;
         }
     }
+    /**
+     * Synchronize stock alerts for all medicines
+     */
+    public function syncStockAlerts(): int
+    {
+        $count = 0;
+        $medicines = Medicine::active()->get();
+
+        foreach ($medicines as $medicine) {
+            $stock = (int) $medicine->stock;
+            $reorderLevel = (int) $medicine->reorder_level;
+
+            if ($stock <= $reorderLevel) {
+                $alertType = $stock == 0 ? 'out_of_stock' : 'low_stock';
+                $message = $stock == 0
+                    ? "{$medicine->name} is out of stock."
+                    : "{$medicine->name} is low on stock. Current stock: {$stock}, Reorder level: {$reorderLevel}";
+
+                // Check if an unresolved alert already exists
+                $existingAlert = StockAlert::where('medicine_id', $medicine->id)
+                    ->where('is_resolved', false)
+                    ->first();
+
+                if ($existingAlert) {
+                    // Update if alert type or message changed
+                    if ($existingAlert->alert_type !== $alertType || $existingAlert->message !== $message) {
+                        $existingAlert->update([
+                            'alert_type' => $alertType,
+                            'message' => $message,
+                        ]);
+                        $count++;
+                    }
+                } else {
+                    // Create new alert
+                    StockAlert::create([
+                        'uuid' => (string) \Illuminate\Support\Str::uuid(),
+                        'branch_id' => $medicine->branch_id ?? 1,
+                        'medicine_id' => $medicine->id,
+                        'alert_type' => $alertType,
+                        'message' => $message,
+                        'is_resolved' => false,
+                    ]);
+                    $count++;
+                }
+            }
+        }
+
+        return $count;
+    }
 }

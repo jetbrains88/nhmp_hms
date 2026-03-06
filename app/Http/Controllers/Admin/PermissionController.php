@@ -119,6 +119,7 @@ class PermissionController extends Controller
             'active' => Permission::where('is_active', true)->count(),
             'inactive' => Permission::where('is_active', false)->count(),
             'groups' => Permission::distinct('group')->count(),
+            'available_groups' => Permission::getGroups(),
         ];
 
         return response()->json($stats);
