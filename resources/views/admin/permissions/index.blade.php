@@ -281,7 +281,7 @@
                                         <i class="fas fa-cube text-xs text-blue-600"></i>
                                         <span class="px-3 py-1 text-slate-600 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-slate-200" x-text="permission.group">
                                         </span>
-                                    </td>
+                                    </td> 
                                     <td class="px-5 py-4">
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all"
                                               :class="permission.is_active ? 'text-emerald-700' : 'text-rose-700'">
@@ -524,6 +524,8 @@
         </div>
     </div>
 </div>
+
+@endsection
 
 @push('scripts')
 <script>
@@ -847,7 +849,7 @@
 </script>
 @endpush
 
-@section('styles')
+@push('styles')
 <style>
     [x-cloak] { display: none !important; }
     .animate-bounce-slow {
@@ -858,4 +860,4 @@
         50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
     }
 </style>
-@endsection
+@endpush
