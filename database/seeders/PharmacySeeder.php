@@ -140,136 +140,141 @@ class PharmacySeeder extends Seeder
 
         $medicines = [
             [
-                'uuid' => (string) Str::uuid(),
-                'code' => 'PARA500',
                 'name' => 'Paracetamol',
                 'generic_name' => 'Acetaminophen',
                 'brand' => 'Tylenol',
                 'manufacturer' => 'Johnson & Johnson',
-                'form' => 'Tablet',
-                'strength' => '500mg',
+                'form_name' => 'Tablet',
+                'strength_value' => 500,
+                'strength_unit' => 'mg',
                 'unit' => 'pcs',
                 'category_id' => 1, // Analgesics
                 'description' => 'For fever and mild to moderate pain',
                 'unit_price' => 0.50,
-                'selling_price' => 1.00,
+                'sale_price' => 1.00,
                 'reorder_level' => 200,
                 'is_active' => true,
                 'requires_prescription' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => (string) Str::uuid(),
-                'code' => 'AMOX250',
                 'name' => 'Amoxicillin',
                 'generic_name' => 'Amoxicillin Trihydrate',
                 'brand' => 'Amoxil',
                 'manufacturer' => 'GlaxoSmithKline',
-                'form' => 'Capsule',
-                'strength' => '250mg',
+                'form_name' => 'Capsule',
+                'strength_value' => 250,
+                'strength_unit' => 'mg',
                 'unit' => 'pcs',
                 'category_id' => 2, // Antibiotics
                 'description' => 'Broad spectrum antibiotic',
                 'unit_price' => 2.50,
-                'selling_price' => 5.00,
+                'sale_price' => 5.00,
                 'reorder_level' => 100,
                 'is_active' => true,
                 'requires_prescription' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => (string) Str::uuid(),
-                'code' => 'IBU400',
                 'name' => 'Ibuprofen',
                 'generic_name' => 'Ibuprofen',
                 'brand' => 'Advil',
                 'manufacturer' => 'Pfizer',
-                'form' => 'Tablet',
-                'strength' => '400mg',
+                'form_name' => 'Tablet',
+                'strength_value' => 400,
+                'strength_unit' => 'mg',
                 'unit' => 'pcs',
                 'category_id' => 1, // Analgesics
                 'description' => 'NSAID for pain, fever, and inflammation',
                 'unit_price' => 0.75,
-                'selling_price' => 1.50,
+                'sale_price' => 1.50,
                 'reorder_level' => 100,
                 'is_active' => true,
                 'requires_prescription' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => (string) Str::uuid(),
-                'code' => 'LOR10',
                 'name' => 'Loratadine',
                 'generic_name' => 'Loratadine',
                 'brand' => 'Claritin',
                 'manufacturer' => 'Bayer',
-                'form' => 'Tablet',
-                'strength' => '10mg',
+                'form_name' => 'Tablet',
+                'strength_value' => 10,
+                'strength_unit' => 'mg',
                 'unit' => 'pcs',
                 'category_id' => 4, // Antihistamines
                 'description' => 'Non-drowsy allergy relief',
                 'unit_price' => 1.25,
-                'selling_price' => 2.50,
+                'sale_price' => 2.50,
                 'reorder_level' => 50,
                 'is_active' => true,
                 'requires_prescription' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => (string) Str::uuid(),
-                'code' => 'MVT100',
                 'name' => 'Multivitamin',
                 'generic_name' => 'Multivitamin Complex',
                 'brand' => 'Centrum',
                 'manufacturer' => 'Pfizer',
-                'form' => 'Tablet',
-                'strength' => '100 tablets',
+                'form_name' => 'Tablet',
+                'strength_value' => 100,
+                'strength_unit' => 'tablets',
                 'unit' => 'bottle',
                 'category_id' => 8, // Vitamins
                 'description' => 'Daily multivitamin supplement',
                 'unit_price' => 15.00,
-                'selling_price' => 30.00,
+                'sale_price' => 30.00,
                 'reorder_level' => 25,
                 'is_active' => true,
                 'requires_prescription' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
         ];
 
         foreach ($medicines as $medData) {
+            // Get form ID
+            $form = DB::table('medicine_forms')->where('name', $medData['form_name'])->first();
+
             // Insert Medicine
-            $medId = DB::table('medicines')->insertGetId($medData);
+            $medId = DB::table('medicines')->insertGetId([
+                'uuid' => (string) Str::uuid(),
+                'name' => $medData['name'],
+                'generic_name' => $medData['generic_name'],
+                'brand' => $medData['brand'],
+                'manufacturer' => $medData['manufacturer'],
+                'form_id' => $form?->id,
+                'strength_value' => $medData['strength_value'],
+                'strength_unit' => $medData['strength_unit'],
+                'unit' => $medData['unit'],
+                'category_id' => $medData['category_id'],
+                'description' => $medData['description'],
+                'reorder_level' => $medData['reorder_level'],
+                'is_active' => $medData['is_active'],
+                'requires_prescription' => $medData['requires_prescription'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             // Determine stock based on medicine
-            $stock = match ($medData['code']) {
-                'PARA500' => 1000,
-                'AMOX250' => 500,
-                'IBU400' => 50,
-                'LOR10' => 300,
-                'MVT100' => 0,
+            $stock = match ($medData['name']) {
+                'Paracetamol' => 1000,
+                'Amoxicillin' => 500,
+                'Ibuprofen' => 50,
+                'Loratadine' => 300,
+                'Multivitamin' => 0,
                 default => 100,
             };
 
-            $batchNumber = match ($medData['code']) {
-                'PARA500' => 'BATCH2024001',
-                'AMOX250' => 'BATCH2024002',
-                'IBU400' => 'BATCH2024003',
-                'LOR10' => 'BATCH2024004',
-                'MVT100' => 'BATCH2024005',
+            $batchNumber = match ($medData['name']) {
+                'Paracetamol' => 'BATCH2024001',
+                'Amoxicillin' => 'BATCH2024002',
+                'Ibuprofen' => 'BATCH2024003',
+                'Loratadine' => 'BATCH2024004',
+                'Multivitamin' => 'BATCH2024005',
                 default => 'BATCH' . date('Y') . rand(100, 999),
             };
 
-            $expiryDate = match ($medData['code']) {
-                'PARA500' => now()->addMonths(12),
-                'AMOX250' => now()->addMonths(8),
-                'IBU400' => now()->addMonths(9),
-                'LOR10' => now()->addMonths(7),
-                'MVT100' => now()->addMonths(14),
+            $expiryDate = match ($medData['name']) {
+                'Paracetamol' => now()->addMonths(12),
+                'Amoxicillin' => now()->addMonths(8),
+                'Ibuprofen' => now()->addMonths(9),
+                'Loratadine' => now()->addMonths(7),
+                'Multivitamin' => now()->addMonths(14),
                 default => now()->addMonths(12),
             };
 
@@ -283,7 +288,7 @@ class PharmacySeeder extends Seeder
                     'rc_number' => 'RC-' . strtoupper(Str::random(6)),
                     'expiry_date' => $expiryDate,
                     'unit_price' => $medData['unit_price'],
-                    'sale_price' => $medData['selling_price'],
+                    'sale_price' => $medData['sale_price'],
                     'remaining_quantity' => $stock,
                     'is_active' => $stock > 0,
                     'created_at' => now(),
@@ -364,7 +369,7 @@ class PharmacySeeder extends Seeder
 
         foreach ($branches as $branch) {
             // Low stock alert for Ibuprofen
-            $ibuprofen = DB::table('medicines')->where('code', 'IBU400')->first();
+            $ibuprofen = DB::table('medicines')->where('name', 'Ibuprofen')->first();
             if ($ibuprofen) {
                 $stockAlerts[] = [
                     'uuid' => (string) Str::uuid(),
@@ -382,7 +387,7 @@ class PharmacySeeder extends Seeder
             }
 
             // Out of stock alert for Multivitamin
-            $multivitamin = DB::table('medicines')->where('code', 'MVT100')->first();
+            $multivitamin = DB::table('medicines')->where('name', 'Multivitamin')->first();
             if ($multivitamin) {
                 $stockAlerts[] = [
                     'uuid' => (string) Str::uuid(),
@@ -423,30 +428,31 @@ class PharmacySeeder extends Seeder
             CREATE VIEW medicine_dispensing_history AS
             SELECT
                 m.id as medicine_id,
-                m.code as medicine_code,
                 m.name as medicine_name,
                 m.generic_name,
-                m.form,
-                m.strength,
-                p.id as prescription_id,
-                p.dispensed_quantity,
-                p.dispensed_at,
-                p.batch_number,
-                p.dispense_notes,
+                mf.name as form,
+                CONCAT(m.strength_value, ' ', m.strength_unit) as strength,
+                pd.id as dispensation_id,
+                pd.quantity_dispensed,
+                pd.dispensed_at,
+                mb.batch_number,
+                pd.notes as dispense_notes,
                 pat.emrn,
                 pat.name as patient_name,
                 pat.gender,
                 doc.name as prescribed_by,
                 pharm.name as dispensed_by
-            FROM prescriptions p
+            FROM prescription_dispensations pd
+            JOIN prescriptions p ON pd.prescription_id = p.id
             JOIN medicines m ON p.medicine_id = m.id
+            LEFT JOIN medicine_forms mf ON m.form_id = mf.id
+            LEFT JOIN medicine_batches mb ON pd.medicine_batch_id = mb.id
             LEFT JOIN diagnoses d ON p.diagnosis_id = d.id
             LEFT JOIN visits v ON d.visit_id = v.id
             LEFT JOIN patients pat ON v.patient_id = pat.id
-            LEFT JOIN users doc ON d.doctor_id = doc.id
-            LEFT JOIN users pharm ON p.dispensed_by = pharm.id
-            WHERE p.status = 'dispensed' AND p.dispensed_at IS NOT NULL
-            ORDER BY p.dispensed_at DESC
+            LEFT JOIN users doc ON p.prescribed_by = doc.id
+            LEFT JOIN users pharm ON pd.dispensed_by = pharm.id
+            ORDER BY pd.dispensed_at DESC
         ");
 
         // Medicine stock value view
@@ -454,15 +460,15 @@ class PharmacySeeder extends Seeder
             CREATE VIEW medicine_stock_value AS
             SELECT
                 m.id,
-                m.code,
                 m.name,
                 m.unit,
                 mc.name as category,
+                mf.name as form,
                 COALESCE(SUM(mb.remaining_quantity), 0) as stock,
                 m.reorder_level,
                 m.reorder_level as min_stock_level,
-                m.unit_price,
-                m.selling_price,
+                COALESCE(AVG(mb.unit_price), 0) as unit_price,
+                COALESCE(AVG(mb.sale_price), 0) as selling_price,
                 COALESCE(SUM(mb.remaining_quantity * mb.unit_price), 0) as stock_value,
                 CASE
                     WHEN COALESCE(SUM(mb.remaining_quantity), 0) = 0 THEN 'out_of_stock'
@@ -475,9 +481,10 @@ class PharmacySeeder extends Seeder
                 m.requires_prescription
             FROM medicines m
             LEFT JOIN medicine_categories mc ON m.category_id = mc.id
+            LEFT JOIN medicine_forms mf ON m.form_id = mf.id
             LEFT JOIN medicine_batches mb ON m.id = mb.medicine_id AND mb.deleted_at IS NULL
             WHERE m.deleted_at IS NULL
-            GROUP BY m.id, m.code, m.name, m.unit, mc.name, m.reorder_level, m.unit_price, m.selling_price, m.is_active, m.requires_prescription
+            GROUP BY m.id, m.name, m.unit, mc.name, mf.name, m.reorder_level, m.is_active, m.requires_prescription
             ORDER BY stock_status, days_to_expire, m.name
         ");
     }

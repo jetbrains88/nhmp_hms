@@ -29,8 +29,7 @@ class MedicineController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                  ->orWhere('brand', 'LIKE', "%{$search}%")
-                  ->orWhere('code', 'LIKE', "%{$search}%");
+                  ->orWhere('brand', 'LIKE', "%{$search}%");
             });
         }
         
@@ -136,8 +135,7 @@ class MedicineController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                  ->orWhere('brand', 'LIKE', "%{$search}%")
-                  ->orWhere('code', 'LIKE', "%{$search}%");
+                  ->orWhere('brand', 'LIKE', "%{$search}%");
             });
             
             // Optional: Order by exact match first if needed by using a raw statement
@@ -171,8 +169,7 @@ class MedicineController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
                   ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                  ->orWhere('brand', 'LIKE', "%{$search}%")
-                  ->orWhere('code', 'LIKE', "%{$search}%");
+                  ->orWhere('brand', 'LIKE', "%{$search}%");
             });
         }
         

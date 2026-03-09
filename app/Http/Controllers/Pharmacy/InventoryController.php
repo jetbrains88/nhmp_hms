@@ -187,7 +187,6 @@ class InventoryController extends Controller
                 $q->whereHas('medicine', function($mq) use ($search) {
                     $mq->where('name', 'LIKE', "%{$search}%")
                       ->orWhere('generic_name', 'LIKE', "%{$search}%")
-                      ->orWhere('code', 'LIKE', "%{$search}%")
                       ->orWhere('brand', 'LIKE', "%{$search}%");
                     
                     // Priority for exact matches (this doesn't change the set, but we could sort by it later)
@@ -241,7 +240,6 @@ class InventoryController extends Controller
                     'id' => $batch->id,
                     'batch_number' => $batch->batch_number,
                     'medicine_name' => 'Unknown Medicine (ID: ' . $batch->medicine_id . ')',
-                    'medicine_code' => 'N/A',
                     'medicine_brand' => 'N/A',
                     'strength' => 'N/A',
                     'form' => 'N/A',
@@ -266,7 +264,6 @@ class InventoryController extends Controller
                 'id' => $batch->id,
                 'batch_number' => $batch->batch_number,
                 'medicine_name' => $medicine->name,
-                'medicine_code' => $medicine->code,
                 'medicine_brand' => $medicine->brand,
                 'strength' => $medicine->strength,
                 'form' => $medicine->form?->name ?? 'N/A',

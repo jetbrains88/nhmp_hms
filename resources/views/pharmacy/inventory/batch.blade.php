@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    @include('layouts.flash')
+
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         <div class="lg:col-span-2 space-y-8">

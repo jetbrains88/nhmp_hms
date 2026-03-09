@@ -34,7 +34,7 @@ echo "MySQL is up and running!"
 # In production, use 'cache' instead of 'clear'.
 echo "Cleaning up Laravel optimization..."
 php artisan config:clear
-php artisan cache:clear
+php artisan cache:clear || true
 
 # 6. Run migrations (Uncomment when ready for auto-migrations)
 # echo "Running migrations..."

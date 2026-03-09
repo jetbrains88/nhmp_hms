@@ -14,7 +14,7 @@
         </a>
     </div>
 
-    @include('layouts.flash')
+
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <form action="{{ route('pharmacy.inventory.adjust', $batch->id) }}" method="POST">

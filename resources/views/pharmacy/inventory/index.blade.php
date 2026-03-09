@@ -332,7 +332,6 @@
                                     <div class="flex flex-col">
                                         <div class="text-base font-black text-slate-800 leading-tight" x-text="batch.medicine_name"></div>
                                         <div class="flex items-center gap-2 mt-1">
-                                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest" x-text="batch.medicine_code"></span>
                                             <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold" x-text="'#' + batch.batch_number"></span>
                                         </div>
                                     </div>
