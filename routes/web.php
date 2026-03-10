@@ -300,6 +300,7 @@ Route::middleware(['auth', 'role:reception'])->prefix('reception')->name('recept
     Route::get('/offices/stats', [ReceptionOfficeController::class, 'stats'])->name('offices.stats');
     Route::get('/offices/data', [ReceptionOfficeController::class, 'data'])->name('offices.data');
     Route::post('/offices/bulk-destroy', [ReceptionOfficeController::class, 'bulkDestroy'])->name('offices.bulk-destroy');
+    Route::post('/offices/{office}/toggle-status', [ReceptionOfficeController::class, 'toggleStatus'])->name('offices.toggle-status');
     Route::resource('offices', ReceptionOfficeController::class)->except(['show', 'create', 'edit', 'index']);
 
     Route::get('/designations', [ReceptionDesignationController::class, 'index'])->name('designations.index');

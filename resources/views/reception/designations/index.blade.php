@@ -675,7 +675,7 @@
                         to: data.to
                     };
                 } catch (error) {
-                    window.Notification.error('Failed to load designations catalog');
+                    showError('Failed to load designations catalog');
                 } finally {
                     this.loading = false;
                 }
@@ -775,7 +775,7 @@
 
             async saveDesignation() {
                 if (!this.form.title) {
-                    window.Notification.warning('Please fill in required fields');
+                    showError('Please fill in required fields');
                     return;
                 }
 
@@ -797,19 +797,19 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success(data.message);
+                        showSuccess(data.message);
                         this.closeAddModal();
                         await this.fetchDesignations();
                         await this.fetchStats();
                     } else {
                         if (data.errors) {
-                            window.Notification.error(Object.values(data.errors)[0][0]);
+                            showError(Object.values(data.errors)[0][0]);
                         } else {
-                            window.Notification.error(data.message || 'Failed to merge Designation');
+                            showError(data.message || 'Failed to merge Designation');
                         }
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 } finally {
                     this.saving = false;
                 }
@@ -831,7 +831,7 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success('Designation purged successfully');
+                        showSuccess('Designation purged successfully');
                         this.showDeleteModal = false;
                         this.dataToDelete = null;
                         
@@ -841,10 +841,10 @@
                         await this.fetchDesignations();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error(data.message || 'Failed to purge Designation');
+                        showError(data.message || 'Failed to purge Designation');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 } finally {
                     this.deleting = false;
                 }
@@ -867,15 +867,15 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success(data.message);
+                        showSuccess(data.message);
                         this.selectedIds = [];
                         await this.fetchDesignations();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error(data.message || 'Failed to perform mass purge');
+                        showError(data.message || 'Failed to perform mass purge');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 }
             }
         };

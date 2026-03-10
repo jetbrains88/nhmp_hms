@@ -748,7 +748,7 @@
                     this.listOffices = mappingData.data;
 
                 } catch (error) {
-                    window.Notification.error('Failed to load offices vault');
+                    showError('Failed to load offices vault');
                 } finally {
                     this.loading = false;
                 }
@@ -861,19 +861,19 @@
                     const data = await response.json();
                     if (response.ok) {
                         office.is_active = data.is_active;
-                        window.Notification.success(data.message);
+                        showSuccess(data.message);
                         this.fetchStats();
                     } else {
-                        window.Notification.error(data.message || 'Failed to update status');
+                        showError(data.message || 'Failed to update status');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 }
             },
 
             async saveOffice() {
                 if (!this.form.name || !this.form.type) {
-                    window.Notification.warning('Please fill in required fields');
+                    showError('Please fill in required fields');
                     return;
                 }
 
@@ -895,19 +895,19 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success(data.message);
+                        showSuccess(data.message);
                         this.closeAddModal();
                         await this.fetchOffices();
                         await this.fetchStats();
                     } else {
                         if (data.errors) {
-                            window.Notification.error(Object.values(data.errors)[0][0]);
+                            showError(Object.values(data.errors)[0][0]);
                         } else {
-                            window.Notification.error(data.message || 'Failed to save Office Node');
+                            showError(data.message || 'Failed to save Office Node');
                         }
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 } finally {
                     this.saving = false;
                 }
@@ -929,7 +929,7 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success('Office node purged successfully');
+                        showSuccess('Office node purged successfully');
                         this.showDeleteModal = false;
                         this.dataToDelete = null;
                         
@@ -939,10 +939,10 @@
                         await this.fetchOffices();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error(data.message || 'Failed to purge office');
+                        showError(data.message || 'Failed to purge office');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 } finally {
                     this.deleting = false;
                 }
@@ -965,15 +965,15 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success(data.message);
+                        showSuccess(data.message);
                         this.selectedIds = [];
                         await this.fetchOffices();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error(data.message || 'Failed to perform mass purge');
+                        showError(data.message || 'Failed to perform mass purge');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    showError('A network error occurred');
                 }
             }
         };

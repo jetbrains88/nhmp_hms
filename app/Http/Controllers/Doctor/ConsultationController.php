@@ -185,13 +185,13 @@ class ConsultationController extends Controller
             ->where('doctor_id', auth()->id())
             ->where('status', 'waiting')
             ->orderBy('created_at', 'asc')
-            ->get();
+            ->limit(7)->get();
 
         $inProgressQueue = Visit::with(['patient', 'latestVital'])
             ->where('doctor_id', auth()->id())
             ->where('status', 'in_progress')
             ->orderBy('created_at', 'asc')
-            ->get();
+            ->limit(7)->get();
 
         if ($request->wantsJson()) {
             return response()->json([
