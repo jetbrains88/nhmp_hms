@@ -60,7 +60,7 @@
             <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-6 border border-green-100">
                 <div class="flex items-center">
                     <div
-                        class="w-12 h-12 bg-gradient-to-br from-green-400 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                        class="w-12 h-12 bg-gray-100 border border-gray-200 rounded-xl flex items-center justify-center mr-4">
                         <i class="fas fa-dollar-sign text-white text-xl"></i>
                     </div>
                     <div>
@@ -114,70 +114,96 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Date & Time
+                        <th class="px-6 py-4 text-left">
+                            <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                    <i class="fas fa-calendar-alt text-xs"></i>
+                                </div>
+                                <span>Date & Time</span>
+                            </div>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Patient
+                        <th class="px-6 py-4 text-left">
+                            <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                    <i class="fas fa-user text-xs"></i>
+                                </div>
+                                <span>Patient</span>
+                            </div>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Medicine
+                        <th class="px-6 py-4 text-left">
+                            <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                    <i class="fas fa-pills text-xs"></i>
+                                </div>
+                                <span>Medicine</span>
+                            </div>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Quantity
+                        <th class="px-6 py-4 text-left">
+                            <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                    <i class="fas fa-cubes text-xs"></i>
+                                </div>
+                                <span>Quantity</span>
+                            </div>
                         </th>
-                        {{--                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">--}}
-                        {{--                            Price--}}
-                        {{--                        </th>--}}
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Prescriber
+                        <th class="px-6 py-4 text-left">
+                            <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                    <i class="fas fa-user-md text-xs"></i>
+                                </div>
+                                <span>Prescriber</span>
+                            </div>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Dispensed By
+                        <th class="px-6 py-4 text-left">
+                            <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                    <i class="fas fa-user-check text-xs"></i>
+                                </div>
+                                <span>Dispensed By</span>
+                            </div>
                         </th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($dispenses as $dispense)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium font-mono">
                                 {{ $dispense->dispensed_at->format('M d, Y h:i A') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div
-                                        class="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mr-3">
-                                    <span class="text-white text-xs font-bold">
+                                    <div class="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-gray-600 text-[10px] font-black uppercase">
                                         {{ strtoupper(substr($dispense->diagnosis->visit->patient->name, 0, 2)) }}
                                     </span>
                                     </div>
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-bold text-navy-800">
                                         {{ $dispense->diagnosis->visit->patient->name }}
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $dispense->medicine->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $dispense->batch_number }}</div>
+                                <div class="text-sm font-bold text-navy-800">{{ $dispense->medicine->name }}</div>
+                                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{{ $dispense->batch_number }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-bold">
                                 {{ $dispense->dispensed_quantity }} {{ $dispense->medicine->unit }}
                             </td>
-                            {{--                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">--}}
+                            {{--                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-bold">--}}
                             {{--                                ${{ number_format($dispense->total_amount, 2) }}--}}
                             {{--                            </td>--}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">
+                                <div class="text-sm font-bold text-navy-800">
                                     {{ $dispense->prescriber->name ?? 'Unknown' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div
-                                        class="w-8 h-8 bg-gradient-to-br from-green-400 to-teal-500 rounded-full flex items-center justify-center mr-3">
-                                        <i class="fas fa-user-md text-white text-xs"></i>
+                                        class="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user-md text-gray-600 text-xs"></i>
                                     </div>
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-bold text-navy-800">
                                         {{ $dispense->dispenser->name ?? 'System' }}
                                     </div>
                                 </div>

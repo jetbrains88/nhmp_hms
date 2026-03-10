@@ -644,14 +644,12 @@
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex flex-col gap-2">
                                      {{-- RC Number badge --}}
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold w-fit"
-                                          :class="item.medicine_batch?.rc_number ? 'bg-gradient-to-br from-purple-50 to-indigo-50 text-purple-600' : 'bg-gray-100 text-gray-600'">
+                                    <span class="inline-flex items-center px-2.5 py-1 text-gray-600 rounded-full text-xs font-bold w-fit">
                                         <i class="fas fa-tag mr-1 text-xs"></i>
                                         <span x-text="item.medicine_batch?.rc_number ?? 'SYSTEM'"></span>
                                     </span>
                                     {{-- Batch badge --}}
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold w-fit"
-                                          :class="item.medicine_batch?.batch_number ? ' bg-gradient-to-br from-blue-50 to-cyan-50 text-blue-600' : 'bg-gray-100 text-gray-600'">
+                                    <span class="inline-flex items-center px-2.5 py-1 text-gray-600 rounded-full text-xs font-bold w-fit">
                                         <i class="fas fa-tag mr-1 text-xs"></i>
                                         <span x-text="item.medicine_batch?.batch_number ?? 'SYSTEM'"></span>
                                     </span>
@@ -663,7 +661,7 @@
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-user-check text-indigo-600 text-sm"></i>
+                                        <i class="fas fa-user-check text-gray-600 text-sm"></i>
                                     </div>
                                     <span class="text-sm font-medium text-gray-700"
                                           x-text="item.dispensed_by?.name ?? 'System'"></span>
@@ -682,11 +680,11 @@
 
                             {{-- Actions Column --}}
                             <td class="px-5 py-4 whitespace-nowrap text-center">
-                                <button @click="openDetails(item)"
-                                        class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-lg text-xs font-bold transition-all duration-200 shadow-md hover:shadow-lg">
+                                <a href="javascript:void(0)" @click="openDetails(item)"
+                                   class="inline-flex items-center gap-1.5 px-4 py-2 text-gray-600 hover:text-gray-900 rounded-lg text-xs font-bold transition-all duration-200 shadow-md hover:shadow-lg">
                                     <i class="fas fa-eye"></i>
                                     View Details
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     </template>
@@ -1255,18 +1253,7 @@ function historyApp(initialStats = {}) {
 
         getAvatarColor(name) {
             const colors = [
-                'bg-gradient-to-br from-blue-400 to-blue-600',
-                'bg-gradient-to-br from-green-400 to-green-600',
-                'bg-gradient-to-br from-purple-400 to-purple-600',
-                'bg-gradient-to-br from-pink-400 to-pink-600',
-                'bg-gradient-to-br from-yellow-400 to-yellow-600',
                 'bg-gradient-to-br from-indigo-400 to-indigo-600',
-                'bg-gradient-to-br from-red-400 to-red-600',
-                'bg-gradient-to-br from-teal-400 to-teal-600',
-                'bg-gradient-to-br from-orange-400 to-orange-600',
-                'bg-gradient-to-br from-cyan-400 to-cyan-600',
-                'bg-gradient-to-br from-emerald-400 to-emerald-600',
-                'bg-gradient-to-br from-rose-400 to-rose-600',
             ];
             if (!name) return colors[0];
             let hash = 0;

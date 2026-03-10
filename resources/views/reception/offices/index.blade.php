@@ -91,7 +91,7 @@
         <div class="space-y-6 transition-all duration-300" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
             <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 flex flex-col">
             
-            {{-- Panel Header with Light Gradient (Matches User Management) --}}
+             {{-- Panel Header with Light Gradient (Matches User Management) --}}
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-indigo-100/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div class="flex items-center gap-4">
@@ -257,45 +257,44 @@
                                     </td>
                                     <td class="px-5 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform bg-indigo-600 text-white">
+                                            <div class="w-9 h-9 rounded-xl flex bg-gradient-to-r from-indigo-400 to-blue-600 text-white items-center justify-center shadow-sm group-hover:scale-110 transition-transform  border border-gray-200 text-gray-600">
                                                 <i class="fas fa-building text-sm"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-slate-800" x-text="office.name"></p>
+                                                <p class="text-sm font-bold text-navy-600" x-text="office.name"></p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-5 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100" x-text="office.type"></span>
+                                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 " x-text="office.type"></span>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <div x-show="office.parent" class="text-xs font-bold text-slate-600 inline-flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                                            <i class="fas fa-level-up-alt text-slate-400 rotate-90"></i>
+                                        <div x-show="office.parent" class="text-xs font-bold text-gray-600 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg ">
+                                            <i class="fas fa-level-up-alt text-gray-400 rotate-90"></i>
                                             <span x-text="office.parent?.name"></span>
                                         </div>
-                                        <div x-show="!office.parent" class="text-[10px] text-slate-400 uppercase tracking-widest font-black italic">Root Node</div>
+                                        <div x-show="!office.parent" class="text-[10px] text-gray-400 uppercase tracking-widest font-black italic">Root Node</div>
                                     </td>
                                     <td class="px-5 py-4 text-center">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all"
-                                              :class="office.is_active ? 'text-emerald-700' : 'text-rose-700'">
+                                        <span class="inline-flex items-center text-gray-600 gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">
                                             <i class="fas" :class="office.is_active ? 'fa-check-circle' : 'fa-clock'"></i>
                                             <span x-text="office.is_active ? 'Active' : 'Inactive'"></span>
                                         </span>
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="openViewModal(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
+                                            <button @click="openViewModal(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
-                                            <button @click="openEditModal(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="openEditModal(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button @click="toggleStatus(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" 
-                                                    :class="office.is_active ? 'text-orange-600 hover:bg-orange-100' : 'text-emerald-600 hover:bg-emerald-100'">
+                                            <button @click="toggleStatus(office)" class="w-full flex items-center text-gray-600  gap-1.5 px-3 py-1.5 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" 
+                                                    >
                                                 <i class="fas" :class="office.is_active ? 'fa-ban' : 'fa-check-circle'"></i>
                                                 <span x-text="office.is_active ? 'Disable' : 'Enable'"></span>
                                             </button>
-                                            <button @click="confirmDelete(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="confirmDelete(office)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-400 hover:text-rose-600 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </div>

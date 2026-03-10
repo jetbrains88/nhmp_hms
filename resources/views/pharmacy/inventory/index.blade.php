@@ -278,7 +278,7 @@
             <!-- Batches Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100">
+                   <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100">
                         <tr>
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -311,13 +311,6 @@
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-money-bill-wave text-cyan-500"></i>
-                                    Pricing
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
                                     <i class="fas fa-cogs text-orange-500"></i>
                                     Actions
                                 </div>
@@ -330,7 +323,7 @@
                                 <!-- Medicine Info -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex flex-col">
-                                        <div class="text-base font-black text-slate-800 leading-tight" x-text="batch.medicine_name"></div>
+                                        <div class="text-base font-black text-navy-800 leading-tight" x-text="batch.medicine_name"></div>
                                         <div class="flex items-center gap-2 mt-1">
                                             <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold" x-text="'#' + batch.batch_number"></span>
                                         </div>
@@ -375,31 +368,19 @@
                                     </div>
                                 </td>
 
-                                <!-- Pricing -->
-                                <td class="px-5 py-4 whitespace-nowrap">
-                                    <div class="flex flex-col">
-                                        <div class="text-sm text-slate-500">
-                                            <span class="text-[10px] font-bold uppercase">CP:</span>
-                                            <span class="font-bold font-mono" x-text="batch.unit_price"></span>
-                                        </div>
-                                        <div class="text-sm text-indigo-700">
-                                            <span class="text-[10px] font-bold uppercase">SP:</span>
-                                            <span class="font-black font-mono" x-text="batch.sale_price"></span>
-                                        </div>
-                                    </div>
-                                </td>
+
 
                                 <!-- Actions -->
                                 <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center gap-2">
-                                        <a :href="batch.view_url" class="p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm" title="View History">
+                                        <a :href="batch.view_url" class="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all" title="View History">
                                             <i class="fas fa-history"></i>
                                         </a>
                                         <button @click="showUpdateStockModal(batch.id, batch.medicine_name)" 
-                                                class="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="Adjust Stock">
+                                                class="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all" title="Adjust Stock">
                                             <i class="fas fa-sliders"></i>
                                         </button>
-                                        <a :href="batch.edit_url" class="p-2 bg-amber-50 text-amber-600 rounded-xl hover:bg-amber-600 hover:text-white transition-all shadow-sm" title="Edit Batch">
+                                        <a :href="batch.edit_url" class="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all" title="Edit Batch">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </div>
@@ -411,7 +392,7 @@
                     <!-- Loading State -->
                     <tbody x-show="loading">
                         <tr>
-                            <td colspan="6" class="px-6 py-20 text-center">
+                            <td colspan="5" class="px-6 py-20 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <div class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-4 shadow-inner"></div>
                                     <p class="text-slate-600 font-black uppercase tracking-widest text-xs">Loading Inventory System...</p>
@@ -424,7 +405,7 @@
                     <!-- Empty State -->
                     <tbody x-show="!loading && (!medicines || medicines.length === 0)">
                         <tr>
-                            <td colspan="6" class="px-6 py-32 text-center">
+                            <td colspan="5" class="px-6 py-32 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <div class="w-24 h-24 mb-6 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 shadow-inner">
                                         <i class="fas fa-box-open text-5xl"></i>

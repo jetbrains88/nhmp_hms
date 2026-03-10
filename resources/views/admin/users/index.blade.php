@@ -346,7 +346,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100">
                         <tr>
-                            <th scope="col"
+                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-id-card text-blue-500"></i>
@@ -391,8 +391,7 @@
                                     <div class="flex items-start space-x-4">
                                         <!-- Avatar -->
                                         <div class="flex-shrink-0">
-                                            <div class="h-12 w-12 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg"
-                                                :class="getAvatarColor(user.name)">
+                                            <div class="h-12 w-12 rounded-full flex bg-gradient-to-br from-indigo-400 to-indigo-600 items-center justify-center text-white text-lg font-bold shadow-lg">
                                                 <span x-text="getInitials(user.name)"></span>
                                             </div>
                                         </div>
@@ -400,13 +399,13 @@
                                         <!-- Details -->
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
-                                                <p class="text-xl font-bold text-gray-900 truncate" x-text="user.name">
+                                                <p class="text-xl font-bold text-navy-800 truncate" x-text="user.name">
                                                 </p>
                                             </div>
 
                                             <!-- ID and other info -->
                                             <div class="flex flex-wrap gap-2 items-center">
-                                                <div class="flex items-center text-xs text-gray-600">
+                                                <div class="flex items-center text-xs text-gray-500">
                                                     <i class="fas fa-id-badge mr-1 text-blue-500"></i>
                                                     <span>ID: <span x-text="user.id"></span></span>
                                                 </div>
@@ -421,9 +420,9 @@
                                         <!-- Email -->
                                         <div class="group relative">
                                             <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-700 hover:text-gray-900"
+                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                 :title="`Email: ${user.email}`">
-                                                <span class="inline-flex items-center mr-2 w-4 text-blue-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-envelope"></i>
                                                 </span>
                                                 <span class="text-sm" x-text="user.email"></span>
@@ -443,12 +442,9 @@
                                         <!-- Status Badge -->
                                         <div class="group relative">
                                             <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full"
-                                                :class="user.is_active ? 'text-green-600 hover:text-green-800' :
-                                                    'text-red-600 hover:text-red-800'"
+                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                 :title="user.is_active ? 'Account is active' : 'Account is inactive'">
-                                                <span class="inline-flex items-center mr-2 w-4"
-                                                    :class="user.is_active ? 'text-green-600' : 'text-red-600'">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas"
                                                         :class="user.is_active ? 'fa-check-circle' : 'fa-clock'"></i>
                                                 </span>
@@ -475,9 +471,9 @@
                                         <template x-for="role in user.roles" :key="role.id">
                                             <div class="group relative">
                                                 <span
-                                                    class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-700 hover:text-gray-900"
+                                                    class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                     :title="`Role: ${role.display_name || role.name}`">
-                                                    <span class="inline-flex items-center mr-2 w-4">
+                                                    <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                         <i class="fas" :class="getRoleIcon(role.name)"></i>
                                                     </span>
                                                     <span class="text-sm">
@@ -532,13 +528,13 @@
                                         <!-- Registration Date -->
                                         <div class="group relative">
                                             <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-800"
+                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                 :title="user.created_at ? `Registered on ${formatDate(user.created_at)}` :
                                                     'Registration date not available'">
-                                                <span class="inline-flex items-center mr-2 w-4 text-blue-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-calendar-plus"></i>
                                                 </span>
-                                                <span class="text-xs"
+                                                <span class="text-sm"
                                                     x-text="user.created_at ? formatDate(user.created_at) : 'N/A'"></span>
                                             </span>
                                             <!-- Tooltip -->
@@ -558,15 +554,15 @@
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full"
                                                 :class="user.last_login_at && user.last_login_at !== 'Invalid Date' && user
-                                                    .last_login_at !== null ? 'text-gray-600 hover:text-gray-800' :
+                                                    .last_login_at !== null ? 'text-gray-600 hover:text-gray-900' :
                                                     'text-gray-400 cursor-not-allowed'"
                                                 :title="getLastLoginTitle(user.last_login_at)">
                                                 <span class="inline-flex items-center mr-2 w-4"
                                                     :class="user.last_login_at && user.last_login_at !== 'Invalid Date' && user
-                                                        .last_login_at !== null ? 'text-cyan-600' : 'text-gray-400'">
+                                                        .last_login_at !== null ? 'text-gray-600' : 'text-gray-400'">
                                                     <i class="fas fa-history"></i>
                                                 </span>
-                                                <span class="text-xs"
+                                                <span class="text-sm"
                                                     x-text="getLastLoginText(user.last_login_at)"></span>
                                             </span>
                                             <!-- Tooltip -->
@@ -589,7 +585,7 @@
                                     <div class="flex flex-col space-y-2 min-w-[120px]">
                                         <!-- View Button -->
                                         <a href="{{ url('/admin/users') }}/" :href="`{{ url('/admin/users') }}/${user.uuid}`"
-                                           class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200 text-left"
+                                           class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                            title="View User Details">
                                             <i class="fas fa-eye mr-2 w-4"></i>
                                             View
@@ -597,7 +593,7 @@
 
                                         <!-- Edit Button -->
                                         <button @click="editUser(user)"
-                                            class="text-blue-600 hover:text-blue-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Edit User">
                                             <i class="fas fa-edit mr-2 w-4"></i>
                                             Edit
@@ -605,7 +601,7 @@
 
                                         <!-- Reset Password Button -->
                                         <button @click="openResetPasswordModal(user)"
-                                            class="text-orange-600 hover:text-orange-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Reset Password">
                                             <i class="fas fa-key mr-2 w-4"></i>
                                             Reset
@@ -613,9 +609,7 @@
 
                                         <!-- Status Toggle Button -->
                                         <button @click="toggleUserStatus(user)"
-                                            class="transition-colors duration-200 text-left"
-                                            :class="user.is_active ? 'text-pink-600 hover:text-pink-900' :
-                                                'text-green-600 hover:text-green-900'"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             :title="user.is_active ? 'Deactivate User' : 'Activate User'">
                                             <i class="fas mr-2 w-4"
                                                 :class="user.is_active ? 'fa-ban' : 'fa-check-circle'"></i>
@@ -624,7 +618,7 @@
 
                                         <!-- View Permissions Button -->
                                         <button @click="openPermissionsModal(user)"
-                                            class="text-green-600 hover:text-green-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="View Permissions">
                                             <i class="fas fa-shield-alt mr-2 w-4"></i>
                                             Permissions
@@ -632,7 +626,7 @@
 
                                         <!-- Delete Button -->
                                         <button @click="confirmDelete(user)"
-                                            class="text-rose-600 hover:text-rose-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Delete User">
                                             <i class="fas fa-trash mr-2 w-4"></i>
                                             Delete
@@ -1481,18 +1475,18 @@
                 getRoleIcon(roleName) {
                     const role = (roleName || '').toLowerCase();
                     const iconMap = {
-                        'super_admin': 'fa-user-shield text-indigo-800',
-                        'admin': 'fa-shield-alt text-purple-600',
-                        'administrator': 'fa-shield-alt text-purple-600',
-                        'doctor': 'fas fa-stethoscope text-blue-600',
-                        'pharmacy': 'fa-pills text-green-600',
-                        'pharmacist': 'fa-pills text-green-600',
-                        'reception': 'fas fa-user-plus text-orange-600',
-                        'receptionist': 'fas fa-user-plus text-orange-600',
-                        'nurse': 'fa-user-nurse text-pink-600',
-                        'lab': 'fa-flask text-cyan-600',
-                        'technician': 'fa-flask text-cyan-600',
-                        'lab technician': 'fa-flask text-cyan-600'
+                        'super_admin': 'fa-user-shield text-gray-600',
+                        'admin': 'fa-shield-alt text-gray-600',
+                        'administrator': 'fa-shield-alt text-gray-600',
+                        'doctor': 'fas fa-stethoscope text-gray-600',
+                        'pharmacy': 'fa-pills text-gray-600',
+                        'pharmacist': 'fa-pills text-gray-600',
+                        'reception': 'fas fa-user-plus text-gray-600',
+                        'receptionist': 'fas fa-user-plus text-gray-600',
+                        'nurse': 'fa-user-nurse text-gray-600',
+                        'lab': 'fa-flask text-gray-600',
+                        'technician': 'fa-flask text-gray-600',
+                        'lab technician': 'fa-flask text-gray-600'
                     };
 
                     // Find matching icon or return default

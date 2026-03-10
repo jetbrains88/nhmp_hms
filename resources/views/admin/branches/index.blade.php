@@ -172,31 +172,31 @@
                     <tr class="bg-gradient-to-r from-indigo-100 to-indigo-100">
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-hospital text-indigo-500"></i>
+                                <i class="fas fa-hospital text-gray-600"></i>
                                 Branch Profile
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-map-marker-alt text-rose-500"></i>
+                                <i class="fas fa-map-marker-alt text-gray-600"></i>
                                 Location Info
                             </div>
                         </th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-center gap-2">
-                                <i class="fas fa-users text-blue-500"></i>
+                                <i class="fas fa-users text-gray-600"></i>
                                 Staff Count
                             </div>
                         </th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-center gap-2">
-                                <i class="fas fa-toggle-on text-emerald-500"></i>
+                                <i class="fas fa-toggle-on text-gray-600"></i>
                                 Status
                             </div>
                         </th>
                         <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-end gap-2">
-                                <i class="fas fa-cogs text-orange-500"></i>
+                                <i class="fas fa-cogs text-gray-600"></i>
                                 Actions
                             </div>
                         </th>
@@ -207,14 +207,13 @@
                         <tr class="hover:bg-indigo-50/30 transition-colors group">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-11 w-11 rounded-2xl flex items-center justify-center text-xl font-bold shadow-sm group-hover:scale-105 transition-transform"
-                                         :class="branch.type === 'CMO' ? 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white' : 'bg-gradient-to-br from-violet-500 to-purple-600 text-white'">
+                                    <div class="h-11 w-11 rounded-2xl flex items-center justify-center bg-gradient-to-br from-indigo-400 to-indigo-600 text-white text-xl font-bold shadow-sm group-hover:scale-105 transition-transform">
                                         <i class="fas fa-hospital text-sm"></i>
                                     </div>
                                     <div>
-                                        <div class="font-bold text-slate-800 text-base" x-text="branch.name"></div>
+                                        <div class="font-bold text-navy-800 text-base" x-text="branch.name"></div>
                                         <div class="flex items-center gap-2">
-                                            <span class="text-[10px] font-black uppercase tracking-tighter" :class="branch.type === 'CMO' ? 'text-indigo-500' : 'text-purple-500'" x-text="branch.type"></span>
+                                            <span class="text-[10px] font-black text-indigo-500 uppercase tracking-tighter" x-text="branch.type"></span>
                                             <span class="h-1 w-1 rounded-full bg-slate-200"></span>
                                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" x-text="branch.office?.name || 'Level 1'"></span>
                                         </div>
@@ -222,7 +221,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-2 text-slate-600">
+                                <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-map-marker-alt text-slate-300"></i>
                                     <span class="text-sm font-medium" x-text="branch.location || 'Headquarters'"></span>
                                 </div>
@@ -241,17 +240,17 @@
                             <td class="px-6 py-4 whitespace-nowrap text-right">
                                 <div class="flex flex-col space-y-2 min-w-[120px]">
                                     <a :href="`/admin/branches/${branch.id}`"
-                                       class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200 text-left text-sm font-bold" title="View Details">
+                                       class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left text-sm font-bold" title="View Details">
                                         <i class="fas fa-search-plus mr-2 w-4"></i>
                                         View
                                     </a>
                                     <button @click="editBranch(branch)"
-                                       class="text-blue-600 hover:text-blue-900 transition-colors duration-200 text-left text-sm font-bold" title="Modify">
+                                       class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left text-sm font-bold" title="Modify">
                                         <i class="fas fa-edit mr-2 w-4"></i>
                                         Modify
                                     </button>
                                     <button type="button" @click="confirmArchive(branch)"
-                                            class="text-rose-600 hover:text-rose-900 transition-colors duration-200 text-left text-sm font-bold" title="Archive">
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left text-sm font-bold" title="Archive">
                                         <i class="fas fa-trash-alt mr-2 w-4"></i>
                                         Archive
                                     </button>

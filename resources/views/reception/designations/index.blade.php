@@ -103,7 +103,7 @@
                         </div>
 
                         <button @click="openAddModal()"
-                            class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
+                            class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-400 to-indigo-600 text-white hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
                             <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
                             New Designation
                         </button>
@@ -146,7 +146,7 @@
                 {{-- Table View --}}
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                       <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
                             <tr>
                                 <th class="px-5 py-5 w-10">
                                     <div class="flex items-center justify-center">
@@ -238,38 +238,38 @@
                                     </td>
                                     <td class="px-5 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform bg-indigo-600 text-white">
+                                            <div class="w-9 h-9 rounded-xl flex bg-gradient-to-r from-indigo-400 to-indigo-600 text-white items-center justify-center shadow-sm group-hover:scale-110 transition-transform bg-gray-100 border border-gray-200 text-gray-600">
                                                 <i class="fas fa-id-badge text-sm"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-slate-800" x-text="item.title"></p>
-                                                <div x-show="item.short_form" class="text-[10px] font-bold text-slate-400 tracking-wider uppercase" x-text="`[${item.short_form}]`"></div>
+                                                <p class="text-sm font-bold text-navy-800" x-text="item.title"></p>
+                                                <div x-show="item.short_form" class="text-[10px] font-bold text-gray-400 tracking-wider uppercase" x-text="`[${item.short_form}]`"></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-5 py-4 whitespace-nowrap">
-                                        <span x-show="item.bps" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-black bg-indigo-50 text-indigo-600 border border-indigo-100" x-text="`BPS-${item.bps}`"></span>
-                                        <span x-show="!item.bps" class="text-xs text-slate-400 italic">N/A</span>
+                                        <span x-show="item.bps" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-black    text-gray-600     " x-text="`BPS-${item.bps}`"></span>
+                                        <span x-show="!item.bps" class="text-xs text-gray-400 italic">N/A</span>
                                     </td>
                                     <td class="px-5 py-4 whitespace-nowrap">
-                                        <span x-show="item.cadre_type" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 capitalize" x-text="item.cadre_type.replace('_', ' ')"></span>
-                                        <span x-show="!item.cadre_type" class="text-xs text-slate-400 italic">-</span>
+                                        <span x-show="item.cadre_type" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold      text-gray-600    capitalize" x-text="item.cadre_type.replace('_', ' ')"></span>
+                                        <span x-show="!item.cadre_type" class="text-xs text-gray-400 italic">-</span>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span x-show="item.rank_group" class="text-xs font-bold text-slate-600 inline-flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                                        <span x-show="item.rank_group" class="text-xs font-bold text-gray-600 inline-flex items-center gap-2     px-3 py-1.5 rounded-lg  ">
                                             <span x-text="item.rank_group"></span>
                                         </span>
-                                        <span x-show="!item.rank_group" class="text-[10px] text-slate-400 uppercase tracking-widest font-black italic">Unassigned</span>
+                                        <span x-show="!item.rank_group" class="text-[10px] text-gray-400 uppercase tracking-widest font-black italic">Unassigned</span>
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="openViewModal(item)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
+                                            <button @click="openViewModal(item)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
-                                            <button @click="openEditModal(item)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="openEditModal(item)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button @click="confirmDelete(item)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="confirmDelete(item)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </div>

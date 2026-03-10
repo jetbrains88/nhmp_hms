@@ -408,7 +408,7 @@
             </div>
 
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gradient-to-r from-rose-100 to-orange-100">
+               <thead class="bg-gradient-to-r from-rose-100 to-orange-100">
                     <tr>
                         <th class="px-5 py-4 text-left w-10">
                             <input type="checkbox" 
@@ -480,11 +480,11 @@
                             {{-- Medicine Column --}}
                             <td class="px-5 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                        <i class="fas fa-pills text-white text-sm"></i>
+                                    <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform border border-gray-200">
+                                        <i class="fas fa-pills text-gray-600 text-sm"></i>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-bold text-gray-900" x-text="alert.medicine?.name"></p>
+                                        <p class="text-sm font-bold text-navy-800" x-text="alert.medicine?.name"></p>
                                         <p class="text-xs text-gray-500" x-text="alert.medicine?.category?.name ?? 'Uncategorized'"></p>
                                     </div>
                                 </div>
@@ -567,13 +567,13 @@
                                 <div class="flex items-center justify-center gap-2">
                                     <button x-show="!alert.is_resolved" 
                                             @click="openResolveModal(alert)"
-                                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-green-100 hover:bg-green-600 text-green-700 hover:text-white rounded-lg text-xs font-bold transition-all duration-200"
+                                            class="inline-flex items-center gap-1.5 px-3 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg text-xs font-bold transition-all duration-200"
                                             title="Resolve Alert">
                                         <i class="fas fa-check-circle"></i>
                                         Resolve
                                     </button>
                                     <a :href="`/pharmacy/medicines/${alert.medicine_id}`" 
-                                       class="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-100 hover:bg-blue-600 text-blue-700 hover:text-white rounded-lg text-xs font-bold transition-all duration-200"
+                                       class="inline-flex items-center gap-1.5 px-3 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg text-xs font-bold transition-all duration-200"
                                        title="View Medicine">
                                         <i class="fas fa-eye"></i>
                                         View

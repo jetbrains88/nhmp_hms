@@ -360,10 +360,10 @@
                                         <div class="group relative">
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-900 hover:text-gray-700">
-                                                <span class="inline-flex items-center mr-2 w-4 text-indigo-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-id-badge"></i>
                                                 </span>
-                                                <span class="font-mono font-bold text-sm text-indigo-600"
+                                                <span class="font-mono font-bold text-sm text-gray-600"
                                                     x-text="patient.emrn"></span>
                                             </span>
                                             <!-- Tooltip -->
@@ -382,7 +382,7 @@
                                         <div class="group relative" x-show="patient.cnic">
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-700 hover:text-gray-900">
-                                                <span class="inline-flex items-center mr-2 w-4 text-green-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-address-card"></i>
                                                 </span>
                                                 <span class="font-mono text-sm" x-text="patient.cnic"></span>
@@ -403,7 +403,7 @@
                                         <div class="group relative" x-show="patient.is_nhmp">
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-700 hover:text-gray-900">
-                                                <span class="inline-flex items-center mr-2 w-4 text-purple-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <!-- Conditional icon using a method -->
                                                     <i class="fas" :class="getNhmpIcon(patient.designation)"></i>
                                                 </span>
@@ -426,7 +426,7 @@
                                         <div class="group relative">
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-800">
-                                                <span class="inline-flex items-center mr-2 w-4 text-cyan-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-calendar-plus"></i>
                                                 </span>
                                                 <span class="text-xs" x-text="formatDate(patient.created_at)"></span>
@@ -452,7 +452,7 @@
                                         <div class="group relative">
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-700 hover:text-gray-900">
-                                                <span class="inline-flex items-center mr-2 w-4 text-sky-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-history"></i>
                                                 </span>
                                                 <span class="text-sm"
@@ -474,7 +474,7 @@
                                         <div class="group relative">
                                             <span
                                                 class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-700 hover:text-gray-900">
-                                                <span class="inline-flex items-center mr-2 w-4 text-cyan-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
                                                     <i class="fas fa-calendar-check"></i>
                                                 </span>
                                                 <span class="text-sm" x-text="patient.total_visits || 0"></span>
@@ -552,7 +552,7 @@
                                     <div class="flex flex-col space-y-2 min-w-[120px]">
                                         <!-- View Details Button -->
                                         <button @click="viewPatientDetails(patient)"
-                                            class="text-blue-600 hover:text-blue-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="View Patient Details">
                                             <i class="fas fa-eye mr-2 w-4"></i>
                                             View
@@ -560,7 +560,7 @@
 
                                         <!-- Edit Button -->
                                         <button @click="editPatient(patient)"
-                                            class="text-amber-600 hover:text-amber-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Edit Patient Details">
                                             <i class="fas fa-edit mr-2 w-4"></i>
                                             Edit
@@ -568,7 +568,7 @@
 
                                         <!-- Medical History Button -->
                                         <button @click="viewMedicalHistory(patient)"
-                                            class="text-green-600 hover:text-green-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="View Medical History">
                                             <i class="fas fa-file-medical mr-2 w-4"></i>
                                             Medical
@@ -576,7 +576,7 @@
 
                                         <!-- Visit History Button -->
                                         <button @click="viewVisitHistory(patient)"
-                                            class="text-purple-600 hover:text-purple-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="View Visit History">
                                             <i class="fas fa-calendar-check mr-2 w-4"></i>
                                             Visits
@@ -584,7 +584,7 @@
 
                                         <!-- Delete Button -->
                                         <button @click="confirmDelete(patient)"
-                                            class="text-rose-600 hover:text-rose-900 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Delete Patient">
                                             <i class="fas fa-trash mr-2 w-4"></i>
                                             Delete

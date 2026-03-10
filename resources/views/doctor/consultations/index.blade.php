@@ -284,9 +284,7 @@
                                     <div class="flex items-start space-x-4">
                                         <!-- Avatar -->
                                         <div class="flex-shrink-0">
-                                            <div class="h-12 w-12 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg"
-                                                :class="getAvatarColor(consultation.patient.name)">
-                                                <!-- <span x-text="getInitials(consultation.patient.name)"></span> -->
+                                            <div class="h-12 w-12 rounded-full flex items-center bg-gradient-to-br from-blue-400 to-blue-600 justify-center text-white text-lg font-bold shadow-lg">
                                                 <i class="fas fa-user-injured text-white"></i>
                                             </div>
                                         </div>
@@ -294,7 +292,7 @@
                                         <!-- Details -->
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
-                                                <p class="text-xl font-bold text-gray-900 truncate"
+                                                <p class="text-xl font-bold text-navy-800 truncate"
                                                     x-text="consultation.patient.name"></p>
                                                 <template x-if="consultation.patient.is_nhmp">
                                                     <span
@@ -306,9 +304,9 @@
                                             <div class="flex flex-wrap gap-2 items-center">
                                                 <!-- Gender -->
                                                 <div class="flex items-center text-xs"
-                                                    :class="consultation.patient.gender === 'male' ? 'text-md-blue' :
-                                                        consultation.patient.gender === 'female' ? 'text-md-rose' :
-                                                        'text-md-purple'">
+                                                    :class="consultation.patient.gender === 'male' ? 'text-gray-700' :
+                                                        consultation.patient.gender === 'female' ? 'text-gray-700' :
+                                                        'text-gray-700'">
                                                     <i class="fas mr-1"
                                                         :class="consultation.patient.gender === 'male' ? 'fa-mars' :
                                                             consultation.patient.gender === 'female' ? 'fa-venus' :
@@ -317,19 +315,19 @@
 
                                                 </div>
                                                 <!-- Age -->
-                                                <div class="flex items-center text-xs text-gray-600">
-                                                    <i class="fas fa-calendar-alt mr-1 text-green-500"></i>
+                                                <div class="flex items-center text-xs text-gray-700">
+                                                    <i class="fas fa-calendar-alt mr-1 text-gray-400"></i>
                                                     <span x-text="consultation.patient.age_formatted"></span>
                                                 </div>
                                                 <!-- Blood Group -->
-                                                <div class="flex items-center text-xs px-2 py-0.5 rounded-full bg-red-50 text-red-700"
+                                                <div class="flex items-center text-xs px-2 py-0.5 rounded-full text-gray-700"
                                                     x-show="consultation.patient.blood_group">
                                                     <i class="fas fa-tint mr-1"></i>
                                                     <span x-text="consultation.patient.blood_group"></span>
                                                 </div>
                                                 <!-- Contact -->
-                                                <div class="mt-1 text-xs font-mono text-gray-500">
-                                                    <i class="fas fa-phone-alt text-md-orange mr-1"></i>
+                                                <div class="mt-1 text-xs font-mono text-gray-400">
+                                                    <i class="fas fa-phone-alt text-gray-400 mr-1"></i>
                                                     <span x-text="consultation.patient.phone"></span>
                                                 </div>
                                             </div>
@@ -340,11 +338,6 @@
                                 <!-- EMRN Column -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-indigo-50 text-indigo-700">
-                                            <i class="fas fa-id-badge mr-1.5"></i>
-                                            EMRN
-                                        </span>
                                         <span class="ml-2 text-sm font-mono text-gray-700"
                                             x-text="consultation.patient.emrn"></span>
                                     </div>
@@ -353,8 +346,9 @@
                                 <!-- Visit Type Column -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold"
-                                            :class="getVisitTypeClass(consultation.visit_type)">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 text-gray-700 rounded-md text-xs font-bold"
+                                            >
                                             <i class="fas mr-1.5" :class="getVisitTypeIcon(consultation.visit_type)"></i>
                                             Type
                                         </span>
@@ -368,7 +362,7 @@
                                     <div class="space-y-2">
                                         <div class="flex items-center">
                                             <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-indigo-50 text-md-indigo">
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold text-gray-700 ">
                                                 <i class="fas fa-clock mr-1.5"></i>
                                                 Time
                                             </span>
@@ -377,7 +371,7 @@
                                         </div>
                                         <div class="flex items-center">
                                             <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-md-purple">
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold text-gray-700 ">
                                                 <i class="fas fa-calendar mr-1.5"></i>
                                                 Date
                                             </span>
@@ -403,46 +397,24 @@
                                         <!-- Start Button (for waiting status) -->
                                         <template x-if="consultation.status === 'waiting'">
                                             <button @click="startConsultation(consultation.id)"
-                                                class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-blue-600 hover:text-blue-800"
+                                                class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                 title="Start this consultation">
-                                                <span class="inline-flex items-center mr-2 w-4 text-blue-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-700">
                                                     <i class="fas fa-play-circle"></i>
                                                 </span>
                                                 <span class="text-sm">Start</span>
-                                                <!-- Tooltip -->
-                                                <div
-                                                    class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                    <div
-                                                        class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                        <span class="font-semibold">Begin consultation</span>
-                                                        <div
-                                                            class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </button>
                                         </template>
 
                                         <!-- Continue Button (for in_progress status) -->
                                         <template x-if="consultation.status === 'in_progress'">
                                             <a :href="`/doctor/consultancy/${consultation.id}`"
-                                                class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-green-600 hover:text-green-800"
+                                                class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                 title="Continue this consultation">
-                                                <span class="inline-flex items-center mr-2 w-4 text-green-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-700">
                                                     <i class="fas fa-notes-medical"></i>
                                                 </span>
                                                 <span class="text-sm">Continue</span>
-                                                <!-- Tooltip -->
-                                                <div
-                                                    class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                    <div
-                                                        class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                        <span class="font-semibold">Continue consultation</span>
-                                                        <div
-                                                            class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </a>
                                         </template>
 
@@ -450,17 +422,17 @@
                                         <template x-if="consultation.status === 'completed'">
                                             <div class="flex flex-col space-y-1">
                                                 <a :href="`/doctor/consultancy/${consultation.id}`"
-                                                    class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-800"
+                                                    class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                     title="View consultation details">
-                                                    <span class="inline-flex items-center mr-2 w-4 text-gray-600">
+                                                    <span class="inline-flex items-center mr-2 w-4 text-gray-700">
                                                         <i class="fas fa-eye"></i>
                                                     </span>
                                                     <span class="text-sm">View</span>
                                                 </a>
                                                 <button @click="printConsultation(consultation.id)"
-                                                    class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-indigo-600 hover:text-indigo-800"
+                                                    class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                     title="Print prescription">
-                                                    <span class="inline-flex items-center mr-2 w-4 text-indigo-600">
+                                                    <span class="inline-flex items-center mr-2 w-4 text-gray-700">
                                                         <i class="fas fa-print"></i>
                                                     </span>
                                                     <span class="text-sm">Print</span>
@@ -471,23 +443,12 @@
                                         <!-- Cancel Button (for waiting and in_progress status) -->
                                         <template x-if="['waiting', 'in_progress'].includes(consultation.status)">
                                             <button @click="cancelConsultation(consultation.id)"
-                                                class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-rose-600 hover:text-rose-800"
+                                                class="group relative transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
                                                 title="Cancel this consultation">
-                                                <span class="inline-flex items-center mr-2 w-4 text-rose-600">
+                                                <span class="inline-flex items-center mr-2 w-4 text-gray-700">
                                                     <i class="fas fa-times-circle"></i>
                                                 </span>
                                                 <span class="text-sm">Cancel</span>
-                                                <!-- Tooltip -->
-                                                <div
-                                                    class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                    <div
-                                                        class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                        <span class="font-semibold">Cancel consultation</span>
-                                                        <div
-                                                            class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </button>
                                         </template>
                                     </div>
@@ -1009,12 +970,12 @@
 
                 getStatusClass(status) {
                     const statusMap = {
-                        'waiting': 'text-md-orange border border-maroon-200',
-                        'in_progress': 'text-indigo-700 border border-indigo-200',
-                        'completed': ' text-md-green border border-green-200',
-                        'cancelled': ' text-md-red border border-red-200'
+                        'waiting': 'text-gray-700',
+                        'in_progress': 'text-gray-700',
+                        'completed': ' text-gray-700',
+                        'cancelled': ' text-gray-700'
                     };
-                    return statusMap[status] || 'bg-gray-50 text-gray-700 border border-gray-200';
+                    return statusMap[status] || 'text-gray-700';
                 },
 
                 getStatusIcon(status) {

@@ -261,18 +261,18 @@
                                                 <i class="fas fa-stream text-sm"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-slate-800" x-text="param.name"></p>
+                                                <p class="text-sm font-bold text-navy-800" x-text="param.name"></p>
                                                 <p class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-1">
-                                                    Type: <span x-text="param.input_type" class="text-blue-500"></span>
+                                                    Type: <span x-text="param.input_type" class="text-gray-600"></span>
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span class="inline-flex items-center justify-center px-3 py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-lg text-xs font-black uppercase tracking-widest shadow-sm" x-text="param.lab_test_type?.name || 'N/A'"></span>
+                                        <span class="inline-flex items-center justify-center px-3 py-1   text-gray-700  text-xs font-black uppercase tracking-widest " x-text="param.lab_test_type?.name || 'N/A'"></span>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span class="inline-flex items-center justify-center px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs font-black uppercase tracking-widest shadow-sm" x-text="param.group_name || 'Generic'"></span>
+                                        <span class="inline-flex items-center justify-center px-3 py-1  text-gray-700 text-xs font-black uppercase tracking-widest " x-text="param.group_name || 'Generic'"></span>
                                     </td>
                                     <td class="px-5 py-4 text-center">
                                         <div x-show="param.input_type === 'number'" class="text-xs">
@@ -286,13 +286,13 @@
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="openViewModal(param)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
+                                            <button @click="openViewModal(param)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
-                                            <button @click="openEditModal(param)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="openEditModal(param)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button @click="confirmDelete(param)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="confirmDelete(param)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </div>

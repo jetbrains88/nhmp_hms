@@ -147,7 +147,7 @@
                 {{-- Table View --}}
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                         <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
                             <tr>
                                 <th class="px-5 py-5 w-10">
                                     <div class="flex items-center justify-center">
@@ -232,28 +232,28 @@
                                                 <i class="fas fa-vial text-sm"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-slate-800" x-text="type.name"></p>
+                                                <p class="text-sm font-bold text-navy-800" x-text="type.name"></p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span class="inline-flex items-center justify-center px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-xs font-black uppercase tracking-widest shadow-sm" x-text="type.department || 'General'"></span>
+                                        <span class="inline-flex items-center justify-center px-3 py-1 text-gray-700 text-xs font-black uppercase tracking-widest" x-text="type.department || 'General'"></span>
                                     </td>
                                     <td class="px-5 py-4 text-center">
-                                        <span class="inline-flex items-center justify-center px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs font-black uppercase tracking-widest shadow-sm" x-text="type.sample_type || 'N/A'"></span>
+                                        <span class="inline-flex items-center justify-center px-3 py-1 text-gray-700 text-xs font-black uppercase tracking-widest" x-text="type.sample_type || 'N/A'"></span>
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="viewParameters(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Parameters">
+                                            <button @click="viewParameters(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Parameters">
                                                 <i class="fas fa-list-check"></i> Parameters
                                             </button>
-                                            <button @click="openViewModal(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
+                                            <button @click="openViewModal(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
-                                            <button @click="openEditModal(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-purple-600 hover:bg-purple-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="openEditModal(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button @click="confirmDelete(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="confirmDelete(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </div>

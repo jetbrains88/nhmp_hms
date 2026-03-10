@@ -209,28 +209,28 @@
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-id-card text-blue-500"></i>
+                                    <i class="fas fa-id-card text-gray-600"></i>
                                     ID & Name
                                 </div>
                             </th>
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-shield-alt text-green-500"></i>
+                                    <i class="fas fa-shield-alt text-gray-600"></i>
                                     Permissions
                                 </div>
                             </th>
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-clock text-orange-500"></i>
+                                    <i class="fas fa-clock text-gray-600"></i>
                                     Created At
                                 </div>
                             </th>
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-cogs text-orange-500"></i>
+                                    <i class="fas fa-cogs text-gray-600"></i>
                                     Actions
                                 </div>
                             </th>
@@ -248,8 +248,8 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <div class="text-sm font-bold text-gray-900" x-text="role.display_name"></div>
-                                            <div class="text-xs text-gray-500 font-mono" x-text="role.name"></div>
+                                            <div class="text-sm font-bold text-navy-800" x-text="role.display_name"></div>
+                                            <div class="text-xs text-gray-400 font-mono" x-text="role.name"></div>
                                             <div class="text-xs text-gray-400 mt-1">ID: #<span x-text="role.id"></span></div>
                                         </div>
                                     </div>
@@ -287,14 +287,14 @@
                                 <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex flex-col space-y-2 w-fit">
                                         <a :href="'{{ route('admin.roles.edit', 'role_id') }}'.replace('role_id', role.id)"
-                                            class="inline-flex items-center justify-center px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors w-full"
+                                            class="inline-flex items-center justify-center px-3 py-1.5 text-gray-600 hover:text-gray-900 border border-gray-100 bg-white rounded-lg transition-colors w-full"
                                             title="View Permissions">
                                             <i class="fas fa-shield-alt mr-1.5 text-xs"></i>
                                             Permissions
                                         </a>
 
                                         <a :href="'{{ route('admin.roles.edit', 'role_id') }}'.replace('role_id', role.id)"
-                                            class="inline-flex items-center justify-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors w-full"
+                                            class="inline-flex items-center justify-center px-3 py-1.5 text-gray-600 hover:text-gray-900 border border-gray-100 bg-white rounded-lg transition-colors w-full"
                                             title="Edit Role">
                                             <i class="fas fa-edit mr-1.5 text-xs"></i>
                                             Edit
@@ -303,14 +303,13 @@
                                         <template x-if="role.id > 5">
                                             <div class="flex flex-col space-y-2">
                                                 <button @click="toggleRoleStatus(role)"
-                                                    :class="role.is_active ? 'bg-amber-50 text-amber-600 hover:bg-amber-100' : 'bg-green-50 text-green-600 hover:bg-green-100'"
-                                                    class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg transition-colors w-full">
+                                                    class="inline-flex items-center justify-center px-3 py-1.5 text-gray-600 hover:text-gray-900 border border-gray-100 bg-white rounded-lg transition-colors w-full">
                                                     <i class="fas mr-1.5 text-xs" :class="role.is_active ? 'fa-ban' : 'fa-check-circle'"></i>
                                                     <span x-text="role.is_active ? 'Deactivate' : 'Activate'"></span>
                                                 </button>
 
                                                 <button @click="confirmDelete(role)"
-                                                    class="inline-flex items-center justify-center px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors w-full"
+                                                    class="inline-flex items-center justify-center px-3 py-1.5 text-gray-600 hover:text-gray-900 border border-gray-100 bg-white rounded-lg transition-colors w-full"
                                                     title="Delete Role">
                                                     <i class="fas fa-trash-alt mr-1.5 text-xs"></i>
                                                     Delete

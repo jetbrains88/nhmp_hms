@@ -261,7 +261,7 @@
             <!-- Reports Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100">
+                     <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100">
                         <tr>
                             <th scope="col"
                                 class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -317,7 +317,7 @@
                                         <!-- Details -->
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
-                                                <p class="text-xl font-bold text-gray-900 truncate"
+                                                <p class="text-xl font-bold text-navy-800 truncate"
                                                     x-text="report.test_type?.name || 'Mixed/Generic Report'"></p>
                                                 <span class="px-2 py-0.5 text-xs font-bold rounded"
                                                     :class="getPriorityClass(report.priority)">
@@ -329,12 +329,12 @@
                                             <!-- Lab Number -->
                                             <div class="flex flex-wrap gap-2 items-center">
                                                 <div class="flex items-center text-xs text-gray-600">
-                                                    <i class="fas fa-hashtag mr-1 text-blue-500"></i>
+                                                    <i class="fas fa-hashtag mr-1 text-gray-400"></i>
                                                     <span x-text="'#' + report.lab_number"></span>
                                                 </div>
                                                 <template x-if="report.test_type?.department">
                                                     <div class="flex items-center text-xs text-gray-600">
-                                                        <i class="fas fa-building mr-1 text-green-500"></i>
+                                                        <i class="fas fa-building mr-1 text-gray-400"></i>
                                                         <span x-text="report.test_type.department"></span>
                                                     </div>
                                                 </template>
@@ -352,8 +352,8 @@
                                                 :title="report.patient?.name ? `View details for ${report.patient.name}` :
                                                     'No patient name available'">
                                                 <i
-                                                    class="fas fa-user-injured mr-2 w-4 text-blue-600 hover:text-blue-800"></i>
-                                                <span class="text-sm text-gray-700"
+                                                    class="fas fa-user-injured mr-2 w-4 text-gray-600"></i>
+                                                <span class="text-sm text-navy-800 font-bold"
                                                     x-text="report.patient?.name || 'N/A'"></span>
                                             </span>
                                             <!-- Tooltip -->
@@ -374,8 +374,8 @@
                                                 :title="report.patient?.cnic ? `ID: ${report.patient.cnic}` :
                                                     'No CNIC available'">
                                                 <i
-                                                    class="fas fa-id-card mr-2 w-4 text-purple-600 hover:text-purple-800"></i>
-                                                <span class="text-sm text-gray-700"
+                                                    class="fas fa-id-card mr-2 w-4 text-gray-600"></i>
+                                                <span class="text-sm text-gray-600"
                                                     x-text="report.patient?.cnic || 'N/A'"></span>
                                             </span>
                                             <!-- Tooltip -->
@@ -396,8 +396,8 @@
                                                 :title="report.doctor?.name ? `Attending: ${report.doctor.name}` :
                                                     'No doctor assigned'">
                                                 <i
-                                                    class="fas fa-user-md mr-2 w-4 text-emerald-600 hover:text-emerald-800"></i>
-                                                <span class="text-sm text-gray-700"
+                                                    class="fas fa-user-md mr-2 w-4 text-gray-600"></i>
+                                                <span class="text-sm text-gray-600"
                                                     x-text="report.doctor?.name || 'N/A'"></span>
                                             </span>
                                             <!-- Tooltip -->
@@ -547,9 +547,7 @@
                                     <div class="flex flex-col space-y-2 min-w-[120px]">
                                         <!-- View/Process Button -->
                                         <a :href="`/lab/reports/${report.id}`"
-                                            class="transition-colors duration-200 text-left"
-                                            :class="report.status === 'completed' ? 'text-blue-600 hover:text-blue-800' :
-                                                'text-indigo-600 hover:text-indigo-800'"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             :title="report.status === 'completed' ? 'View Report' : 'Process Report'">
                                             <i class="fas mr-2 w-4"
                                                 :class="report.status === 'completed' ? 'fa-eye' : 'fa-flask'"></i>
@@ -557,8 +555,8 @@
                                         </a>
 
                                         <!-- Edit Button -->
-                                        <a :href="`/lab/results/${report.id}/edit`"
-                                            class="text-amber-600 hover:text-amber-800 transition-colors duration-200 text-left"
+                                        <a :href="`/lab/reports/${report.id}/edit`"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Edit Report">
                                             <i class="fas fa-edit mr-2 w-4"></i>
                                             Edit
@@ -566,8 +564,8 @@
 
                                         <!-- Print Button (conditional) -->
                                         <template x-if="report.status === 'completed'">
-                                            <a :href="`/lab/results/${report.id}/print`" target="_blank"
-                                                class="text-green-600 hover:text-green-800 transition-colors duration-200 text-left"
+                                            <a :href="`/lab/reports/${report.id}/print`" target="_blank"
+                                                class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                                 title="Print Report">
                                                 <i class="fas fa-print mr-2 w-4"></i>
                                                 Print
@@ -583,7 +581,7 @@
 
                                         <!-- Delete Button -->
                                         <button @click="openDeleteModal(report)"
-                                            class="text-rose-600 hover:text-rose-800 transition-colors duration-200 text-left"
+                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
                                             title="Delete Report">
                                             <i class="fas fa-trash mr-2 w-4"></i>
                                             Delete
@@ -1019,14 +1017,7 @@
                 // Helper methods
                 getTestIconColor(testName) {
                     const colors = [
-                        'bg-gradient-to-br from-blue-400 to-blue-600',
-                        'bg-gradient-to-br from-green-400 to-green-600',
-                        'bg-gradient-to-br from-purple-400 to-purple-600',
-                        'bg-gradient-to-br from-pink-400 to-pink-600',
-                        'bg-gradient-to-br from-yellow-400 to-yellow-600',
                         'bg-gradient-to-br from-indigo-400 to-indigo-600',
-                        'bg-gradient-to-br from-red-400 to-red-600',
-                        'bg-gradient-to-br from-teal-400 to-teal-600'
                     ];
                     const index = (testName || '').split('').reduce((acc, char) => acc + char
                         .charCodeAt(0), 0) % colors.length;

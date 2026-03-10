@@ -200,41 +200,41 @@
                                     </div>
                                 </th>
                                 <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 shadow-sm border border-blue-500/20">
+                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-fingerprint text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('display_name')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
+                                        <button @click="sortBy('display_name')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
                                             Access Point
                                             <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('display_name')"></i>
                                         </button>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600 shadow-sm border border-purple-500/20">
+                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-cubes text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('group')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
+                                        <button @click="sortBy('group')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
                                             Module
                                             <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('group')"></i>
                                         </button>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-500/20">
+                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-toggle-on text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('is_active')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
+                                        <button @click="sortBy('is_active')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
                                             Status
                                             <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('is_active')"></i>
                                         </button>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5 text-center whitespace-nowrap">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 shadow-sm border border-amber-500/20">
+                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-bolt text-xs"></i>
                                         </div>
                                         Actions
@@ -258,8 +258,8 @@
                                                 <i class="fas fa-shield-alt text-sm"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-slate-800" x-text="permission.display_name"></p>
-                                                <p class="text-[10px] font-mono text-slate-500" x-text="permission.name"></p>
+                                                <p class="text-sm font-bold text-navy-800" x-text="permission.display_name"></p>
+                                                <p class="text-[10px] font-mono text-gray-400" x-text="permission.name"></p>
                                             </div>
                                         </div>
                                     </td>
@@ -271,26 +271,24 @@
                                         </span>
                                     </td>
                                     <td class="px-5 py-4">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all"
-                                              :class="permission.is_active ? 'text-emerald-700' : 'text-rose-700'">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] text-gray-700 font-bold uppercase tracking-wider transition-all">
                                             <i class="fas" :class="permission.is_active ? 'fa-check-circle' : 'fa-clock'"></i>
                                             <span x-text="permission.is_active ? 'Authorized' : 'Locked'"></span>
                                         </span>
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="openViewModal(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
+                                            <button @click="openViewModal(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:text-gray-900 transition-colors text-[10px] font-bold uppercase tracking-wider" title="View Details">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
-                                            <button @click="editPermission(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="Edit Controller">
+                                            <button @click="editPermission(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:text-gray-900 transition-colors text-[10px] font-bold uppercase tracking-wider" title="Edit Controller">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button @click="toggleStatus(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" 
-                                                    :class="permission.is_active ? 'text-orange-600 hover:bg-orange-100' : 'text-emerald-600 hover:bg-emerald-100'">
+                                            <button @click="toggleStatus(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:text-gray-900 transition-colors text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas" :class="permission.is_active ? 'fa-ban' : 'fa-check-circle'"></i>
                                                 <span x-text="permission.is_active ? 'Deactivate' : 'Activate'"></span>
                                             </button>
-                                            <button @click="confirmDelete(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="confirmDelete(permission)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:text-gray-900 transition-colors text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </div>
@@ -331,8 +329,8 @@
                                                 <i class="fas fa-shield-alt text-lg"></i>
                                             </div>
                                             <div class="flex-1">
-                                                <h4 class="font-black text-slate-800 text-sm leading-tight mb-1" x-text="p.display_name"></h4>
-                                                <span class="text-[9px] font-mono text-slate-400 uppercase tracking-tighter" x-text="p.name"></span>
+                                                <h4 class="font-black text-navy-800 text-sm leading-tight mb-1" x-text="p.display_name"></h4>
+                                                <span class="text-[9px] font-mono text-gray-400 uppercase tracking-tighter" x-text="p.name"></span>
                                             </div>
                                         </div>
 
@@ -1168,27 +1166,27 @@
                 if (!group) return 'bg-gray-50 text-gray-700 border border-gray-200';
                 const lowerGroup = group.toLowerCase();
                 const colors = {
-                    'medicine': 'text-green-600 border border-green-200',
-                    'permission': 'text-indigo-600 border border-indigo-200',
-                    'lab': 'text-purple-600 border border-purple-200',
-                    'patient': 'text-rose-600 border border-rose-200',
-                    'user': 'text-sky-600 border border-sky-200',
-                    'branch': 'text-cyan-600 border border-cyan-200',
-                    'reports': 'text-emerald-600 border border-emerald-200',
-                    'office': 'text-jade-600 border border-jade-200',
-                    'api': 'text-amber-600 border border-amber-200',
-                    'designations': 'text-fuchsia-600 border border-fuchsia-200',
-                    'consultation': 'text-violet-600 border border-violet-200',
-                    'diagnosis': 'text-green-600 border border-green-200',
-                    'alert': 'text-rose-600 border border-rose-200',
-                    'visits': 'text-blue-600 border border-blue-200',
-                    'vitals': 'text-maroon-600 border border-maroon-200',
-                    'dashboard': 'text-blue-600 border border-blue-200',
-                    'role': 'text-orange-600 border border-orange-200',
-                    'audit': 'text-yellow-600 border border-yellow-200',
-                    'prescription': 'text-teal-600 border border-teal-200',
-                    'setting': 'text-maroon-600 border border-maroon-200',
-                    'notification': 'text-red-600 border border-red-200'
+                    'medicine': 'text-gray-600',
+                    'permission': 'text-gray-600',
+                    'lab': 'text-gray-600',
+                    'patient': 'text-gray-600',
+                    'user': 'text-gray-600',
+                    'branch': 'text-gray-600',
+                    'reports': 'text-gray-600',
+                    'office': 'text-gray-600',
+                    'api': 'text-gray-600',
+                    'designations': 'text-gray-600 ',
+                    'consultation': 'text-gray-600 ',
+                    'diagnosis': 'text-gray-600 ',
+                    'alert': 'text-gray-600 ',
+                    'visits': 'text-gray-600 ',
+                    'vitals': 'text-gray-600 ',
+                    'dashboard': 'text-gray-600 ',
+                    'role': 'text-gray-600 ',
+                    'audit': 'text-gray-600 ',
+                    'prescription': 'text-gray-600 ',
+                    'setting': 'text-gray-600 ',
+                    'notification': 'text-gray-600 '
                 };
                 for (const key in colors) {
                     if (lowerGroup.includes(key)) return colors[key];

@@ -167,7 +167,7 @@
                 {{-- Table View --}}
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                        <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
                                 <th class="px-5 py-5 w-10">
                                     <div class="flex items-center justify-center">
@@ -176,46 +176,46 @@
                                     </div>
                                 </th>
                                 <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 shadow-sm border border-blue-500/20">
+                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-tag text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('name')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
+                                        <button @click="sortBy('name')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
                                             Category Name
                                             <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('name')"></i>
                                         </button>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600 shadow-sm border border-purple-500/20">
+                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-indent text-xs"></i>
                                         </div>
                                         <span>Description</span>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5 text-center">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-500/20">
+                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-sort-numeric-up text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('display_order')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
+                                        <button @click="sortBy('display_order')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
                                             Order
                                             <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('display_order')"></i>
                                         </button>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5 text-center">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-500/20">
+                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-power-off text-xs"></i>
                                         </div>
                                         <span>Status</span>
                                     </div>
                                 </th>
                                 <th class="px-5 py-5 text-center whitespace-nowrap">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 shadow-sm border border-amber-500/20">
+                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
                                             <i class="fas fa-bolt text-xs"></i>
                                         </div>
                                         Actions
@@ -260,7 +260,7 @@
                                                 <i class="fas fa-folder text-sm"></i>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-bold text-slate-800" x-text="category.name"></p>
+                                                <p class="text-sm font-bold text-navy-800" x-text="category.name"></p>
                                                 <div class="text-[10px] font-bold text-slate-400 tracking-wider" x-text="category.slug || '-'"></div>
                                             </div>
                                         </div>
@@ -279,13 +279,13 @@
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="openViewModal(category)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
+                                            <button @click="openViewModal(category)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
-                                            <button @click="openEditModal(category)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="openEditModal(category)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button @click="confirmDelete(category)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
+                                            <button @click="confirmDelete(category)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </button>
                                         </div>

@@ -310,37 +310,37 @@
                     <tr class="bg-gradient-to-r from-indigo-100 to-indigo-100">
                         <th class="px-8 py-5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-clock text-orange-500"></i>
+                                <i class="fas fa-clock text-gray-600"></i>
                                 Timestamp
                             </div>
                         </th>
                         <th class="px-8 py-5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-user text-blue-500"></i>
+                                <i class="fas fa-user text-gray-600"></i>
                                 Performed By
                             </div>
                         </th>
                         <th class="px-8 py-5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-cube text-slate-500"></i>
+                                <i class="fas fa-cube text-gray-600"></i>
                                 Target Entity
                             </div>
                         </th>
                         <th class="px-8 py-5 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-center gap-2">
-                                <i class="fas fa-tag text-green-500"></i>
+                                <i class="fas fa-tag text-gray-600"></i>
                                 Action
                             </div>
                         </th>
                         <th class="px-8 py-5 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center gap-2">
-                                <i class="fas fa-code-branch text-indigo-500"></i>
+                                <i class="fas fa-code-branch text-gray-600"></i>
                                 Branch
                             </div>
                         </th>
                         <th class="px-8 py-5 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-end gap-2">
-                                <i class="fas fa-search-plus text-orange-500"></i>
+                                <i class="fas fa-search-plus text-gray-600"></i>
                                 Details
                             </div>
                         </th>
@@ -350,15 +350,15 @@
                     <template x-for="log in logs" :key="log.id">
                         <tr class="hover:bg-indigo-50/30 transition-colors group">
                             <td class="px-8 py-5 whitespace-nowrap">
-                                <div class="text-sm font-black text-slate-700" x-text="formatDate(log.created_at)"></div>
+                                <div class="text-sm font-black text-gray-600" x-text="formatDate(log.created_at)"></div>
                                 <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter" x-text="formatTime(log.created_at)"></div>
                             </td>
                             <td class="px-8 py-5 whitespace-nowrap">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-black text-xs shadow-sm border border-indigo-100"
+                                    <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white font-black text-xs shadow-sm border border-indigo-100"
                                          x-text="getInitials(log.user?.name || 'SY')"></div>
                                     <div>
-                                        <div class="text-sm font-black text-slate-800" x-text="log.user?.name || 'System Process'"></div>
+                                        <div class="text-sm font-black text-navy-800" x-text="log.user?.name || 'System Process'"></div>
                                         <div class="text-[10px] font-bold text-slate-400 tracking-wider uppercase" x-text="log.user ? `ID: ${log.user.id}` : 'Automated Task'"></div>
                                     </div>
                                 </div>
@@ -369,7 +369,7 @@
                                         <i class="fas fa-cube text-xs"></i>
                                     </span>
                                     <div>
-                                        <div class="text-sm font-black text-slate-700" x-text="log.entity_type.split('\\').pop()"></div>
+                                        <div class="text-sm font-black text-gray-600" x-text="log.entity_type.split('\\').pop()"></div>
                                         <div class="text-[10px] font-black text-indigo-400 tracking-wider" x-text="`REF ID: #${log.entity_id}`"></div>
                                     </div>
                                 </div>
@@ -379,7 +379,7 @@
                                       :class="getActionClass(log.action)"
                                       x-text="log.action"></span>
                             </td>
-                            <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-slate-500 italic" x-text="log.branch?.name || 'System Core'"></td>
+                            <td class="px-8 py-5 whitespace-nowrap text-sm font-bold text-gray-600 italic" x-text="log.branch?.name || 'System Core'"></td>
                             <td class="px-8 py-5 text-right">
                                 <button @click="viewDetails(log)"
                                         class="inline-flex items-center justify-center h-10 w-10 bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 rounded-xl transition-all hover:shadow-lg">
