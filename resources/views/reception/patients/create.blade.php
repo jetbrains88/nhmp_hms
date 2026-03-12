@@ -12,43 +12,6 @@
 @include('reception.partials.existing-patient-vitals-modal')
 
 <div x-data="receptionDashboard()" x-init="init()">
-<<<<<<< HEAD
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Welcome Card -->
-        <div class="lg:col-span-2 bg-gradient-to-r from-red-500 to-red-600 rounded-xl text-white p-6 shadow-lg">
-            <h2 class="text-2xl font-bold mb-2">Reception Desk</h2>
-            <p class="text-red-100 mb-4">Admit and process patient visits</p>
-            <div class="flex items-center gap-4">
-                <div class="bg-white/20 p-3 rounded-lg">
-                    <i class="fas fa-ambulance text-2xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm">Ready to admit Patients</p>
-                    <p class="text-xl font-bold">Patient Care</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow p-6">
-            <h3 class="text-2xl font-bold text-white mb-4">Today's Stats</h3>
-            <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="text-white">Total Patients</span>
-                    <span class="font-bold text-white">{{ $totalPatients }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-white">Today's Registrations</span>
-                    <span class="font-bold text-white">{{ $todayPatients }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-white">Waiting Patients</span>
-                    <span class="font-bold text-white">{{ $waitingPatients }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-white">In Progress</span>
-                    <span class="font-bold text-white" x-text="inProgressCount">0</span>
-=======
 
     <!-- Welcome & Stats Section -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -77,14 +40,12 @@
                 <div class="flex items-center gap-2">
                     <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                     <span class="text-xs text-blue-700 font-medium">Currently accepting new patients</span>
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
+(NHMP-HMS STARTED)
                 </div>
             </div>
         </div>
     </div>
 
-<<<<<<< HEAD
-=======
     <!-- Today's Stats Card - Updated with amber/orange theme -->
     <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-200 hover:-translate-y-2 transition-all duration-300 group p-6">
         <div class="absolute -top-6 left-6 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-300 shadow-lg shadow-amber-900/40 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
@@ -122,7 +83,7 @@
         </div>
     </div>    
 </div>
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
+    (NHMP-HMS STARTED)
     <div class="mt-8 grid lg:grid-cols-3 gap-6">
         <!-- Left Column - Registration Form -->
         <div class="lg:col-span-2 space-y-6">
@@ -1307,21 +1268,6 @@
                         } else {
                             window.showNotification(data.message || 'Error updating patient', 'error');
                         }
-<<<<<<< HEAD
-=======
-                    } else if (response.status === 422) {
-                        const data = await response.json();
-                        if (data.errors) {
-                            Object.keys(data.errors).forEach(field => {
-                                window.showNotification(data.errors[field][0], 'error');
-                            });
-                        } else {
-                            window.showNotification(data.message || 'Validation failed', 'error');
-                        }
-                    } else {
-                        const data = await response.json().catch(() => ({}));
-                        window.showNotification(data.message || `Error: ${response.status}`, 'error');
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
                     }
                 } catch (error) {
                     console.error('Update error:', error);
@@ -1391,21 +1337,6 @@
                                 window.showNotification(result.message || 'An error occurred', 'error');
                             }
                         }
-<<<<<<< HEAD
-=======
-                    } else if (response.status === 422) {
-                        const result = await response.json();
-                        if (result.errors) {
-                            Object.keys(result.errors).forEach(field => {
-                                window.showNotification(result.errors[field][0], 'error', 'Validation Error');
-                            });
-                        } else {
-                            window.showNotification(result.message || 'Validation failed', 'error');
-                        }
-                    } else {
-                        const result = await response.json().catch(() => ({}));
-                        window.showNotification(result.message || `Error: ${response.status}`, 'error');
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
                     }
                 } catch (error) {
                     console.error('Form submission error:', error);
