@@ -618,10 +618,18 @@
                             </button>
 
                             <div x-show="isMenuOpen" x-collapse class="pl-4 space-y-1 mt-1">
+<<<<<<< HEAD
                                 <a href="{{ Route::has('reception.dashboard') ? route('reception.dashboard') : url('/reception') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.dashboard') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">
                                     <i class="fas fa-tachometer-alt w-6 text-center"></i>
                                     <span class="ml-2">Dashboard</span>
+=======
+                                <!-- Add Patient Button -->
+                                <a href="{{ Route::has('reception.patients.create') ? route('reception.patients.create') : url('/reception/patients/create') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50">
+                                    <i class="fas fa-user-injured w-6 text-center"></i>
+                                    <span class="ml-2">Add Patients</span>
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
                                 </a>
                                 <a href="{{ Route::has('reception.patients.index') ? route('reception.patients.index') : url('/reception/patients') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.patients.*') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">

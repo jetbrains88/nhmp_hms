@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+**/*Zone.Identifier
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
 /vendor/
 /node_modules/
 /public/hot
@@ -18,3 +22,7 @@ yarn-error.log
 /.vscode
 /bootstrap/cache/
 /mysql_data/
+<<<<<<< HEAD
+=======
+
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)

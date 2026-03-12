@@ -7,6 +7,10 @@ EXEC=$(COMPOSE) exec app
 # 🚀 Full First-Time Setup
 # Use this to get a brand new environment running from zero
 setup: build-no-cache
+<<<<<<< HEAD
+=======
+	@if [ ! -f .env ]; then cp .env.example .env; fi
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
 	$(COMPOSE) up -d
 	sleep 5
 	$(EXEC) php artisan key:generate

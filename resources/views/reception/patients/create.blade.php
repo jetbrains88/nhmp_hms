@@ -12,6 +12,7 @@
 @include('reception.partials.existing-patient-vitals-modal')
 
 <div x-data="receptionDashboard()" x-init="init()">
+<<<<<<< HEAD
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Welcome Card -->
         <div class="lg:col-span-2 bg-gradient-to-r from-red-500 to-red-600 rounded-xl text-white p-6 shadow-lg">
@@ -47,11 +48,81 @@
                 <div class="flex justify-between items-center">
                     <span class="text-white">In Progress</span>
                     <span class="font-bold text-white" x-text="inProgressCount">0</span>
+=======
+
+    <!-- Welcome & Stats Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Welcome Card - Updated with soft medical theme -->
+    <div class="lg:col-span-2 relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/30 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group p-6">
+        <div class="absolute -top-6 left-6 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-300 shadow-lg shadow-blue-900/40 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+            <i class="fas fa-hospital-user text-2xl drop-shadow-md text-white"></i>
+        </div>
+        
+        <div class="pt-8">
+            <h2 class="text-2xl font-bold text-blue-800 mb-1">Reception Desk</h2>
+            <p class="text-blue-600 mb-4">Admit and process patient visits</p>
+            
+            <div class="flex items-center gap-4 mt-4">
+                <div class="bg-gradient-to-br from-blue-100 to-cyan-100 p-4 rounded-xl border border-blue-200">
+                    <i class="fas fa-ambulance text-2xl text-blue-600"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-blue-600">Ready to admit Patients</p>
+                    <p class="text-xl font-bold text-blue-800">Patient Care</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 border-t border-blue-200 pt-3">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                    <span class="text-xs text-blue-700 font-medium">Currently accepting new patients</span>
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
                 </div>
             </div>
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+    <!-- Today's Stats Card - Updated with amber/orange theme -->
+    <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-200 hover:-translate-y-2 transition-all duration-300 group p-6">
+        <div class="absolute -top-6 left-6 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-300 shadow-lg shadow-amber-900/40 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
+            <i class="fas fa-chart-line text-2xl drop-shadow-md text-white"></i>
+        </div>
+        
+        <div class="pt-8">
+            <h3 class="text-xl font-bold text-amber-800 mb-4">Today's Stats</h3>
+            
+            <div class="space-y-4">
+                <!-- <div class="flex justify-between items-center border-b border-amber-100 pb-2">
+                    <span class="text-amber-700 font-medium">Total Patients</span>
+                    <span class="font-bold text-amber-900 text-lg">{{ $totalPatients }}</span>
+                </div> -->
+                <div class="flex justify-between items-center border-b border-amber-100 pb-2">
+                    <span class="text-amber-700 font-medium">Today's Registrations</span>
+                    <span class="font-bold text-amber-900 text-lg">{{ $todayPatients }}</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-amber-100 pb-2">
+                    <span class="text-amber-700 font-medium">Waiting Patients</span>
+                    <span class="font-bold text-amber-900 text-lg">{{ $waitingPatients }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-amber-700 font-medium">In Progress</span>
+                    <span class="font-bold text-amber-900 text-lg" x-text="inProgressCount">0</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 border-t border-amber-200 pt-3">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-amber-600"></span>
+                    <span class="text-xs text-amber-700 font-medium">Updated in real-time</span>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
     <div class="mt-8 grid lg:grid-cols-3 gap-6">
         <!-- Left Column - Registration Form -->
         <div class="lg:col-span-2 space-y-6">
@@ -1236,6 +1307,21 @@
                         } else {
                             window.showNotification(data.message || 'Error updating patient', 'error');
                         }
+<<<<<<< HEAD
+=======
+                    } else if (response.status === 422) {
+                        const data = await response.json();
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(field => {
+                                window.showNotification(data.errors[field][0], 'error');
+                            });
+                        } else {
+                            window.showNotification(data.message || 'Validation failed', 'error');
+                        }
+                    } else {
+                        const data = await response.json().catch(() => ({}));
+                        window.showNotification(data.message || `Error: ${response.status}`, 'error');
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
                     }
                 } catch (error) {
                     console.error('Update error:', error);
@@ -1305,6 +1391,21 @@
                                 window.showNotification(result.message || 'An error occurred', 'error');
                             }
                         }
+<<<<<<< HEAD
+=======
+                    } else if (response.status === 422) {
+                        const result = await response.json();
+                        if (result.errors) {
+                            Object.keys(result.errors).forEach(field => {
+                                window.showNotification(result.errors[field][0], 'error', 'Validation Error');
+                            });
+                        } else {
+                            window.showNotification(result.message || 'Validation failed', 'error');
+                        }
+                    } else {
+                        const result = await response.json().catch(() => ({}));
+                        window.showNotification(result.message || `Error: ${response.status}`, 'error');
+>>>>>>> f3c01c7 (NHMP-HMS STARTED)
                     }
                 } catch (error) {
                     console.error('Form submission error:', error);
