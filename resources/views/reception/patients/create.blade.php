@@ -40,7 +40,7 @@
                 <div class="flex items-center gap-2">
                     <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                     <span class="text-xs text-blue-700 font-medium">Currently accepting new patients</span>
-(NHMP-HMS STARTED)
+<!-- (NHMP-HMS STARTED) -->
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
         </div>
     </div>    
 </div>
-    (NHMP-HMS STARTED)
+    <!-- (NHMP-HMS STARTED) -->
     <div class="mt-8 grid lg:grid-cols-3 gap-6">
         <!-- Left Column - Registration Form -->
         <div class="lg:col-span-2 space-y-6">
@@ -596,130 +596,121 @@
         </div> <!-- This closes the receptionDashboard div -->
 
         <!-- Right Column - Quick Search & Patient Lists -->
-        <div class="lg:col-span-1 space-y-6">
-            <!-- Quick Patient Search -->
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Quick Patient Search
-                </h2>
-                <div class="relative">
-                    <input type="text" x-model="searchQuery" @input.debounce.300ms="performSearch"
-                        placeholder="Search by name, EMRN, phone, or CNIC..."
-                        class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all">
-                    <div class="absolute left-4 top-3.5 text-gray-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Search Results -->
-                <div x-show="searchResults.length > 0" class="mt-3 space-y-2 max-h-60 overflow-y-auto">
-                    <template x-for="patient in searchResults" :key="patient.id">
-                        <div @click="selectExistingPatient(patient)"
-                            class="p-3 bg-white border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-bold text-gray-800" x-text="patient.name"></div>
-                                    <div class="text-sm text-gray-600"
-                                        x-text="`${patient.emrn} • ${patient.phone}`"></div>
-                                </div>
-                                <span
-                                    class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Select</span>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-
-                <div x-show="searchQuery && searchResults.length === 0" class="mt-3 text-center py-4">
-                    <p class="text-gray-600">No patients found</p>
-                </div>
-            </div>
-
-            <!-- Waiting Patients -->
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-                    <h2 class="font-bold text-gray-800 text-xl flex items-center gap-2">
-                        <i class="fas fa-clock text-orange-500"></i>
-                        Waiting Patients
-                        <span
-                            class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded-full ml-2">
-                            {{ $waitingPatients }}
-                        </span>
-                    </h2>
-                    <p class="text-xs text-gray-500 mt-1">Click to update status/vitals</p>
-                </div>
-
-                <div class="overflow-y-auto max-h-[450px]" id="waitingPatientsList">
-                    @include('reception.partials.waiting-patients', ['waitingPatientsList' => $waitingPatientsList])
-                </div>
-            </div>
-
-            <!-- In Progress Patients -->
-            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-                    <h2 class="font-bold text-gray-800 text-xl flex items-center gap-2">
-                        <i class="fas fa-user-md text-blue-500"></i>
-                        In Progress
-                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full ml-2"
-                            x-text="inProgressCount">0</span>
-                    </h2>
-                    <p class="text-xs text-gray-500 mt-1">Currently being examined</p>
-                </div>
-
-                <div class="overflow-y-auto max-h-[450px]" id="inProgressPatientsList">
-                    <div class="p-8 text-center" x-show="inProgressCount === 0">
-                        <div class="w-16 h-16 mx-auto mb-4 text-gray-300">
-                            <i class="fas fa-user-md text-4xl"></i>
-                        </div>
-                        <p class="text-gray-500">No patients in progress</p>
-                    </div>
-                    <template x-for="patient in inProgressPatients" :key="patient.id">
-                        <div
-                            class="p-4 hover:bg-blue-50 transition-colors cursor-pointer border-b border-gray-100"
-                            @click="openPatientModal(patient)">
-                            <div class="flex items-start gap-3">
-                                <div class="flex-shrink-0">
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-user-md text-blue-600"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center justify-between">
-                                        <h4 class="font-bold text-gray-800 truncate" x-text="patient.name"></h4>
-                                        <span
-                                            class="text-xs font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded"
-                                            x-text="patient.queue_token"></span>
-                                    </div>
-                                    <div class="mt-1 flex items-center gap-2">
-                                        <span class="text-sm text-gray-600" x-text="patient.phone"></span>
-                                        <span class="text-xs px-2 py-0.5 rounded-full"
-                                            :class="patient.gender === 'male' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
-                                            x-text="patient.gender"></span>
-                                    </div>
-                                    <div class="mt-2">
-                                        <span
-                                            class="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-blue-100 text-blue-800">
-                                            <i class="fas fa-circle text-xs mr-1"></i>
-                                            In Progress
-                                        </span>
-                                        <span class="ml-2 text-xs text-gray-500"
-                                            x-text="patient.waiting_time"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
+<div class="lg:col-span-1 space-y-6">
+    <!-- Quick Patient Search (unchanged) -->
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Quick Patient Search
+        </h2>
+        <div class="relative">
+            <input type="text" x-model="searchQuery" @input.debounce.300ms="performSearch"
+                placeholder="Search by name, EMRN, phone, or CNIC..."
+                class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all">
+            <div class="absolute left-4 top-3.5 text-gray-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
             </div>
         </div>
+        <!-- Search Results (unchanged) -->
+        <div x-show="searchResults.length > 0" class="mt-3 space-y-2 max-h-60 overflow-y-auto">
+            <template x-for="patient in searchResults" :key="patient.id">
+                <div @click="selectExistingPatient(patient)"
+                    class="p-3 bg-white border border-gray-200 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-bold text-gray-800" x-text="patient.name"></div>
+                            <div class="text-sm text-gray-600" x-text="`${patient.emrn} • ${patient.phone}`"></div>
+                        </div>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Select</span>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div x-show="searchQuery && searchResults.length === 0" class="mt-3 text-center py-4">
+            <p class="text-gray-600">No patients found</p>
+        </div>
+    </div>
+
+    <!-- Combined Patient Lists with Tabs -->
+    <!-- Combined Patient Lists with Tabs -->
+<div class="bg-white rounded-2xl shadow-xl border border-gray-100 flex flex-col h-full">
+    <!-- Tabs Header -->
+    <div class="flex border-b">
+        <button type="button" @click="activePatientListTab = 'waiting'"
+            :class="activePatientListTab === 'waiting' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500'"
+            class="tab-btn flex-1 py-4 font-bold">
+            <span class="flex items-center justify-center gap-2">
+                <i class="fas fa-clock text-orange-500"></i>
+                Waiting Patients
+                <span class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded-full">
+                    {{ $waitingPatients }}
+                </span>
+            </span>
+        </button>
+        <button type="button" @click="activePatientListTab = 'in_progress'"
+            :class="activePatientListTab === 'in_progress' ? 'text-blue-600 border-b-2 border-blue-500' : 'text-gray-500'"
+            class="tab-btn flex-1 py-4 font-bold">
+            <span class="flex items-center justify-center gap-2">
+                <i class="fas fa-user-md text-blue-500"></i>
+                In Progress
+                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full"
+                    x-text="inProgressCount">0</span>
+            </span>
+        </button>
+    </div>
+
+    <!-- Waiting Tab Content (scrollable) -->
+    <div x-show="activePatientListTab === 'waiting'" class="flex-1 overflow-y-auto p-6" id="waitingPatientsList">
+        @include('reception.partials.waiting-patients', ['waitingPatientsList' => $waitingPatientsList])
+    </div>
+
+    <!-- In Progress Tab Content (scrollable) -->
+    <div x-show="activePatientListTab === 'in_progress'" class="flex-1 overflow-y-auto p-6" id="inProgressPatientsList">
+        <div class="p-8 text-center" x-show="inProgressCount === 0">
+            <div class="w-16 h-16 mx-auto mb-4 text-gray-300">
+                <i class="fas fa-user-md text-4xl"></i>
+            </div>
+            <p class="text-gray-500">No patients in progress</p>
+        </div>
+        <template x-for="patient in inProgressPatients" :key="patient.id">
+            <div class="p-4 hover:bg-blue-50 transition-colors cursor-pointer border-b border-gray-100"
+                @click="openPatientModal(patient)">
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user-md text-blue-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-gray-800 truncate" x-text="patient.name"></h4>
+                            <span class="text-xs font-mono bg-blue-100 text-blue-800 px-2 py-1 rounded"
+                                x-text="patient.queue_token"></span>
+                        </div>
+                        <div class="mt-1 flex items-center gap-2">
+                            <span class="text-sm text-gray-600" x-text="patient.phone"></span>
+                            <span class="text-xs px-2 py-0.5 rounded-full"
+                                :class="patient.gender === 'male' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
+                                x-text="patient.gender"></span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-blue-100 text-blue-800">
+                                <i class="fas fa-circle text-xs mr-1"></i>
+                                In Progress
+                            </span>
+                            <span class="ml-2 text-xs text-gray-500" x-text="patient.waiting_time"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+</div>
     </div>
 
     <!-- Patient Update Modal (for waiting/in-progress patients) -->
@@ -883,6 +874,7 @@
             isSubmitting: false,
             isUpdating: false,
             showPatientModal: false,
+            activePatientListTab: 'waiting', // or 'in_progress'
             visitType: 'routine',
 
             // New patient form data

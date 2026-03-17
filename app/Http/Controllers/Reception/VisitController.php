@@ -106,7 +106,23 @@ class VisitController extends Controller
      */
     public function show(Visit $visit)
     {
-        $this->authorize('view', $visit);
+        \Log::info('Reception\VisitController@show: Entry', [
+            'visit_id' => $visit->id,
+            'user_id' => auth()->id(),
+            'branch_id' => $visit->branch_id,
+            'session_branch_id' => session('current_branch_id'),
+        ]);
+
+        try {
+            $this->authorize('view', $visit);
+            \Log::info('Reception\VisitController@show: Authorized successfully');
+        } catch (\Exception $e) {
+            \Log::error('Reception\VisitController@show: Authorization failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
         
         $visit->load(['patient', 'doctor', 'vitals', 'diagnoses.prescriptions']);
         

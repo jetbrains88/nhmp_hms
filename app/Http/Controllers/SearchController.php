@@ -42,7 +42,9 @@ class SearchController extends Controller
                         'id' => $patient->id,
                         'title' => $patient->name,
                         'subtitle' => $patient->emrn . ' | ' . $patient->cnic,
-                        'url' => route('reception.patients.show', $patient),
+                        'url' => auth()->user()->hasRole('doctor') 
+                                    ? route('doctor.patients.history', $patient) 
+                                    : route('reception.patients.show', $patient),
                         'icon' => 'user',
                     ];
                 });
@@ -94,7 +96,9 @@ class SearchController extends Controller
                         'id' => $visit->id,
                         'title' => 'Visit: ' . $visit->queue_token,
                         'subtitle' => $visit->patient->name . ' | ' . $visit->status,
-                        'url' => route('reception.visits.show', $visit),
+                        'url' => auth()->user()->hasRole('doctor')
+                                    ? route('doctor.consultancy.show', $visit)
+                                    : route('reception.visits.show', $visit),
                         'icon' => 'clipboard',
                     ];
                 });

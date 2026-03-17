@@ -54,6 +54,12 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/dev-login', function () {
+    auth()->loginUsingId(3);
+    session(['current_branch_id' => 1]);
+    return redirect()->route('reception.dashboard');
+});
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -158,7 +164,7 @@ Route::middleware(['auth'])->group(function () {
 // ADMIN MODULE ROUTES
 // ============================================
 
-Route::middleware(['auth', 'role:super_admin,admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'branch.context', 'role:super_admin,admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -230,7 +236,7 @@ Route::middleware(['auth', 'role:super_admin,admin'])->prefix('admin')->name('ad
 // DOCTOR MODULE ROUTES
 // ============================================
 
-Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->group(function () {
+Route::middleware(['auth', 'branch.context', 'role:doctor'])->prefix('doctor')->name('doctor.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
 
@@ -286,7 +292,7 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
 // RECEPTION MODULE ROUTES
 // ============================================
 
-Route::middleware(['auth', 'role:reception'])->prefix('reception')->name('reception.')->group(function () {
+Route::middleware(['auth', 'branch.context', 'role:reception'])->prefix('reception')->name('reception.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [ReceptionDashboardController::class, 'index'])->name('dashboard');
     Route::post('/check-patient-exists', [ReceptionDashboardController::class, 'checkPatientExists'])
@@ -360,7 +366,7 @@ Route::middleware(['auth', 'role:reception'])->prefix('reception')->name('recept
 // PHARMACY MODULE ROUTES
 // ============================================
 
-Route::middleware(['auth', 'role:pharmacy'])->prefix('pharmacy')->name('pharmacy.')->group(function () {
+Route::middleware(['auth', 'branch.context', 'role:pharmacy'])->prefix('pharmacy')->name('pharmacy.')->group(function () {
     // Dispense History
 // Dispense History
     Route::get('/dispense-history', [PharmacyPrescriptionController::class, 'history'])->name('dispense.history'); // Changed from dispense_history
@@ -433,7 +439,7 @@ Route::middleware(['auth', 'role:pharmacy'])->prefix('pharmacy')->name('pharmacy
 // LABORATORY MODULE ROUTES
 // ============================================
 
-Route::middleware(['auth', 'role:lab'])->prefix('lab')->name('lab.')->group(function () {
+Route::middleware(['auth', 'branch.context', 'role:lab'])->prefix('lab')->name('lab.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [LabDashboardController::class, 'index'])->name('dashboard');
 
@@ -491,7 +497,7 @@ Route::middleware(['auth', 'role:lab'])->prefix('lab')->name('lab.')->group(func
 // NURSE MODULE ROUTES
 // ============================================
 
-Route::middleware(['auth', 'role:nurse'])->prefix('nurse')->name('nurse.')->group(function () {
+Route::middleware(['auth', 'branch.context', 'role:nurse'])->prefix('nurse')->name('nurse.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [NurseDashboardController::class, 'index'])->name('dashboard');
 

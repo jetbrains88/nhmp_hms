@@ -108,21 +108,51 @@ class DashboardController extends Controller
     public function quickSearch(Request $request)
     {
         $query = $request->get('q') ?? $request->get('search');
+        $branchId = session('current_branch_id');
+        
+        \Log::info('quickSearch: Start', [
+            'query' => $query,
+            'session_branch_id' => $branchId,
+            'auth_user_branch_id' => auth()->user()->current_branch_id,
+            'user_id' => auth()->id()
+        ]);
 
-        if (!$query) {
-            return response()->json([]);
+        // Explicitly set branch if missing (fallback)
+        if (!$branchId) {
+            $branchId = auth()->user()->current_branch_id;
+            \Log::warning('quickSearch: branchId missing from session, using user fallback', ['branch_id' => $branchId]);
         }
 
-        $patients = Patient::where('branch_id', session('current_branch_id'))
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'LIKE', "%{$query}%")
-                    ->orWhere('cnic', 'LIKE', "%{$query}%")
-                    ->orWhere('emrn', 'LIKE', "%{$query}%")
-                    ->orWhere('phone', 'LIKE', "%{$query}%");
-            })
-            ->limit(10)
-            ->get(['id', 'name', 'cnic', 'emrn', 'phone']);
+        try {
+            $patients = Patient::where('branch_id', $branchId)
+                ->where(function ($q) use ($query) {
+                    $q->where('name', 'LIKE', "%{$query}%")
+                        ->orWhere('cnic', 'LIKE', "%{$query}%")
+                        ->orWhere('emrn', 'LIKE', "%{$query}%")
+                        ->orWhere('phone', 'LIKE', "%{$query}%");
+                })
+                ->limit(10)
+                ->get(['id', 'name', 'cnic', 'emrn', 'phone']);
 
-        return response()->json($patients);
+            \Log::info('quickSearch: Results found', [
+                'count' => $patients->count(),
+                'sql' => Patient::where('branch_id', $branchId)
+                    ->where(function ($q) use ($query) {
+                        $q->where('name', 'LIKE', "%{$query}%")
+                            ->orWhere('cnic', 'LIKE', "%{$query}%")
+                            ->orWhere('emrn', 'LIKE', "%{$query}%")
+                            ->orWhere('phone', 'LIKE', "%{$query}%");
+                    })->toSql(),
+                'bindings' => [$branchId, "%{$query}%", "%{$query}%", "%{$query}%", "%{$query}%"]
+            ]);
+
+            return response()->json($patients);
+        } catch (\Exception $e) {
+            \Log::error('quickSearch: Exception', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([]);
+        }
     }
 }

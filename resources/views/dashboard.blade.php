@@ -142,10 +142,6 @@
         }
 
         .circular-progress {
-<<<<<<< HEAD
-=======
-            color: #ec407a;
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
             width: 160px;
             height: 160px;
             transform: rotate(-90deg);
@@ -412,13 +408,8 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <!-- Good Stock Card -->
             <div class="stock-card bg-gradient-to-br from-blue-600 to-cyan-400 shadow-lg" x-show="!isLoading"
-=======
-            <!-- Good Stock Card --> 
-            <div class="stock-card bg-gradient-to-br from-sky-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200" x-show="!isLoading"
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
                 x-transition:enter="transition ease-out duration-500 delay-200"
                 x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100">
                 <div class="text-sm font-bold uppercase tracking-widest opacity-90">Good Stock</div>
@@ -432,11 +423,7 @@
                         </circle>
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center">
-<<<<<<< HEAD
                         <span class="text-3xl font-bold text-white progress-percentage">{{ $inStockPercentage }}%</span>
-=======
-                        <span class="text-3xl font-bold text-cyan-700 progress-percentage">{{ $inStockPercentage }}%</span>
->>>>>>> f3c01c7 (NHMP-HMS STARTED)
                     </div>
                 </div>
                 <div

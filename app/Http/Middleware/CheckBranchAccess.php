@@ -22,7 +22,18 @@ class CheckBranchAccess
         if ($branchId) {
             $hasAccess = $user->branches()->where('branch_id', $branchId)->exists();
             
+            \Log::info('CheckBranchAccess: Checking access', [
+                'user_id' => $user->id,
+                'branch_id' => $branchId,
+                'has_access' => $hasAccess
+            ]);
+
             if (!$hasAccess) {
+                \Log::warning('CheckBranchAccess: Forbidden access', [
+                    'user_id' => $user->id,
+                    'branch_id' => $branchId,
+                    'url' => $request->fullUrl()
+                ]);
                 abort(403, 'You do not have access to this branch.');
             }
         }

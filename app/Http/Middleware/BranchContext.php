@@ -24,6 +24,8 @@ class BranchContext
             return $next($request);
         }
 
+        \Log::info('BranchContext: Processing for user', ['user_id' => $user->id, 'session_id' => Session::getId()]);
+
         // Check if user has any branch access
         if ($user->branches()->count() === 0) {
             Auth::logout();
@@ -43,6 +45,11 @@ class BranchContext
 
         // Share branch info with views
         $this->shareBranchInfo();
+
+        \Log::info('BranchContext: Branch verified', [
+            'branch_id' => Session::get('current_branch_id'),
+            'branch_name' => Session::get('current_branch_name')
+        ]);
 
         // Add branch_id to request for easy access
         $request->merge(['branch_id' => Session::get('current_branch_id')]);

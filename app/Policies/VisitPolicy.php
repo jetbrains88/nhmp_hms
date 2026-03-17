@@ -18,45 +18,80 @@ class VisitPolicy
     /**
      * Determine if user can view the visit
      */
-    public function view(User $user, Visit $visit): bool
+    public function view(User $user, Visit $visit)
     {
-        if (!$user->hasPermission('view_visits')) {
+        try {
+            \Log::info('VisitPolicy@view: Start', [
+                'user_id' => $user->id,
+                'user_roles' => $user->roles->pluck('name'),
+                'visit_id' => $visit->id,
+                'visit_branch_id' => $visit->branch_id
+            ]);
+
+            if (!$user->hasPermission('view_visits')) {
+                \Log::warning('VisitPolicy@view: Permission [view_visits] missing');
+                return false;
+            }
+
+            // Super admin can view all
+            if ($user->hasRole('super_admin')) {
+                \Log::info('VisitPolicy@view: Allowed as super_admin');
+                return true;
+            }
+
+            // Check branch access
+            // Use current_branch_id attribute or relationship
+            $hasBranchAccess = $user->branches()->where('branch_id', $visit->branch_id)->exists();
+            \Log::info('VisitPolicy@view: Branch access check', ['has_access' => $hasBranchAccess]);
+
+            if (!$hasBranchAccess) {
+                \Log::warning('VisitPolicy@view: Denied due to branch access');
+                return false;
+            }
+
+            // Role-specific access rules
+            $canView = $user->hasPermission('view_all_visits');
+            \Log::info('VisitPolicy@view: Initial canView (from view_all_visits)', ['can_view' => $canView]);
+
+            if ($user->hasRole('reception')) {
+                // Reception can view all visits in their branch
+                \Log::info('VisitPolicy@view: Allowed as reception');
+                $canView = true;
+            }
+
+            if (!$canView && $user->hasRole('doctor')) {
+                // Doctors can view visits assigned to them
+                if ($visit->doctor_id === $user->id) {
+                    \Log::info('VisitPolicy@view: Allowed as assigned doctor');
+                    $canView = true;
+                }
+            }
+
+            if (!$canView && $user->hasRole('nurse')) {
+                // Nurses can view visits where they recorded vitals
+                if ($visit->vitals()->where('recorded_by', $user->id)->exists()) {
+                    \Log::info('VisitPolicy@view: Allowed as recording nurse');
+                    $canView = true;
+                }
+            }
+
+            if (!$canView && $user->hasRole('lab')) {
+                // Lab can view visits with lab orders
+                if ($visit->labOrders()->exists()) {
+                    \Log::info('VisitPolicy@view: Allowed as lab staff');
+                    $canView = true;
+                }
+            }
+
+            \Log::info('VisitPolicy@view: Final decision', ['can_view' => $canView]);
+            return $canView;
+        } catch (\Exception $e) {
+            \Log::error('VisitPolicy@view: Exception occurred', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return false;
         }
-
-        // Super admin can view all
-        if ($user->hasRole('super_admin')) {
-            return true;
-        }
-
-        // Check branch access
-        if (!$user->branches()->where('branch_id', $visit->branch_id)->exists()) {
-            return false;
-        }
-
-        // Role-specific access rules
-        if ($user->hasRole('doctor')) {
-            // Doctors can view visits assigned to them OR any visit in their branch (for consultation)
-            return $visit->doctor_id === $user->id || $user->hasPermission('view_all_visits');
-        }
-
-        if ($user->hasRole('nurse')) {
-            // Nurses can view visits where they recorded vitals or any in their branch
-            return $visit->vitals()->where('recorded_by', $user->id)->exists() || 
-                   $user->hasPermission('view_all_visits');
-        }
-
-        if ($user->hasRole('reception')) {
-            // Reception can view all visits in their branch
-            return true;
-        }
-
-        if ($user->hasRole('lab')) {
-            // Lab can view visits with lab orders
-            return $visit->labOrders()->exists();
-        }
-
-        return $user->hasPermission('view_all_visits');
     }
 
     /**

@@ -27,6 +27,13 @@ class RoleMiddleware
             }
         }
         
+        \Log::warning('RoleMiddleware: Forbidden access', [
+            'user_id' => $user->id,
+            'user_roles' => $user->roles->pluck('name')->toArray(),
+            'required_roles' => $roles,
+            'url' => $request->fullUrl()
+        ]);
+        
         abort(403, 'You do not have the required role to access this page.');
     }
 }
