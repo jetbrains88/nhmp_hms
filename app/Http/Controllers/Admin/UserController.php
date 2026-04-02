@@ -166,15 +166,18 @@ class UserController extends Controller
     }
 
     /**
-     * Get user statistics for dashboard
+     * Get user statistics with filters
      */
-    public function stats()
+    public function stats(Request $request)
     {
+        $query = User::query();
+        $query = $this->applyFiltersToQuery($query, $request);
+
         $stats = [
-            'total' => User::count(),
-            'active' => User::where('is_active', true)->count(),
-            'inactive' => User::where('is_active', false)->count(),
-            'admins' => User::whereHas('roles', function ($q) {
+            'total' => (clone $query)->count(),
+            'active' => (clone $query)->where('is_active', true)->count(),
+            'inactive' => (clone $query)->where('is_active', false)->count(),
+            'admins' => (clone $query)->whereHas('roles', function ($q) {
                 $q->whereIn('name', ['admin', 'super_admin']);
             })->count()
         ];
@@ -188,7 +191,32 @@ class UserController extends Controller
     public function data(Request $request)
     {
         $query = User::with(['roles', 'branches']);
+        $query = $this->applyFiltersToQuery($query, $request);
 
+        // Sort
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
+        $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
+        
+        // Ensure sort field is valid (add more allowed fields as needed)
+        $allowedSortFields = ['name', 'email', 'created_at', 'last_login_at'];
+        if (!in_array($sort, $allowedSortFields)) {
+            $sort = 'name';
+        }
+        
+        $query->orderBy($sort, $direction);
+
+        $perPage = $request->get('per_page', 10);
+        $users = $query->paginate($perPage);
+
+        return response()->json($users);
+    }
+
+    /**
+     * Apply common filters to user query
+     */
+    protected function applyFiltersToQuery($query, Request $request)
+    {
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
@@ -198,19 +226,23 @@ class UserController extends Controller
             });
         }
 
-        // Filters
-        if ($request->active == '1' && $request->inactive == '0') {
-            $query->where('is_active', true);
-        } elseif ($request->active == '0' && $request->inactive == '1') {
-            $query->where('is_active', false);
+        // Status Filter
+        if ($request->filled('filterStatus')) {
+            if ($request->filterStatus === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->filterStatus === 'inactive') {
+                $query->where('is_active', false);
+            }
         }
 
+        // Roles Filter
         if ($request->filled('role')) {
             $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('roles.id', $request->role);
             });
         }
 
+        // Date Range Filters
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);
         }
@@ -219,15 +251,25 @@ class UserController extends Controller
             $query->whereDate('created_at', '<=', $request->end_date);
         }
 
-        // Sort
-        $sort = $request->get('sort', 'name');
-        $direction = $request->get('direction', 'asc');
-        $query->orderBy($sort, $direction);
+        // Security Isolation: Non-super admins are always restricted to their assigned branch
+        if (!auth()->user()->isSuperAdmin()) {
+            $userBranchId = auth()->user()->primary_branch_id;
+            if ($userBranchId) {
+                $query->whereHas('branches', function ($q) use ($userBranchId) {
+                    $q->where('branches.id', $userBranchId);
+                });
+            }
+        }
 
-        $perPage = $request->get('per_page', 10);
-        $users = $query->paginate($perPage);
+        // Optional Branch Filter (Explicitly selected by the user - mostly for super-admins)
+        if ($request->filled('branch_id')) {
+            $filterBranchId = $request->branch_id;
+            $query->whereHas('branches', function ($q) use ($filterBranchId) {
+                $q->where('branches.id', (int) $filterBranchId);
+            });
+        }
 
-        return response()->json($users);
+        return $query;
     }
 
     /**

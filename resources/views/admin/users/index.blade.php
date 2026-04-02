@@ -7,732 +7,524 @@
 @section('content')
     <div x-data="userManagement({{ json_encode($roles) }}, {{ json_encode($branches) }})" x-init="init()" class="space-y-6">
 
-        <!-- Light Themed Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 gap-y-10 mt-8 p-4">
+        <!-- Futuristic Floating Filter Toggle -->
+        <button @click="showSidebar = true"
+            x-show="!showSidebar"
+            x-transition:enter="transition ease-out duration-500 delay-100"
+            x-transition:enter-start="translate-x-full opacity-0"
+            x-transition:enter-end="translate-x-0 opacity-100"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="translate-x-0 opacity-100"
+            x-transition:leave-end="translate-x-full opacity-0"
+            class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-gradient-to-b from-indigo-500 to-indigo-700 text-white p-2.5 py-6 rounded-l-2xl shadow-[0_0_30px_-5px_rgba(79,70,229,0.4)] hover:shadow-[-5px_0_40px_-5px_rgba(79,70,229,0.7)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-400/50 group cursor-pointer"
+            title="Open User Filters">
+            <div class="relative">
+                <div class="absolute inset-0 bg-white/20 blur-md rounded-full group-hover:bg-white/40 transition-colors duration-300"></div>
+                <i class="fas fa-sliders-h relative z-10 drop-shadow-lg group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
+            </div>
+            <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 drop-shadow-md text-indigo-50">User Filters</span>
+        </button>
+
+        <!-- Stats Cards - Vibrant Premium Style -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
 
             <!-- Total Users Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/30 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click.throttle.500ms="setFilter('all')" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-300 shadow-lg shadow-blue-900/40 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-users text-2xl drop-shadow-md text-blue-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                 @click.throttle.500ms="setFilter('all')" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 shadow-lg shadow-blue-900/30 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-users text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-blue-600 uppercase">
-                        Total Users
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-blue-800 drop-shadow-md font-mono"
-                        x-text="stats.total ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="block antialiased font-sans text-xs font-bold tracking-wider text-sky-500 uppercase">Total Users</p>
+                    <h4 class="block antialiased text-3xl font-bold text-sky-700 drop-shadow-sm font-mono" x-text="stats.total ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-blue-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-sky-200 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-blue-600"
-                            :class="{ 'animate-pulse': stats.total > 0 }"></span>
-                        <span class="text-xs text-blue-700 font-medium">All Registered Users</span>
-                    </div>
-                    <!-- Tooltip -->
-                    <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                        <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                            <span class="font-semibold">Click to view all users</span>
-                            <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                            </div>
-                        </div>
+                        <span class="h-1.5 w-1.5 rounded-full bg-sky-600" :class="{ 'animate-pulse': stats.total > 0 }"></span>
+                        <span class="text-[10px] text-sky-700 font-bold uppercase tracking-tight">All Registered Users</span>
                     </div>
                 </div>
             </div>
 
             <!-- Active Users Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/30 border border-emerald-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click.throttle.500ms="setFilter('active')"
-                :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-300 shadow-lg shadow-emerald-900/40 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-user-check text-2xl drop-shadow-md text-emerald-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/20 border border-emerald-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                 @click.throttle.500ms="setFilter('active')" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-lg shadow-emerald-900/30 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-user-check text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-teal-600 uppercase">
-                        Active Users
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-teal-800 drop-shadow-md font-mono"
-                        x-text="stats.active ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="block antialiased font-sans text-xs font-bold tracking-wider text-teal-500 uppercase">Active Users</p>
+                    <h4 class="block antialiased text-3xl font-bold text-teal-700 drop-shadow-sm font-mono" x-text="stats.active ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-teal-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-teal-200 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-teal-600"
-                            :class="{ 'animate-pulse': stats.active > 0 }"></span>
-                        <span class="text-xs text-teal-700 font-medium">Currently Active</span>
-                    </div>
-                    <!-- Tooltip -->
-                    <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                        <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                            <span class="font-semibold">Click to view active users</span>
-                            <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                            </div>
-                        </div>
+                        <span class="h-1.5 w-1.5 rounded-full bg-teal-600" :class="{ 'animate-pulse': stats.active > 0 }"></span>
+                        <span class="text-[10px] text-teal-700 font-bold uppercase tracking-tight">Currently Active</span>
                     </div>
                 </div>
             </div>
 
             <!-- Administrators Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/30 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click.throttle.500ms="setFilter('admins')"
-                :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-300 shadow-lg shadow-purple-900/40 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-user-shield text-2xl drop-shadow-md text-purple-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/20 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                 @click.throttle.500ms="setFilter('admins')" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-400 shadow-lg shadow-purple-900/30 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-user-shield text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-purple-600 uppercase">
-                        Administrators
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-purple-800 drop-shadow-md font-mono"
-                        x-text="stats.admins ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="block antialiased font-sans text-xs font-bold tracking-wider text-purple-500 uppercase">Administrators</p>
+                    <h4 class="block antialiased text-3xl font-bold text-purple-700 drop-shadow-sm font-mono" x-text="stats.admins ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-purple-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-purple-200 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-purple-600"
-                            :class="{ 'animate-pulse': stats.admins > 0 }"></span>
-                        <span class="text-xs text-purple-700 font-medium">System Admins</span>
-                    </div>
-                    <!-- Tooltip -->
-                    <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                        <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                            <span class="font-semibold">Click to view administrators</span>
-                            <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                            </div>
-                        </div>
+                        <span class="h-1.5 w-1.5 rounded-full bg-purple-600" :class="{ 'animate-pulse': stats.admins > 0 }"></span>
+                        <span class="text-[10px] uppercase font-bold text-purple-700 tracking-tight">System Admins</span>
                     </div>
                 </div>
             </div>
 
             <!-- Inactive Users Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl shadow-lg shadow-rose-500/30 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click.throttle.500ms="setFilter('inactive')"
-                :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-500 to-orange-300 shadow-lg shadow-rose-900/40 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-clock text-2xl drop-shadow-md text-rose-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl shadow-lg shadow-rose-500/20 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                 @click.throttle.500ms="setFilter('inactive')" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-orange-400 shadow-lg shadow-rose-900/30 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-clock text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-rose-600 uppercase">
-                        Inactive Users
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-rose-800 drop-shadow-md font-mono"
-                        x-text="stats.inactive ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="block antialiased font-sans text-xs font-bold tracking-wider text-rose-500 uppercase">Inactive Users</p>
+                    <h4 class="block antialiased text-3xl font-bold text-rose-700 drop-shadow-sm font-mono" x-text="stats.inactive ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-rose-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-rose-200 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-rose-600"
-                            :class="{ 'animate-pulse': stats.inactive > 0 }"></span>
-                        <span class="text-xs text-rose-700 font-medium">Inactive Accounts</span>
-                    </div>
-                    <!-- Tooltip -->
-                    <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                        <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                            <span class="font-semibold">Click to view inactive users</span>
-                            <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                            </div>
-                        </div>
+                        <span class="h-1.5 w-1.5 rounded-full bg-rose-600" :class="{ 'animate-pulse': stats.inactive > 0 }"></span>
+                        <span class="text-[10px] uppercase font-bold text-rose-700 tracking-tight">Inactive Accounts</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Enhanced Users List -->
-        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <!-- Header with Filters -->
-            <div class="mb-0 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight flex items-center gap-3">
-                            <i class="fas fa-users-cog text-blue-600"></i>
-                            User Management
-                            <span class="text-lg font-normal text-gray-600">
-                                (<span x-text="pagination.total"></span> records)
-                            </span>
-                        </h2>
-                        <p class="text-sm text-navy-600 mt-1">
-                            Manage system users, roles, and permissions
-                        </p>
-                    </div>
+        <!-- MAIN CONTROL PANEL -->
+        <div class="mt-8 grid lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Column - Table -->
+            <div class="space-y-6 transition-all duration-300" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 flex flex-col min-h-[500px]">
 
-                    <div class="flex flex-wrap gap-3 items-center">
-                        <!-- Records per page -->
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-gray-700">Show:</span>
-                            <select x-model="pagination.per_page" @change="fetchUsers()"
-                                class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </div>
-
-                        <!-- Quick Actions -->
-                        <div class="flex gap-2">
-                            <button @click="clearFilters()"
-                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-colors text-sm font-medium">
-                                <i class="fas fa-sync-alt"></i>
-                                Refresh
-                            </button>
-                            <button @click="showAdvancedFilters = !showAdvancedFilters"
-                                :class="showAdvancedFilters ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' :
-                                    'bg-gradient-to-r from-orange-500 to-orange-600 text-white'"
-                                class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-medium">
-                                <i class="fas fa-filter"></i>
-                                Filters
-                            </button>
-                            <!-- Add User Button -->
-                            <button @click="openAddModal()"
-                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg transition-colors text-sm font-medium shadow-md hover:shadow-lg">
-                                <i class="fas fa-user-plus"></i>
-                                Add User
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Advanced Filters (Collapsible) -->
-                <div x-show="showAdvancedFilters" x-transition
-                    class="mt-6 bg-white p-6 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-lg">
-
-                    <!-- First Row - Search, Status, Role (3 columns) -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Search Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
+                    <!-- Panel Header -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-indigo-100/50">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center border border-indigo-100 shadow-sm transition-transform hover:scale-105 duration-300">
+                                    <i class="fas fa-users-cog text-2xl text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight flex items-center gap-3">
+                                        User Management
+                                        <span class="text-lg font-normal text-gray-600">
+                                            (<span x-text="pagination.total"></span> records)
+                                        </span>
+                                    </h2>
+                                    <p class="text-gray-600 text-sm font-medium mt-1">Manage system users, roles, and permissions</p>
+                                </div>
                             </div>
-                            <input type="text" x-model="searchQuery" @input.debounce.500ms="searchUsers()"
-                                placeholder="Search users by name, email..."
-                                class="pl-10 w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
+
+                            <div class="flex flex-wrap gap-4 items-center">
+                                <div class="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5 shadow-sm">
+                                    <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase">Rows</span>
+                                    <select x-model="pagination.per_page" @change="fetchUsers()" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+
+                                <button @click="openAddModal()"
+                                    class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
+                                    <i class="fas fa-user-plus group-hover:-translate-y-1 transition-transform duration-300"></i>
+                                    Add User
+                                </button>
+
+                                <button @click="showSidebar = !showSidebar"
+                                    class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+                                    :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
+                                    <i class="fas" :class="showSidebar ? 'fa-eye-slash' : 'fa-filter'"></i>
+                                </button>
+
+                                <button @click="clearFilters(); fetchUsers()" 
+                                    class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+                                    title="Refresh">
+                                    <i class="fas fa-sync-alt" :class="loading ? 'animate-spin' : ''"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- Status Filter -->
-                        <div>
-                            <select x-model="filterStatus" @change="applyFilters"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                                <option value="">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
+                        <!-- Active Filters Summary -->
+                        <div x-show="searchQuery || filterStatus || filters.role || registrationFrom || registrationTo"
+                             class="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-indigo-100" style="padding-left: 1.5rem; padding-right: 1.5rem; padding-bottom: 1rem;">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-2">Active filters:</span>
+                            
+                            <template x-if="searchQuery">
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-100">
+                                    <i class="fas fa-search text-[10px]"></i>
+                                    <span x-text="searchQuery"></span>
+                                    <button @click="searchQuery = ''; applyFilters()" class="hover:text-blue-900"><i class="fas fa-times"></i></button>
+                                </span>
+                            </template>
 
-                        <!-- Role Filter -->
-                        <div>
-                            <select x-model="filters.role" @change="applyFilters"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                                <option value="">All Roles</option>
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->display_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                            <template x-if="filterStatus">
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-bold border border-emerald-100">
+                                    <i class="fas" :class="filterStatus === 'active' ? 'fa-user-check' : 'fa-user-clock'"></i>
+                                    <span x-text="filterStatus === 'active' ? 'Active' : 'Inactive'"></span>
+                                    <button @click="filterStatus = ''; applyFilters()" class="hover:text-emerald-900"><i class="fas fa-times"></i></button>
+                                </span>
+                            </template>
 
-                    <!-- Second Row - Date From, Date To, Clear Button -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <!-- Registration From -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Registration From</label>
-                            <input type="date" x-model="registrationFrom" @change="applyFilters"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                        </div>
+                            <template x-if="filters.role">
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 text-purple-700 rounded-lg text-xs font-bold border border-purple-100">
+                                    <i class="fas fa-user-tag text-[10px]"></i>
+                                    <span x-text="getRoleNameById(filters.role)"></span>
+                                    <button @click="filters.role = ''; applyFilters()" class="hover:text-purple-900"><i class="fas fa-times"></i></button>
+                                </span>
+                            </template>
 
-                        <!-- Registration To -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Registration To</label>
-                            <input type="date" x-model="registrationTo" @change="applyFilters"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                        </div>
+                            <template x-if="registrationFrom || registrationTo">
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100">
+                                    <i class="fas fa-calendar text-[10px]"></i>
+                                    <span x-text="`${registrationFrom || '...'} to ${registrationTo || '...'}`"></span>
+                                    <button @click="registrationFrom = ''; registrationTo = ''; applyFilters()" class="hover:text-amber-900"><i class="fas fa-times"></i></button>
+                                </span>
+                            </template>
 
-                        <!-- Clear All Filters Button -->
-                        <div class="flex items-end">
-                            <button @click="clearFilters()"
-                                class="w-full flex items-center justify-center text-white py-2.5
-                       text-center bg-gradient-to-r from-rose-500 to-rose-600
-                       rounded-lg font-medium hover:from-rose-600 hover:to-rose-700
-                       disabled:opacity-50 disabled:cursor-not-allowed transition-all
-                       gap-2 shadow-md hover:shadow-lg h-[42px]">
-                                <i class="fas fa-filter-circle-xmark"></i>
-                                Clear All Filters
+                            <button @click="clearFilters()" class="text-[10px] font-black text-rose-500 hover:text-rose-700 uppercase tracking-widest ml-auto transition-colors">
+                                Clear All
                             </button>
                         </div>
                     </div>
 
-                    <!-- Active Filters Summary -->
-                    <div x-show="searchQuery || filterStatus || filters.role || registrationFrom || registrationTo"
-                        class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-purple-200">
-                        <span class="text-xs font-medium text-gray-500">Active filters:</span>
-
-                        <template x-if="searchQuery">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
-                                <i class="fas fa-search"></i>
-                                <span x-text="searchQuery"></span>
-                                <button @click="searchQuery = ''; applyFilters()" class="ml-1 hover:text-blue-900">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </span>
-                        </template>
-
-                        <template x-if="filterStatus">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs">
-                                <i class="fas"
-                                    :class="filterStatus === 'active' ? 'fa-user-check' : 'fa-user-clock'"></i>
-                                <span x-text="filterStatus === 'active' ? 'Active' : 'Inactive'"></span>
-                                <button @click="filterStatus = ''; applyFilters()" class="ml-1 hover:text-green-900">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </span>
-                        </template>
-
-                        <template x-if="filters.role">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-xs">
-                                <i class="fas fa-user-tag"></i>
-                                <span x-text="getRoleNameById(filters.role)"></span>
-                                <button @click="filters.role = ''; applyFilters()" class="ml-1 hover:text-purple-900">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </span>
-                        </template>
-
-                        <template x-if="registrationFrom">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 rounded-md text-xs">
-                                <i class="fas fa-calendar-start"></i>
-                                <span x-text="registrationFrom"></span>
-                                <button @click="registrationFrom = ''; applyFilters()" class="ml-1 hover:text-amber-900">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </span>
-                        </template>
-
-                        <template x-if="registrationTo">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-amber-100 text-amber-700 rounded-md text-xs">
-                                <i class="fas fa-calendar-end"></i>
-                                <span x-text="registrationTo"></span>
-                                <button @click="registrationTo = ''; applyFilters()" class="ml-1 hover:text-amber-900">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </span>
-                        </template>
-
-                        <button @click="clearFilters()" class="text-xs text-rose-600 hover:text-rose-800 underline ml-2">
-                            Clear all
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Users Table -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100">
-                        <tr>
-                             <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-id-card text-blue-500"></i>
-                                    User Information
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-envelope text-purple-500"></i>
-                                    Email & Status
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-shield-alt text-green-500"></i>
-                                    Roles & Permissions
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-clock text-orange-500"></i>
-                                    Activity
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-cogs text-orange-500"></i>
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100" x-show="!loading && users && users.length > 0">
-                        <template x-for="user in users" :key="user.id">
-                            <tr class="hover:bg-blue-50/30 transition-colors duration-200">
-                                <!-- User Info Column (Name & Avatar) -->
-                                <td class="px-5 py-4 whitespace-nowrap">
-                                    <div class="flex items-start space-x-4">
-                                        <!-- Avatar -->
-                                        <div class="flex-shrink-0">
-                                            <div class="h-12 w-12 rounded-full flex bg-gradient-to-br from-indigo-400 to-indigo-600 items-center justify-center text-white text-lg font-bold shadow-lg">
-                                                <span x-text="getInitials(user.name)"></span>
-                                            </div>
+                    <!-- View Content (Table Area) -->
+                    <div class="relative min-h-[400px]">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                                    <tr>
+                                        <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('name')">
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-200 transition-all">
+                                            <i class="fas fa-id-card text-xs"></i>
                                         </div>
-
-                                        <!-- Details -->
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center gap-2 mb-1">
-                                                <p class="text-xl font-bold text-navy-800 truncate" x-text="user.name">
-                                                </p>
-                                            </div>
-
-                                            <!-- ID and other info -->
-                                            <div class="flex flex-wrap gap-2 items-center">
-                                                <div class="flex items-center text-xs text-gray-500">
-                                                    <i class="fas fa-id-badge mr-1 text-blue-500"></i>
-                                                    <span>ID: <span x-text="user.id"></span></span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <span>User Information</span>
+                                        <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'name'"></i>
+                                        <i class="fas fa-sort-up ml-1 text-indigo-500" x-show="sortField === 'name' && sortDirection === 'asc'"></i>
+                                        <i class="fas fa-sort-down ml-1 text-indigo-500" x-show="sortField === 'name' && sortDirection === 'desc'"></i>
                                     </div>
-                                </td>
-
-                                <!-- Email & Status Column -->
-                                <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex flex-col space-y-2 min-w-[160px]">
-                                        <!-- Email -->
-                                        <div class="group relative">
-                                            <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
-                                                :title="`Email: ${user.email}`">
-                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
-                                                    <i class="fas fa-envelope"></i>
-                                                </span>
-                                                <span class="text-sm" x-text="user.email"></span>
-                                            </span>
-                                            <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                <div
-                                                    class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                    <span class="font-semibold">Email Address</span>
-                                                    <div
-                                                        class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                                                    </div>
-                                                </div>
-                                            </div>
+                                </th>
+                                        <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('is_active')">
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center text-rose-500 shadow-sm border border-rose-200 transition-all">
+                                            <i class="fas fa-envelope text-xs"></i>
                                         </div>
-
-                                        <!-- Status Badge -->
-                                        <div class="group relative">
-                                            <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
-                                                :title="user.is_active ? 'Account is active' : 'Account is inactive'">
-                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
-                                                    <i class="fas"
-                                                        :class="user.is_active ? 'fa-check-circle' : 'fa-clock'"></i>
-                                                </span>
-                                                <span class="text-sm"
-                                                    x-text="user.is_active ? 'Active' : 'Inactive'"></span>
-                                            </span>
-                                            <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                <div
-                                                    class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                    <span class="font-semibold">Account Status</span>
-                                                    <div
-                                                        class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <span>Email & Status</span>
+                                        <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'is_active'"></i>
+                                        <i class="fas fa-sort-up ml-1 text-rose-500" x-show="sortField === 'is_active' && sortDirection === 'asc'"></i>
+                                        <i class="fas fa-sort-down ml-1 text-rose-500" x-show="sortField === 'is_active' && sortDirection === 'desc'"></i>
                                     </div>
-                                </td>
-
-                                <!-- Roles Column -->
-                                <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex flex-col space-y-2 min-w-[200px]">
-                                        <template x-for="role in user.roles" :key="role.id">
-                                            <div class="group relative">
-                                                <span
-                                                    class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
-                                                    :title="`Role: ${role.display_name || role.name}`">
-                                                    <span class="inline-flex items-center mr-2 w-4 text-gray-600">
-                                                        <i class="fas" :class="getRoleIcon(role.name)"></i>
-                                                    </span>
-                                                    <span class="text-sm">
-                                                        <span x-text="role.display_name || role.name"></span>
-                                                        <span class="text-xs text-gray-500 ml-1"
-                                                            x-text="`(${role.name})`"
-                                                            x-show="role.display_name && role.display_name !== role.name"></span>
-                                                    </span>
-                                                </span>
-                                                <!-- Tooltip with role details -->
-                                                <div
-                                                    class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                    <div
-                                                        class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                        <span class="font-semibold"
-                                                            x-text="role.display_name || role.name"></span>
-                                                        <div
-                                                            class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
+                                </th>
+                                        <th class="px-5 py-5 text-left " >
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-200 transition-all">
+                                            <i class="fas fa-shield-alt text-xs"></i>
+                                        </div>
+                                        <span>Roles & Permissions</span>
+                                    </div>
+                                </th>
+                                        <th class="px-5 py-5 text-left " >
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-500 shadow-sm border border-sky-200 transition-all">
+                                            <i class="fas fa-clock text-xs"></i>
+                                        </div>
+                                        <span>Activity</span>
+                                    </div>
+                                </th>
+                                        <th class="px-5 py-5 text-right cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('action')">
+                                    <div class="flex items-center justify-end gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shadow-sm border border-slate-200 transition-all">
+                                            <i class="fas fa-cogs text-xs"></i>
+                                        </div>
+                                        <span>Actions</span>
+                                        <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'action'"></i>
+                                        <i class="fas fa-sort-up ml-1 text-slate-500" x-show="sortField === 'action' && sortDirection === 'asc'"></i>
+                                        <i class="fas fa-sort-down ml-1 text-slate-500" x-show="sortField === 'action' && sortDirection === 'desc'"></i>
+                                    </div>
+                                </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50" x-show="!loading && users && users.length > 0">
+                                    <template x-for="user in users" :key="user.id">
+                                        <tr class="hover:bg-indigo-50/40 transition-colors group">
+                                            <!-- User Info -->
+                                            <td class="px-5 py-4 whitespace-nowrap">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white font-black text-sm shadow-sm border border-indigo-100 group-hover:scale-105 transition-transform"
+                                                         x-text="getInitials(user.name)"></div>
+                                                    <div>
+                                                        <div class="text-sm font-extrabold text-navy-800 truncate max-w-[200px]"  x-text="user.name"></div>
+                                                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                                                            <i class="fas fa-id-badge text-indigo-400"></i>
+                                                            <span x-text="`ID: ${user.id}`"></span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </template>
+                                            </td>
 
-                                        <!-- No roles fallback -->
-                                        <div class="group relative" x-show="!user.roles || user.roles.length === 0">
-                                            <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-400 cursor-not-allowed"
-                                                title="No roles assigned">
-                                                <span class="inline-flex items-center mr-2 w-4 text-gray-400">
-                                                    <i class="fas fa-user-slash"></i>
-                                                </span>
-                                                <span class="text-sm">No Role Assigned</span>
-                                            </span>
-                                            <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                <div
-                                                    class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                    <span class="font-semibold">No roles assigned</span>
-                                                    <div
-                                                        class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
+                                            <!-- Email & Status -->
+                                            <td class="px-5 py-4 whitespace-nowrap">
+                                                <div class="flex flex-col gap-2">
+                                                    <div class="flex items-center gap-2 group/email relative cursor-default">
+                                                        <span class="w-6 h-6 flex items-center justify-center bg-slate-50 border border-slate-100 rounded-md text-slate-400 group-hover/email:text-indigo-600 group-hover/email:border-indigo-200 transition-colors">
+                                                            <i class="fas fa-envelope text-[10px]"></i>
+                                                        </span>
+                                                        <span class="text-xs font-bold text-gray-600 group-hover/email:text-indigo-600 transition-colors truncate max-w-[150px]"  x-text="user.email" :title="user.email"></span>
+                                                    </div>
+                                                    
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="w-6 h-6 flex items-center justify-center rounded-md"
+                                                              :class="user.is_active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'">
+                                                            <i class="fas text-[10px]" :class="user.is_active ? 'fa-check-circle' : 'fa-ban'"></i>
+                                                        </span>
+                                                        <span class="text-[10px] font-black uppercase tracking-widest"
+                                                              :class="user.is_active ? 'text-emerald-600' : 'text-rose-600'"
+                                                              x-text="user.is_active ? 'Active' : 'Inactive'"></span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                            </td>
 
-                                <!-- Activity Column -->
-                                <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex flex-col space-y-2 min-w-[160px]">
-                                        <!-- Registration Date -->
-                                        <div class="group relative">
-                                            <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full text-gray-600 hover:text-gray-900"
-                                                :title="user.created_at ? `Registered on ${formatDate(user.created_at)}` :
-                                                    'Registration date not available'">
-                                                <span class="inline-flex items-center mr-2 w-4 text-gray-600">
-                                                    <i class="fas fa-calendar-plus"></i>
-                                                </span>
-                                                <span class="text-sm"
-                                                    x-text="user.created_at ? formatDate(user.created_at) : 'N/A'"></span>
-                                            </span>
-                                            <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                <div
-                                                    class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                    <span class="font-semibold">Registration Date</span>
-                                                    <div
-                                                        class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
+                                            <!-- Roles -->
+                                            <td class="px-5 py-4 whitespace-wrap text-sm font-medium">
+                                                <div class="flex flex-wrap gap-1.5 max-w-[200px]">
+                                                    <template x-for="role in user.roles" :key="role.id">
+                                                        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-50 border border-slate-200 text-slate-700 text-[10px] font-bold shadow-sm" :title="role.display_name || role.name">
+                                                            <i class="fas text-[9px]" :class="getRoleIcon(role.name)"></i>
+                                                            <span x-text="role.display_name || role.name"></span>
+                                                        </span>
+                                                    </template>
+                                                    <span x-show="!user.roles || user.roles.length === 0" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                        <i class="fas fa-user-slash mr-1"></i> No Roles
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            <!-- Activity -->
+                                            <td class="px-5 py-4 whitespace-nowrap">
+                                                <div class="flex flex-col gap-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="w-6 h-6 flex items-center justify-center bg-blue-50 border border-blue-100 rounded-md text-blue-500">
+                                                            <i class="fas fa-calendar-plus text-[10px]"></i>
+                                                        </span>
+                                                        <span class="text-xs font-bold text-gray-600" x-text="user.created_at ? formatDate(user.created_at) : 'N/A'" title="Registration Date"></span>
+                                                    </div>
+                                                    
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="w-6 h-6 flex items-center justify-center bg-slate-50 border border-slate-100 rounded-md"
+                                                              :class="(user.last_login_at && user.last_login_at !== 'Invalid Date' && user.last_login_at !== null) ? 'text-indigo-500' : 'text-slate-400'">
+                                                            <i class="fas fa-history text-[10px]"></i>
+                                                        </span>
+                                                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-500" x-text="getLastLoginText(user.last_login_at)" :title="getLastLoginTitle(user.last_login_at)"></span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </td>
 
-                                        <!-- Last Login -->
-                                        <div class="group relative">
-                                            <span
-                                                class="transition-colors duration-200 text-left inline-flex items-center w-full"
-                                                :class="user.last_login_at && user.last_login_at !== 'Invalid Date' && user
-                                                    .last_login_at !== null ? 'text-gray-600 hover:text-gray-900' :
-                                                    'text-gray-400 cursor-not-allowed'"
-                                                :title="getLastLoginTitle(user.last_login_at)">
-                                                <span class="inline-flex items-center mr-2 w-4"
-                                                    :class="user.last_login_at && user.last_login_at !== 'Invalid Date' && user
-                                                        .last_login_at !== null ? 'text-gray-600' : 'text-gray-400'">
-                                                    <i class="fas fa-history"></i>
-                                                </span>
-                                                <span class="text-sm"
-                                                    x-text="getLastLoginText(user.last_login_at)"></span>
-                                            </span>
-                                            <!-- Tooltip -->
-                                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-10">
-                                                <div
-                                                    class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                                                    <span class="font-semibold"
-                                                        x-text="getLastLoginTooltip(user.last_login_at)"></span>
-                                                    <div
-                                                        class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900">
-                                                    </div>
+                                            <!-- Actions -->
+                                            <td class="px-5 py-4 text-right">
+                                                <div class="flex items-center justify-end gap-1 flex-wrap w-[120px] ml-auto">
+                                                    <a :href="`/admin/users/${user.uuid}`" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-colors shadow-sm tooltip" title="View User">
+                                                        <i class="fas fa-eye text-xs"></i>
+                                                    </a>
+                                                    
+                                                    <button @click="editUser(user)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-colors shadow-sm tooltip" title="Edit User">
+                                                        <i class="fas fa-edit text-xs"></i>
+                                                    </button>
+                                                    
+                                                    <button @click="openResetPasswordModal(user)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-amber-600 hover:border-amber-200 hover:bg-amber-50 transition-colors shadow-sm tooltip" title="Reset Password">
+                                                        <i class="fas fa-key text-xs"></i>
+                                                    </button>
+                                                    
+                                                    <button @click="openPermissionsModal(user)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-50 transition-colors shadow-sm tooltip" title="View Permissions">
+                                                        <i class="fas fa-shield-alt text-xs"></i>
+                                                    </button>
+                                                    
+                                                    <button @click="toggleUserStatus(user)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 transition-colors shadow-sm tooltip"
+                                                            :class="user.is_active ? 'text-slate-400 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50' : 'text-slate-400 hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-50'"
+                                                            :title="user.is_active ? 'Deactivate User' : 'Activate User'">
+                                                        <i class="fas text-[10px]" :class="user.is_active ? 'fa-ban' : 'fa-check-circle'"></i>
+                                                    </button>
+
+                                                    <button @click="confirmDelete(user)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50 transition-colors shadow-sm tooltip" title="Delete User">
+                                                        <i class="fas fa-trash text-[10px]"></i>
+                                                    </button>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
 
-                                <!-- Actions Column -->
-                                <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex flex-col space-y-2 min-w-[120px]">
-                                        <!-- View Button -->
-                                        <a href="{{ url('/admin/users') }}/" :href="`{{ url('/admin/users') }}/${user.uuid}`"
-                                           class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
-                                           title="View User Details">
-                                            <i class="fas fa-eye mr-2 w-4"></i>
-                                            View
-                                        </a>
+                        <!-- Loading State -->
+                        <div x-show="loading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 transition-all rounded-b-3xl">
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin shadow-lg"></div>
+                                <span class="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] animate-pulse">Syncing Records...</span>
+                            </div>
+                        </div>
 
-                                        <!-- Edit Button -->
-                                        <button @click="editUser(user)"
-                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
-                                            title="Edit User">
-                                            <i class="fas fa-edit mr-2 w-4"></i>
-                                            Edit
-                                        </button>
-
-                                        <!-- Reset Password Button -->
-                                        <button @click="openResetPasswordModal(user)"
-                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
-                                            title="Reset Password">
-                                            <i class="fas fa-key mr-2 w-4"></i>
-                                            Reset
-                                        </button>
-
-                                        <!-- Status Toggle Button -->
-                                        <button @click="toggleUserStatus(user)"
-                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
-                                            :title="user.is_active ? 'Deactivate User' : 'Activate User'">
-                                            <i class="fas mr-2 w-4"
-                                                :class="user.is_active ? 'fa-ban' : 'fa-check-circle'"></i>
-                                            <span x-text="user.is_active ? 'Deactivate' : 'Activate'"></span>
-                                        </button>
-
-                                        <!-- View Permissions Button -->
-                                        <button @click="openPermissionsModal(user)"
-                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
-                                            title="View Permissions">
-                                            <i class="fas fa-shield-alt mr-2 w-4"></i>
-                                            Permissions
-                                        </button>
-
-                                        <!-- Delete Button -->
-                                        <button @click="confirmDelete(user)"
-                                            class="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-left"
-                                            title="Delete User">
-                                            <i class="fas fa-trash mr-2 w-4"></i>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-
-                    <!-- Loading State -->
-                    <tbody x-show="loading">
-                        <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center justify-center">
-                                    <div
-                                        class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4">
-                                    </div>
-                                    <p class="text-gray-600">Loading users...</p>
-                                    <p class="text-sm text-gray-400 mt-1">Please wait while we fetch the records</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-
-                    <!-- Empty State -->
-                    <tbody x-show="!loading && (!users || users.length === 0)">
-                        <tr>
-                            <td colspan="5" class="px-6 py-16 text-center">
-                                <div class="flex flex-col items-center justify-center">
-                                    <div class="w-20 h-20 mb-4 text-gray-300">
-                                        <i class="fas fa-users-cog text-5xl"></i>
-                                    </div>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-                                    <p class="text-gray-500 max-w-md mb-4">
-                                        <span
-                                            x-show="searchQuery || filters.role || filterStatus || registrationFrom || registrationTo">
-                                            Try adjusting your filters or search terms
-                                        </span>
-                                        <span
-                                            x-show="!searchQuery && !filters.role && !filterStatus && !registrationFrom && !registrationTo">
-                                            No users in the system. Start by adding a new user.
-                                        </span>
-                                    </p>
-                                    <button @click="openAddModal()"
-                                        class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg font-medium">
-                                        <i class="fas fa-user-plus"></i>
-                                        Add First User
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div x-show="!loading && users && users.length > 0" class="bg-white px-6 py-4 border-t border-gray-200">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <!-- Pagination Info -->
-                    <div class="text-sm text-gray-700">
-                        Showing <span x-text="pagination.from"></span> to
-                        <span x-text="pagination.to"></span> of
-                        <span x-text="pagination.total"></span> results
+                        <!-- Empty State -->
+                        <div x-show="!loading && (!users || users.length === 0)" class="flex flex-col items-center justify-center py-24 text-center">
+                            <div class="w-32 h-32 bg-slate-100 rounded-full flex items-center justify-center mb-8 border-4 border-white shadow-xl">
+                                <i class="fas fa-users-slash text-4xl text-slate-300"></i>
+                            </div>
+                            <h3 class="text-2xl font-black text-slate-800 mb-2">No users found</h3>
+                            <p class="text-slate-500 max-w-sm mx-auto mb-8 font-medium">Try adjusting your filter parameters to narrow the scope.</p>
+                            <button @click="openAddModal()" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-500/40 hover:scale-105 transition-all">
+                                <i class="fas fa-user-plus mr-2"></i> Add First User
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Pagination Controls -->
-                    <nav class="flex items-center space-x-2">
-                        <!-- First Page -->
-                        <button @click="changePage(1)" :disabled="pagination.current_page === 1"
-                            class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                            First
-                        </button>
+                    <!-- Premium Pagination -->
+                    <div x-show="!loading && users && users.length > 0" class="p-8 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div class="flex flex-col md:flex-row items-center gap-4">
+                                <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Displaying <span class="text-slate-900" x-text="pagination.from"></span> - <span class="text-slate-900" x-text="pagination.to"></span> 
+                                    <span class="mx-2 overflow-hidden bg-slate-200 w-8 h-[2px] inline-block align-middle"></span> 
+                                    Source: <span class="text-indigo-600" x-text="pagination.total"></span> Entries
+                                </div>
+                            </div>
 
-                        <!-- Previous Page -->
-                        <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
-                            class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                            Previous
-                        </button>
+                            <div class="flex items-center gap-2">
+                                <button @click="changePage(1)" :disabled="pagination.current_page === 1"
+                                    class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:pointer-events-none transition-all group">
+                                    <i class="fas fa-angles-left text-[10px]"></i>
+                                    <span class="text-[10px] font-black uppercase tracking-widest hidden sm:inline">First</span>
+                                </button>
+                                <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
+                                    class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:pointer-events-none transition-all group">
+                                    <i class="fas fa-chevron-left text-[10px]"></i>
+                                    <span class="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Prev</span>
+                                </button>
 
-                        <!-- Page Numbers -->
-                        <template x-for="page in getPageRange()" :key="page">
-                            <button @click="page !== '...' && changePage(page)"
-                                :class="page === pagination.current_page ?
-                                    'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600' :
-                                    'border-gray-300 text-gray-700 hover:bg-gray-50'"
-                                :disabled="page === '...'"
-                                class="px-3 py-1.5 rounded-lg border min-w-[40px] text-sm font-medium">
-                                <span x-text="page"></span>
-                            </button>
-                        </template>
+                                <div class="flex items-center gap-1.5 mx-2">
+                                    <template x-for="page in getPageRange()" :key="page">
+                                        <button @click="page !== '...' && changePage(page)"
+                                            :class="page === pagination.current_page ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 border-indigo-600 scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-600 hover:text-indigo-600'"
+                                            :disabled="page === '...'"
+                                            class="w-10 h-10 rounded-xl border text-[10px] font-black transition-all flex items-center justify-center"
+                                            x-text="page">
+                                        </button>
+                                    </template>
+                                </div>
 
-                        <!-- Next Page -->
-                        <button @click="changePage(pagination.current_page + 1)"
-                            :disabled="pagination.current_page === pagination.last_page"
-                            class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                            Next
-                        </button>
+                                <button @click="changePage(pagination.current_page + 1)" :disabled="pagination.current_page === pagination.last_page"
+                                    class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:pointer-events-none transition-all group">
+                                    <span class="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Next</span>
+                                    <i class="fas fa-chevron-right text-[10px]"></i>
+                                </button>
+                                <button @click="changePage(pagination.last_page)" :disabled="pagination.current_page === pagination.last_page"
+                                    class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:pointer-events-none transition-all group">
+                                    <span class="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Last</span>
+                                    <i class="fas fa-angles-right text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- Last Page -->
-                        <button @click="changePage(pagination.last_page)"
-                            :disabled="pagination.current_page === pagination.last_page"
-                            class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                            Last
+            <!-- Right Column - Security Filters Sidebar -->
+            <div class="lg:col-span-3 lg:sticky lg:top-0 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto scrollbar-hide pb-2" style="scrollbar-width: none;" x-show="showSidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4">
+                
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col min-h-0">
+                    <div class="p-5 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white flex items-center justify-between shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                                <i class="fas fa-filter text-sm"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-black text-slate-800 text-base tracking-tight">User Filters</h2>
+                                <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mt-0.5">Refine Results</p>
+                            </div>
+                        </div>
+                        <button @click="showSidebar = false" class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm" title="Hide Filters">
+                            <i class="fas fa-angle-right"></i>
                         </button>
-                    </nav>
+                    </div>
+
+                    <div class="overflow-y-auto scrollbar-hide flex-1 space-y-5 p-5" style="scrollbar-width: none;">
+                        <div class="space-y-4">
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-search text-indigo-500"></i> Search Term
+                                </label>
+                                <div class="relative group">
+                                    <input type="text" x-model="searchQuery" @input.debounce.500ms="searchUsers()"
+                                        placeholder="Name, email..."
+                                        class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-slate-600 text-sm shadow-inner group-hover:border-slate-200">
+                                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-shield-alt text-emerald-500"></i> Status
+                                </label>
+                                <select x-model="filterStatus" @change="applyFilters()"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-slate-600 text-sm shadow-inner appearance-none cursor-pointer">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-user-tag text-purple-500"></i> Role
+                                </label>
+                                <select x-model="filters.role" @change="applyFilters()"
+                                    class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-slate-600 text-sm shadow-inner appearance-none cursor-pointer">
+                                    <option value="">All Roles</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->display_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="space-y-3 border-t border-slate-100 pt-3">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fas fa-calendar-alt text-amber-500"></i> Registration Window
+                                </label>
+                                <div class="flex flex-col gap-2">
+                                    <input type="date" x-model="registrationFrom" @change="applyFilters()"
+                                        class="w-full px-3 py-2 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold text-slate-600 text-xs shadow-inner" placeholder="From">
+                                    <div class="text-center text-slate-400 text-xs font-black uppercase">to</div>
+                                    <input type="date" x-model="registrationTo" @change="applyFilters()"
+                                        class="w-full px-3 py-2 bg-slate-50 border-2 border-slate-100 rounded-xl font-bold text-slate-600 text-xs shadow-inner" placeholder="To">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="p-5 pt-0 flex flex-col gap-2.5 shrink-0">
+                        <button @click="clearFilters()" 
+                            class="w-full px-4 py-2.5 bg-rose-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-700 hover:-translate-y-0.5 transition-all text-left flex items-center justify-between group">
+                            <span>Purge All Filters</span>
+                            <i class="fas fa-eraser group-hover:rotate-12 transition-transform opacity-90 group-hover:opacity-100"></i>
+                        </button>
+                        <button @click="showSidebar = false" 
+                            class="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:-translate-y-0.5 transition-all text-left flex items-center justify-between group shadow-md shadow-indigo-500/20">
+                            <span>Hide Filters</span>
+                            <i class="fas fa-eye-slash group-hover:scale-110 transition-transform opacity-90 group-hover:opacity-100"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -804,7 +596,7 @@
 
                 // UI states
                 changePassword: false,
-                showAdvancedFilters: false,
+                showSidebar: false,
                 filterStatus: '',
                 _componentInitialized: false,
 
@@ -835,6 +627,16 @@
                 // Sorting
                 sortField: 'name',
                 sortDirection: 'asc',
+
+                sortBy(field) {
+                    if (this.sortField === field) {
+                        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        this.sortField = field;
+                        this.sortDirection = 'asc';
+                    }
+                    this.fetchUsers();
+                },
 
                 // Pagination
                 pagination: {
@@ -920,8 +722,7 @@
                         const params = new URLSearchParams({
                             page: this.pagination.current_page,
                             search: this.searchQuery,
-                            active: this.filters.active ? '1' : '0',
-                            inactive: this.filters.inactive ? '1' : '0',
+                            filterStatus: this.filterStatus,
                             role: this.filters.role,
                             start_date: this.registrationFrom,
                             end_date: this.registrationTo,
@@ -967,7 +768,16 @@
                 // Fetch stats
                 async fetchStats() {
                     try {
-                        const response = await fetch('/admin/users/stats', {
+                        const params = new URLSearchParams({
+                            search: this.searchQuery,
+                            filterStatus: this.filterStatus,
+                            role: this.filters.role,
+                            start_date: this.registrationFrom,
+                            end_date: this.registrationTo,
+                            _: Date.now()
+                        });
+
+                        const response = await fetch(`/admin/users/stats?${params}`, {
                             headers: {
                                 'Accept': 'application/json'
                             }
@@ -980,16 +790,6 @@
                     }
                 },
 
-                // Sort users
-                sortBy(field) {
-                    if (this.sortField === field) {
-                        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-                    } else {
-                        this.sortField = field;
-                        this.sortDirection = 'asc';
-                    }
-                    this.fetchUsers();
-                },
 
                 // Search users
                 searchUsers() {
@@ -1032,6 +832,7 @@
                     if (this.loading) return;
                     this.pagination.current_page = 1;
                     this.fetchUsers();
+                    this.fetchStats();
                 },
 
                 // Reset all filters
@@ -1049,6 +850,7 @@
 
                     if (fetch) {
                         this.fetchUsers();
+                        this.fetchStats();
                     }
                 },
 

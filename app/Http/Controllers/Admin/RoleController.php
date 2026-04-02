@@ -164,15 +164,18 @@ class RoleController extends Controller
     }
 
     /**
-     * Get role statistics
+     * Get role statistics with filters
      */
-    public function stats()
+    public function stats(Request $request)
     {
+        $query = Role::query();
+        $query = $this->applyFiltersToQuery($query, $request);
+
         $stats = [
-            'total' => Role::count(),
-            'with_permissions' => Role::has('permissions')->count(),
-            'without_permissions' => Role::doesntHave('permissions')->count(),
-            'system_roles' => Role::where('id', '<=', 5)->count(), // Assuming first 5 are system roles as per the index view check role->id > 1
+            'total' => (clone $query)->count(),
+            'with_permissions' => (clone $query)->has('permissions')->count(),
+            'without_permissions' => (clone $query)->doesntHave('permissions')->count(),
+            'system_roles' => (clone $query)->where('id', '<=', 5)->count(),
         ];
 
         return response()->json($stats);
@@ -184,7 +187,25 @@ class RoleController extends Controller
     public function data(Request $request)
     {
         $query = Role::with(['permissions', 'branch']);
+        $query = $this->applyFiltersToQuery($query, $request);
 
+        // Sort
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
+        $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
+        $query->orderBy($sort, $direction);
+
+        $perPage = $request->get('per_page', 10);
+        $roles = $query->paginate($perPage);
+
+        return response()->json($roles);
+    }
+
+    /**
+     * Apply common filters to role query
+     */
+    protected function applyFiltersToQuery($query, Request $request)
+    {
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
@@ -194,15 +215,28 @@ class RoleController extends Controller
             });
         }
 
-        // Sort
-        $sort = $request->get('sort', 'name');
-        $direction = $request->get('direction', 'asc');
-        $query->orderBy($sort, $direction);
+        // Security Isolation: Non-super admins are restricted to their assigned branch
+        if (!auth()->user()->isSuperAdmin()) {
+            $userBranchId = auth()->user()->primary_branch_id;
+            if ($userBranchId) {
+                $query->where(function($q) use ($userBranchId) {
+                    $q->where('branch_id', $userBranchId)
+                      ->orWhereNull('branch_id'); // Global roles always visible
+                });
+            }
+        }
 
-        $perPage = $request->get('per_page', 10);
-        $roles = $query->paginate($perPage);
+        // Optional Branch Filter (Explicitly selected by the user)
+        if ($request->filled('branch_id')) {
+            $filterBranchId = $request->branch_id;
+            if ($filterBranchId === 'null' || $filterBranchId === 'system') {
+                $query->whereNull('branch_id');
+            } else {
+                $query->where('branch_id', (int) $filterBranchId);
+            }
+        }
 
-        return response()->json($roles);
+        return $query;
     }
 
     /**

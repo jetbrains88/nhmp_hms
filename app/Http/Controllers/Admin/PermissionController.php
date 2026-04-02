@@ -110,28 +110,49 @@ class PermissionController extends Controller
     }
 
     /**
-     * Get permission statistics.
+     * Get permission statistics with filters
      */
-    public function stats()
+    public function stats(Request $request)
     {
+        $query = Permission::query();
+        $query = $this->applyFiltersToQuery($query, $request);
+
         $stats = [
-            'total' => Permission::count(),
-            'active' => Permission::where('is_active', true)->count(),
-            'inactive' => Permission::where('is_active', false)->count(),
-            'groups' => Permission::distinct('group')->count(),
-            'available_groups' => Permission::getGroups(),
+            'total' => (clone $query)->count(),
+            'active' => (clone $query)->where('is_active', true)->count(),
+            'inactive' => (clone $query)->where('is_active', false)->count(),
+            'groups' => (clone $query)->distinct('group')->count(),
+            'available_groups' => Permission::getGroups(), // This usually returns all groups for the filter dropdown
         ];
 
         return response()->json($stats);
     }
 
     /**
-     * Get paginated permission data.
+     * Get paginated permission data for AJAX table
      */
     public function data(Request $request)
     {
         $query = Permission::query();
+        $query = $this->applyFiltersToQuery($query, $request);
 
+        // Sort
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
+        $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
+        $query->orderBy($sort, $direction);
+
+        $perPage = $request->get('per_page', 10);
+        $permissions = $query->paginate($perPage);
+
+        return response()->json($permissions);
+    }
+
+    /**
+     * Apply common filters to permission query
+     */
+    protected function applyFiltersToQuery($query, Request $request)
+    {
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
@@ -160,15 +181,7 @@ class PermissionController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        // Sort
-        $sort = $request->get('sort', 'name');
-        $direction = $request->get('direction', 'asc');
-        $query->orderBy($sort, $direction);
-
-        $perPage = $request->get('per_page', 10);
-        $permissions = $query->paginate($perPage);
-
-        return response()->json($permissions);
+        return $query;
     }
 
     /**

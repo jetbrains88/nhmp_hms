@@ -193,51 +193,50 @@
                                 <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
 
                             <tr>
-                                <th class="px-5 py-5 w-10">
-                                    <div class="flex items-center justify-center">
-                                        <input type="checkbox" @change="toggleSelectAll($event)" :checked="isAllSelected()"
-                                            class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all shadow-sm">
+                                <th class="px-5 py-5 text-left " >
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-200 transition-all">
+                                            <i class="fas fa-cube"></i>
+                                        </div>
+                                        <span></span>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                <th class="px-5 py-5 text-left " >
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-200 transition-all">
                                             <i class="fas fa-fingerprint text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('display_name')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
-                                            Access Point
-                                            <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('display_name')"></i>
-                                        </button>
+                                        <span>Access Point</span>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                <th class="px-5 py-5 text-left " >
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-200 transition-all">
                                             <i class="fas fa-cubes text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('group')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
-                                            Module
-                                            <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('group')"></i>
-                                        </button>
+                                        <span>Module</span>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('is_active')">
+                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-200 transition-all">
                                             <i class="fas fa-toggle-on text-xs"></i>
                                         </div>
-                                        <button @click="sortBy('is_active')" class="flex items-center gap-1.5 hover:text-navy-800 transition-colors group">
-                                            Status
-                                            <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('is_active')"></i>
-                                        </button>
+                                        <span>Status</span>
+                                        <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'is_active'"></i>
+                                        <i class="fas fa-sort-up ml-1 text-indigo-500" x-show="sortField === 'is_active' && sortDirection === 'asc'"></i>
+                                        <i class="fas fa-sort-down ml-1 text-indigo-500" x-show="sortField === 'is_active' && sortDirection === 'desc'"></i>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center whitespace-nowrap">
+                                <th class="px-5 py-5 text-center cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('action')">
                                     <div class="flex items-center justify-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 shadow-sm border border-gray-200">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-200 transition-all">
                                             <i class="fas fa-bolt text-xs"></i>
                                         </div>
-                                        Actions
+                                        <span>Actions</span>
+                                        <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'action'"></i>
+                                        <i class="fas fa-sort-up ml-1 text-indigo-500" x-show="sortField === 'action' && sortDirection === 'asc'"></i>
+                                        <i class="fas fa-sort-down ml-1 text-indigo-500" x-show="sortField === 'action' && sortDirection === 'desc'"></i>
                                     </div>
                                 </th>
                             </tr>
@@ -880,7 +879,16 @@
             
             async fetchStats() {
                 try {
-                    const response = await fetch('/admin/permissions/stats');
+                    const params = new URLSearchParams({
+                        search: this.searchQuery,
+                        group: this.filterGroup,
+                        status: this.filterStatus,
+                        date_from: this.filterDateFrom,
+                        date_to: this.filterDateTo,
+                        _: Date.now()
+                    });
+                    
+                    const response = await fetch(`/admin/permissions/stats?${params}`);
                     const data = await response.json();
                     this.stats = {
                         total: data.total,
@@ -895,6 +903,7 @@
             searchPermissions() {
                 this.pagination.current_page = 1;
                 this.fetchPermissions();
+                this.fetchStats();
             },
             
             sortBy(field) {
@@ -905,6 +914,7 @@
                     this.sortDirection = 'asc';
                 }
                 this.fetchPermissions();
+                this.fetchStats();
             },
 
             getSortIcon(field) {
@@ -920,6 +930,7 @@
                 this.filterDateTo = '';
                 this.pagination.current_page = 1;
                 this.fetchPermissions();
+                this.fetchStats();
             },
 
             hasActiveFilters() {

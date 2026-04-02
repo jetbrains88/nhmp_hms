@@ -15,31 +15,7 @@ class AuditLogController extends Controller
     public function index(Request $request)
     {
         $query = AuditLog::with(['user', 'branch', 'details']);
-
-        // Apply filters
-        if ($request->filled('entity_type')) {
-            $query->where('entity_type', $request->entity_type);
-        }
-
-        if ($request->filled('action')) {
-            $query->where('action', $request->action);
-        }
-
-        if ($request->filled('user_id')) {
-            $query->where('user_id', $request->user_id);
-        }
-
-        if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
-        }
-
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
+        $query = $this->applyFiltersToQuery($query, $request);
 
         $logs = $query->orderByDesc('created_at')->paginate(20);
 
@@ -66,23 +42,7 @@ class AuditLogController extends Controller
     public function export(Request $request)
     {
         $query = AuditLog::with(['user', 'branch']);
-
-        // Apply same filters as index
-        if ($request->filled('entity_type')) {
-            $query->where('entity_type', $request->entity_type);
-        }
-
-        if ($request->filled('action')) {
-            $query->where('action', $request->action);
-        }
-
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
+        $query = $this->applyFiltersToQuery($query, $request);
 
         $logs = $query->orderByDesc('created_at')->get();
 
@@ -112,13 +72,18 @@ class AuditLogController extends Controller
     /**
      * Get audit log statistics
      */
-    public function stats()
+    public function stats(Request $request)
     {
+        $query = AuditLog::query();
+        $query = $this->applyFiltersToQuery($query, $request);
+
+        $statsQuery = clone $query;
+
         $stats = [
-            'total' => AuditLog::count(),
-            'created' => AuditLog::where('action', 'created')->count(),
-            'updated' => AuditLog::where('action', 'updated')->count(),
-            'deleted' => AuditLog::where('action', 'deleted')->count(),
+            'total' => $statsQuery->count(),
+            'created' => (clone $query)->where('action', 'created')->count(),
+            'updated' => (clone $query)->where('action', 'updated')->count(),
+            'deleted' => (clone $query)->where('action', 'deleted')->count(),
         ];
 
         return response()->json($stats);
@@ -130,8 +95,29 @@ class AuditLogController extends Controller
     public function data(Request $request)
     {
         $query = AuditLog::with(['user', 'branch', 'details']);
+        $query = $this->applyFiltersToQuery($query, $request);
 
-        // Search
+        // Sort
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+        
+        // Ensure direction is valid
+        $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'desc';
+        
+        $query->orderBy($sort, $direction);
+
+        $perPage = $request->get('per_page', 20);
+        $logs = $query->paginate($perPage);
+
+        return response()->json($logs);
+    }
+
+    /**
+     * Apply common filters to audit log query
+     */
+    protected function applyFiltersToQuery($query, Request $request)
+    {
+        // Global Search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -144,23 +130,40 @@ class AuditLogController extends Controller
             });
         }
 
-        // Apply filters
-        if ($request->filled('entity_type')) {
-            $query->where('entity_type', $request->entity_type);
-        }
-
+        // Action Filter
         if ($request->filled('action')) {
             $query->where('action', $request->action);
         }
 
+        // Entity Type Filter
+        if ($request->filled('entity_type')) {
+            $query->where('entity_type', $request->entity_type);
+        }
+
+        // User Filter
         if ($request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
 
-        if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
+        // Security Isolation: Non-super admins are always restricted to their assigned branch
+        if (!auth()->user()->isSuperAdmin()) {
+            $userBranchId = auth()->user()->primary_branch_id;
+            if ($userBranchId) {
+                $query->where('branch_id', $userBranchId);
+            }
         }
 
+        // Optional Branch Filter (Explicitly selected by the user)
+        if ($request->filled('branch_id')) {
+            $filterBranchId = $request->branch_id;
+            if ($filterBranchId === 'null' || $filterBranchId === 'system') {
+                $query->whereNull('branch_id');
+            } else {
+                $query->where('branch_id', (int) $filterBranchId);
+            }
+        }
+
+        // Date Range Filters
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
@@ -169,9 +172,6 @@ class AuditLogController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        $perPage = $request->get('per_page', 20);
-        $logs = $query->orderByDesc('created_at')->paginate($perPage);
-
-        return response()->json($logs);
+        return $query;
     }
 }

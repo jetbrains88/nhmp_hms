@@ -192,6 +192,7 @@ class BranchController extends Controller
         // Sort
         $sort = $request->get('sort', 'name');
         $direction = $request->get('direction', 'asc');
+        $direction = in_array(strtolower($direction), ['asc', 'desc']) ? $direction : 'asc';
         $query->orderBy($sort, $direction);
 
         $perPage = $request->get('per_page', 10);

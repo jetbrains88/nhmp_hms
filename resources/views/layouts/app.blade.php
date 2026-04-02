@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'MedCare | Smart Hospital OS')</title>
+    <title>@yield('title', 'HealthCare | Smart Hospital OS')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="current-branch" content="{{ session('current_branch_id') }}">
 
@@ -232,7 +232,8 @@
         }
 
         /* --- Theme System --- */
-        :root, [data-theme="vibrant"] {
+        :root,
+        [data-theme="vibrant"] {
             --bg-body: #f8fafc;
             --bg-card: #ffffff;
             --primary: #4f46e5;
@@ -311,51 +312,61 @@
             background: var(--sidebar-active-bg) !important;
             border-right: 3px solid var(--primary) !important;
         }
-        
-        .bg-primary-theme { background-color: var(--primary); }
-        .text-primary-theme { color: var(--primary); }
-        .border-primary-theme { border-color: var(--primary); }
-        .shadow-theme { box-shadow: 0 4px 20px var(--shadow); }
+
+        .bg-primary-theme {
+            background-color: var(--primary);
+        }
+
+        .text-primary-theme {
+            color: var(--primary);
+        }
+
+        .border-primary-theme {
+            border-color: var(--primary);
+        }
+
+        .shadow-theme {
+            box-shadow: 0 4px 20px var(--shadow);
+        }
     </style>
 
     @stack('styles')
 </head>
 
-<body class="font-sans antialiased text-slate-600 bg-slate-50 overflow-hidden"
-    x-data="{
-        sidebarOpen: window.innerWidth >= 1024,
-        isMobile: window.innerWidth < 1024,
-        toggleSidebar() { this.sidebarOpen = !this.sidebarOpen },
-        notificationsOpen: false,
-        profileOpen: false,
-        branchSwitcherOpen: false,
-        currentBranch: null,
-        branches: [],
-        async loadBranches() {
-            try {
-                const response = await fetch('/api/user/branches');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                this.branches = data;
-
-                const currentBranchElement = document.querySelector('meta[name=current-branch]');
-                if (currentBranchElement) {
-                    const currentBranchId = currentBranchElement.content;
-                    this.currentBranch = this.branches.find(b => b.id == currentBranchId);
-                } else if (this.branches.length > 0) {
-                    this.currentBranch = this.branches[0];
-                }
-            } catch (error) {
-                console.error('Failed to load branches:', error);
-                this.branches = [];
+<body class="font-sans antialiased text-slate-600 bg-slate-50 overflow-hidden" x-data="{
+    sidebarOpen: window.innerWidth >= 1024,
+    isMobile: window.innerWidth < 1024,
+    toggleSidebar() { this.sidebarOpen = !this.sidebarOpen },
+    notificationsOpen: false,
+    profileOpen: false,
+    branchSwitcherOpen: false,
+    currentBranch: null,
+    branches: [],
+    async loadBranches() {
+        try {
+            const response = await fetch('/api/user/branches');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        },
-        init() {
-            this.loadBranches();
+            const data = await response.json();
+            this.branches = data;
+
+            const currentBranchElement = document.querySelector('meta[name=current-branch]');
+            if (currentBranchElement) {
+                const currentBranchId = currentBranchElement.content;
+                this.currentBranch = this.branches.find(b => b.id == currentBranchId);
+            } else if (this.branches.length > 0) {
+                this.currentBranch = this.branches[0];
+            }
+        } catch (error) {
+            console.error('Failed to load branches:', error);
+            this.branches = [];
         }
-    }"
+    },
+    init() {
+        this.loadBranches();
+    }
+}"
     @resize.window="isMobile = window.innerWidth < 1024; if(!isMobile) sidebarOpen = true">
 
     <div class="flex h-screen overflow-hidden relative">
@@ -374,14 +385,15 @@
             :class="sidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full lg:w-0 lg:translate-x-0 lg:overflow-hidden'">
 
             <!-- Logo Area -->
-            <div class="h-20 flex items-center justify-between px-6 border-b border-slate-100" style="background-color: var(--bg-card);">
+            <div class="h-20 flex items-center justify-between px-6 border-b border-slate-100"
+                style="background-color: var(--bg-card);">
                 <div class="flex items-center gap-3 overflow-hidden whitespace-nowrap">
                     <div
                         class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
                         <i class="fas fa-hospital text-white text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold text-slate-800 tracking-tight">MedCare</h1>
+                        <h1 class="text-xl font-bold text-slate-800 tracking-tight">Health Care</h1>
                         <p class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Hospital OS</p>
                     </div>
                 </div>
@@ -541,12 +553,12 @@
                                     <i class="fas fa-history w-6 text-center"></i>
                                     <span class="ml-2">Audit Logs</span>
                                 </a>
-                                @if(Route::has('admin.reports.index'))
-                                <a href="{{ route('admin.reports.index') }}"
-                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-indigo-50 {{ request()->routeIs('admin.reports.*') ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600' }}">
-                                    <i class="fas fa-chart-bar w-6 text-center"></i>
-                                    <span class="ml-2">Reports</span>
-                                </a>
+                                @if (Route::has('admin.reports.index'))
+                                    <a href="{{ route('admin.reports.index') }}"
+                                        class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-indigo-50 {{ request()->routeIs('admin.reports.*') ? 'text-indigo-600 bg-indigo-50' : 'text-slate-600' }}">
+                                        <i class="fas fa-chart-bar w-6 text-center"></i>
+                                        <span class="ml-2">Reports</span>
+                                    </a>
                                 @endif
                             </div>
                         </div>
@@ -619,10 +631,10 @@
 
                             <div x-show="isMenuOpen" x-collapse class="pl-4 space-y-1 mt-1">
                                 <!-- <a href="{{ Route::has('reception.dashboard') ? route('reception.dashboard') : url('/reception') }}"
-                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.dashboard') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">
-                                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
-                                    <span class="ml-2">Dashboard</span>
-                                </a> -->
+                                                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.dashboard') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">
+                                                                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
+                                                                    <span class="ml-2">Dashboard</span>
+                                                                </a> -->
                                 <a href="{{ Route::has('reception.patients.create') ? route('reception.patients.create') : url('/reception/patients/create') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50">
                                     <i class="fas fa-user-injured w-6 text-center"></i>
@@ -648,7 +660,9 @@
                                     <i class="fas fa-calendar-alt w-6 text-center"></i>
                                     <span class="ml-2">Appointments</span>
                                 </a>
-                                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-100 pt-2">Setup Config</div>
+                                <div
+                                    class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-100 pt-2">
+                                    Setup Config</div>
                                 <a href="{{ route('reception.offices.index') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.offices.*') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">
                                     <i class="fas fa-sitemap w-6 text-center"></i>
@@ -727,7 +741,7 @@
                                     @endif
                                 </a>
                                 <a href="{{ route('pharmacy.dispense.history') }}"
-                                   class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.dispense.history') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.dispense.history') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
                                     <i class="fas fa-history w-6 text-center"></i>
                                     <span class="ml-2">History</span>
                                 </a>
@@ -736,7 +750,9 @@
                                     <i class="fas fa-chart-bar w-6 text-center"></i>
                                     <span class="ml-2">Reports</span>
                                 </a>
-                                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-100 pt-2">Setup Config</div>
+                                <div
+                                    class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-100 pt-2">
+                                    Setup Config</div>
                                 <a href="{{ route('pharmacy.medicine-categories.index') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.medicine-categories.*') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
                                     <i class="fas fa-tags w-6 text-center"></i>
@@ -780,7 +796,9 @@
                                     <i class="fas fa-file-pdf w-6 text-center"></i>
                                     <span class="ml-2">Reports</span>
                                 </a>
-                                <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-100 pt-2">Setup Config</div>
+                                <div
+                                    class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 border-t border-slate-100 pt-2">
+                                    Setup Config</div>
                                 <a href="{{ route('lab.test-types.index') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-purple-50 {{ request()->routeIs('lab.test-types.*') ? 'text-purple-600 bg-purple-50' : 'text-slate-600' }}">
                                     <i class="fas fa-microscope w-6 text-center"></i>
@@ -832,9 +850,11 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative" style="background-color: var(--bg-body);">
+        <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden relative"
+            style="background-color: var(--bg-body);">
             <!-- Header -->
-            <header class="h-20 sticky top-0 z-30 border-b border-slate-200 shadow-sm" style="background-color: var(--bg-card);">
+            <header class="h-20 sticky top-0 z-30 border-b border-slate-200 shadow-sm"
+                style="background-color: var(--bg-card);">
                 <div class="px-6 h-full flex justify-between items-center">
                     <!-- Left side -->
                     <div class="flex items-center gap-4">
@@ -980,12 +1000,14 @@
                     @yield('content')
                 </div>
             </main>
-            
+
             <!-- Footer -->
             <footer
                 class="bg-white px-4 lg:px-8 py-4 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 shrink-0 z-30 relative">
                 <div>
-                    <span class="font-bold text-slate-700">MedCare Hospital OS</span> &copy; {{ date('Y') }} -
+                    <span class="font-bold text-slate-700">Health Care+ | Smart Hospital OS</span> &copy;
+                    {{ date('Y') }}
+                    -
                     Multi-Tenant v2.5
                 </div>
                 <div class="flex items-center gap-4 mt-2 md:mt-0">
