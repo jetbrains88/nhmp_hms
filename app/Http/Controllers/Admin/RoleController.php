@@ -215,7 +215,7 @@ class RoleController extends Controller
             });
         }
 
-        // Security Isolation: Non-super admins are restricted to their assigned branch
+        // Security Isolation: Non-super admins are restricted to their assigned branch + global roles
         if (!auth()->user()->isSuperAdmin()) {
             $userBranchId = auth()->user()->primary_branch_id;
             if ($userBranchId) {
@@ -229,11 +229,19 @@ class RoleController extends Controller
         // Optional Branch Filter (Explicitly selected by the user)
         if ($request->filled('branch_id')) {
             $filterBranchId = $request->branch_id;
-            if ($filterBranchId === 'null' || $filterBranchId === 'system') {
-                $query->whereNull('branch_id');
-            } else {
-                $query->where('branch_id', (int) $filterBranchId);
-            }
+            $query->where(function($q) use ($filterBranchId) {
+                if ($filterBranchId === 'null' || $filterBranchId === 'system') {
+                    $q->whereNull('branch_id');
+                } else {
+                    $q->where('branch_id', (int) $filterBranchId)
+                      ->orWhereNull('branch_id'); // System roles stay visible even when filtering branches
+                }
+            });
+        }
+
+        // Status Filter
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'active');
         }
 
         return $query;
