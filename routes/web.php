@@ -15,7 +15,10 @@ use App\Http\Controllers\Doctor\AppointmentController as DoctorAppointmentContro
 use App\Http\Controllers\Doctor\ConsultationController;
 use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Doctor\DiagnosisController;
+use App\Http\Controllers\Doctor\ExternalSpecialistController;
+use App\Http\Controllers\Doctor\IllnessTagController;
 use App\Http\Controllers\Doctor\LabOrderController as DoctorLabOrderController;
+use App\Http\Controllers\Doctor\PrescriptionAbbreviationController as DoctorPrescriptionAbbreviationController;
 use App\Http\Controllers\Doctor\PrescriptionController as DoctorPrescriptionController;
 use App\Http\Controllers\Doctor\ReportController as DoctorReportController;
 use App\Http\Controllers\Lab\DashboardController as LabDashboardController;
@@ -286,6 +289,38 @@ Route::middleware(['auth', 'branch.context', 'role:doctor'])->prefix('doctor')->
     Route::get('/patients/search', [DoctorDashboardController::class, 'searchPatients'])->name('patients.search');
     Route::get('/office/{office}/patients', [DoctorDashboardController::class, 'getOfficePatients'])
         ->name('office.patients');
+
+    // ── Doctor Setup / Configuration ─────────────────────────────────────────
+    Route::prefix('setup')->name('setup.')->group(function () {
+
+        // Illness Tags
+        Route::get('/illness-tags', [IllnessTagController::class, 'index'])->name('illness-tags.index');
+        Route::get('/illness-tags/data', [IllnessTagController::class, 'data'])->name('illness-tags.data');
+        Route::get('/illness-tags/stats', [IllnessTagController::class, 'stats'])->name('illness-tags.stats');
+        Route::post('/illness-tags', [IllnessTagController::class, 'store'])->name('illness-tags.store');
+        Route::put('/illness-tags/{illnessTag}', [IllnessTagController::class, 'update'])->name('illness-tags.update');
+        Route::patch('/illness-tags/{illnessTag}/toggle', [IllnessTagController::class, 'toggleStatus'])->name('illness-tags.toggle');
+        Route::delete('/illness-tags/{illnessTag}', [IllnessTagController::class, 'destroy'])->name('illness-tags.destroy');
+
+        // External Specialists (branch-scoped)
+        Route::get('/physicians', [ExternalSpecialistController::class, 'index'])->name('physicians.index');
+        Route::get('/physicians/data', [ExternalSpecialistController::class, 'data'])->name('physicians.data');
+        Route::get('/physicians/stats', [ExternalSpecialistController::class, 'stats'])->name('physicians.stats');
+        Route::post('/physicians', [ExternalSpecialistController::class, 'store'])->name('physicians.store');
+        Route::put('/physicians/{externalSpecialist}', [ExternalSpecialistController::class, 'update'])->name('physicians.update');
+        Route::patch('/physicians/{externalSpecialist}/toggle', [ExternalSpecialistController::class, 'toggleStatus'])->name('physicians.toggle');
+        Route::delete('/physicians/{externalSpecialist}', [ExternalSpecialistController::class, 'destroy'])->name('physicians.destroy');
+
+        // Prescription Abbreviations
+        Route::get('/prescription-abbreviations', [DoctorPrescriptionAbbreviationController::class, 'index'])->name('prescription-abbreviations.index');
+        Route::get('/prescription-abbreviations/data', [DoctorPrescriptionAbbreviationController::class, 'data'])->name('prescription-abbreviations.data');
+        Route::get('/prescription-abbreviations/stats', [DoctorPrescriptionAbbreviationController::class, 'stats'])->name('prescription-abbreviations.stats');
+        Route::get('/prescription-abbreviations/for-form', [DoctorPrescriptionAbbreviationController::class, 'forForm'])->name('prescription-abbreviations.for-form');
+        Route::post('/prescription-abbreviations', [DoctorPrescriptionAbbreviationController::class, 'store'])->name('prescription-abbreviations.store');
+        Route::put('/prescription-abbreviations/{prescriptionAbbreviation}', [DoctorPrescriptionAbbreviationController::class, 'update'])->name('prescription-abbreviations.update');
+        Route::patch('/prescription-abbreviations/{prescriptionAbbreviation}/toggle', [DoctorPrescriptionAbbreviationController::class, 'toggleStatus'])->name('prescription-abbreviations.toggle');
+        Route::delete('/prescription-abbreviations/{prescriptionAbbreviation}', [DoctorPrescriptionAbbreviationController::class, 'destroy'])->name('prescription-abbreviations.destroy');
+    });
 });
 
 // ============================================
@@ -383,8 +418,12 @@ Route::middleware(['auth', 'branch.context', 'role:pharmacy'])->prefix('pharmacy
         ->name('prescriptions.dispense');
     Route::get('/prescriptions/{prescription}/label', [PharmacyPrescriptionController::class, 'printLabel'])
         ->name('prescriptions.print');
+    Route::get('/prescriptions/{prescription}/alternatives', [PharmacyPrescriptionController::class, 'alternativeMedicines'])
+        ->name('prescriptions.alternatives');
+
 
     // Medicine Management
+    Route::get('/medicines/api-list', [MedicineController::class, 'apiList'])->name('medicines.api-list');
     Route::resource('medicines', MedicineController::class);
 
     // Medicine Categories & Forms

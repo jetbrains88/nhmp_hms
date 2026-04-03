@@ -268,8 +268,37 @@
                                 </div>
 
                                 <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-2">Illness Tags</label>
+                                    <select multiple x-model="diagnosis.illness_tag_ids"
+                                            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]">
+                                        @foreach($illnessTags as $tag)
+                                            <option value="{{ $tag->id }}">{{ $tag->name }} ({{ $tag->category }})</option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-xs text-gray-400 mt-1">Hold Ctrl/Cmd to select multiple tags.</p>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Refer To External Specialist</label>
+                                        <select multiple x-model="diagnosis.specialist_ids"
+                                                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]">
+                                            @foreach($externalSpecialists as $specialist)
+                                                <option value="{{ $specialist->id }}">{{ $specialist->name }} ({{ $specialist->specialty }})</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">General Medical Advice / Lifestyle</label>
+                                        <textarea x-model="diagnosis.medical_advice" rows="4"
+                                                  class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                  placeholder="e.g. Bed rest, drink more water..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Clinical Notes & Observations</label>
-                                    <textarea x-model="diagnosis.notes" rows="6"
+                                    <textarea x-model="diagnosis.notes" rows="4"
                                               class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-gray-900"
                                               placeholder="Describe symptoms, duration, findings..."></textarea>
                                 </div>
@@ -393,11 +422,28 @@
                                         <div id="medicineStock" class="mt-2 text-xs font-bold"></div>
                                     </div>
 
-                                    <div>
-                                        <label class="block text-xs font-black text-gray-400 uppercase mb-2">Dosage / Strength</label>
-                                        <input type="text" name="dosage" id="prescrDosage"
-                                               class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-bold"
-                                               placeholder="e.g. 500mg, 1 tablet">
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label class="block text-xs font-black text-gray-400 uppercase mb-2">Abbreviation</label>
+                                            <select id="abbrevSelect" class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500" onchange="applyAbbreviation(this)">
+                                                <option value="">Optional template...</option>
+                                                @foreach ($prescriptionAbbreviations as $abbr)
+                                                    <option value="{{ $abbr->id }}" 
+                                                            data-days="{{ $abbr->default_days }}"
+                                                            data-morning="{{ $abbr->morning }}"
+                                                            data-evening="{{ $abbr->evening }}"
+                                                            data-night="{{ $abbr->night }}">
+                                                        {{ $abbr->abbreviation }} ({{ $abbr->meaning }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-black text-gray-400 uppercase mb-2">Dosage / Strength</label>
+                                            <input type="text" name="dosage" id="prescrDosage"
+                                                class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-bold"
+                                                placeholder="e.g. 500mg, 1 tablet">
+                                        </div>
                                     </div>
 
                                     <div>
@@ -1043,8 +1089,33 @@
                                             <div class="text-xs font-bold text-gray-400" x-text="new Date(pastVisit.created_at).toLocaleDateString()"></div>
                                         </div>
                                         <template x-if="pastVisit.diagnoses && pastVisit.diagnoses.length > 0">
-                                            <div class="text-sm text-gray-600 mt-2">
-                                                <strong>Diagnosis:</strong> <span x-text="pastVisit.diagnoses[0].diagnosis"></span>
+                                            <div>
+                                                <div class="text-sm text-gray-600 mt-2">
+                                                    <strong>Diagnosis:</strong> <span x-text="pastVisit.diagnoses[0].diagnosis"></span>
+                                                </div>
+                                                <template x-if="pastVisit.diagnoses[0].medical_advice">
+                                                    <div class="text-sm text-gray-600 mt-1">
+                                                        <strong>Medical Advice:</strong> <span x-text="pastVisit.diagnoses[0].medical_advice"></span>
+                                                    </div>
+                                                </template>
+                                                <template x-if="pastVisit.diagnoses[0].illness_tags && pastVisit.diagnoses[0].illness_tags.length > 0">
+                                                    <div class="mt-2 flex flex-wrap gap-1">
+                                                        <template x-for="tag in pastVisit.diagnoses[0].illness_tags" :key="tag.id">
+                                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border bg-gray-100 text-gray-600 border-gray-200"
+                                                                  x-text="tag.name"></span>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                                <template x-if="pastVisit.diagnoses[0].external_specialists && pastVisit.diagnoses[0].external_specialists.length > 0">
+                                                    <div class="mt-2">
+                                                        <strong class="text-xs text-gray-500 uppercase tracking-widest">Referred To:</strong>
+                                                        <div class="flex flex-col gap-1 mt-1">
+                                                            <template x-for="spec in pastVisit.diagnoses[0].external_specialists" :key="spec.id">
+                                                                <span class="text-xs text-gray-700 font-medium"><i class="fas fa-stethoscope text-gray-400 mr-1"></i> <span x-text="spec.name"></span> (<span x-text="spec.specialty"></span>)</span>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </template>
                                             </div>
                                         </template>
                                     </div>
@@ -1059,13 +1130,30 @@
                                 <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                                     <div class="divide-y divide-gray-100">
                                         <template x-for="pres in historyData.prescriptions" :key="pres.id">
-                                            <div class="p-4 flex justify-between items-center">
-                                                <div>
-                                                    <div class="font-bold text-gray-900 mb-1" x-text="pres.medicine?.name"></div>
-                                                    <div class="text-xs text-gray-500" x-text="(pres.dosage || '') + ' for ' + (pres.days || '') + ' days'"></div>
+                                            <div class="p-4 flex flex-col">
+                                                <div class="flex justify-between items-start">
+                                                    <div>
+                                                        <div class="font-bold text-gray-900 mb-1" x-text="pres.medicine?.name"></div>
+                                                        <div class="text-xs text-gray-500" x-text="(pres.dosage || '') + ' for ' + (pres.days || '') + ' days'"></div>
+                                                    </div>
+                                                    <div class="text-xs font-bold px-2 py-1 bg-gray-50 text-gray-500 rounded-lg border border-gray-200"
+                                                         x-text="new Date(pres.created_at).toLocaleDateString()"></div>
                                                 </div>
-                                                <div class="text-xs font-bold px-2 py-1 bg-gray-50 text-gray-500 rounded-lg border border-gray-200"
-                                                     x-text="new Date(pres.created_at).toLocaleDateString()"></div>
+                                                <template x-if="pres.dispensations && pres.dispensations.length > 0">
+                                                    <div class="mt-3 pl-3 border-l-2 border-emerald-200 space-y-1">
+                                                        <template x-for="disp in pres.dispensations" :key="disp.id">
+                                                            <div class="text-xs">
+                                                                <span class="text-emerald-600 font-bold"><i class="fas fa-check-circle"></i> Dispensed</span>
+                                                                <span class="text-gray-500 font-medium ml-1" x-text="disp.dispensed_quantity + ' units'"></span>
+                                                                <template x-if="disp.is_alternative && disp.alternative_medicine">
+                                                                    <span class="text-amber-600 font-bold ml-2">
+                                                                        <i class="fas fa-exchange-alt"></i> Substituted with <span x-text="disp.alternative_medicine.name"></span>
+                                                                    </span>
+                                                                </template>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </template>
                                             </div>
                                         </template>
                                     </div>
@@ -1272,7 +1360,10 @@
                     severity: 'moderate',
                     is_urgent: false,
                     is_chronic: false,
-                    has_prescription: true
+                    has_prescription: true,
+                    illness_tag_ids: [],
+                    specialist_ids: [],
+                    medical_advice: ''
                 },
 
                 calculateBMI() {
@@ -1431,8 +1522,11 @@
                                 this.diagnosis.is_urgent = !!latestDiag.is_urgent;
                                 this.diagnosis.is_chronic = !!latestDiag.is_chronic;
                                 this.diagnosis.has_prescription = latestDiag.has_prescription !== false;
+                                this.diagnosis.medical_advice = latestDiag.medical_advice || '';
+                                this.diagnosis.illness_tag_ids = (latestDiag.illness_tags || []).map(t => String(t.id));
+                                this.diagnosis.specialist_ids = (latestDiag.external_specialists || []).map(s => String(s.id));
                             } else {
-                                this.diagnosis = { text: '', notes: '', severity: 'moderate', is_urgent: false, is_chronic: false, has_prescription: true };
+                                this.diagnosis = { text: '', notes: '', severity: 'moderate', is_urgent: false, is_chronic: false, has_prescription: true, medical_advice: '', illness_tag_ids: [], specialist_ids: [] };
                             }
 
                             window.history.pushState({}, '', `/doctor/consultancy/${visitId}`);
@@ -1478,7 +1572,10 @@
                                 severity: this.diagnosis.severity,
                                 is_urgent: this.diagnosis.is_urgent ? 1 : 0,
                                 is_chronic: this.diagnosis.is_chronic ? 1 : 0,
-                                has_prescription: this.diagnosis.has_prescription ? 1 : 0
+                                has_prescription: this.diagnosis.has_prescription ? 1 : 0,
+                                medical_advice: this.diagnosis.medical_advice,
+                                illness_tag_ids: this.diagnosis.illness_tag_ids,
+                                specialist_ids: this.diagnosis.specialist_ids
                             })
                         });
                         const data = await response.json();
@@ -1713,6 +1810,8 @@
                             const el = document.getElementById(id);
                             if (el) el.value = 0;
                         });
+                        const abbrevEl = document.getElementById('abbrevSelect');
+                        if (abbrevEl) abbrevEl.value = '';
                         // Refresh visit data via Alpine
                         document.addEventListener('alpine:initialized', () => {}, { once: true });
                         const workspace = Alpine.$data(document.querySelector('[x-data="consultationWorkspace()"]'));
@@ -1732,6 +1831,18 @@
                 }
             });
         });
+
+        function applyAbbreviation(select) {
+            const opt = select.options[select.selectedIndex];
+            if (!opt || !opt.value) return;
+            
+            if(opt.dataset.days) document.getElementById('prescrDays').value = opt.dataset.days;
+            if(opt.dataset.morning) document.getElementById('prescrMorning').value = opt.dataset.morning;
+            if(opt.dataset.evening) document.getElementById('prescrEvening').value = opt.dataset.evening;
+            if(opt.dataset.night) document.getElementById('prescrNight').value = opt.dataset.night;
+            
+            updatePrescQty();
+        }
 
         function updatePrescQty() {
             const m = parseInt(document.getElementById('prescrMorning')?.value) || 0;

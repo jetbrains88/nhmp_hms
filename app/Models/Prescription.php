@@ -30,7 +30,8 @@ class Prescription extends Model
         'days',
         'quantity',
         'status',
-        'instructions'
+        'instructions',
+        'abbreviation_id',
     ];
 
     protected $casts = [
@@ -141,6 +142,14 @@ class Prescription extends Model
     public function prescribedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'prescribed_by');
+    }
+
+    /**
+     * The Rx abbreviation selected for this prescription (e.g. BID, TID, PRN).
+     */
+    public function abbreviation(): BelongsTo
+    {
+        return $this->belongsTo(PrescriptionAbbreviation::class, 'abbreviation_id');
     }
 
     public function dispensations(): HasMany

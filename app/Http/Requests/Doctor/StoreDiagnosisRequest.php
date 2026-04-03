@@ -24,6 +24,11 @@ class StoreDiagnosisRequest extends FormRequest
             'is_urgent' => 'boolean',
             'severity' => 'required|in:mild,moderate,severe,critical',
             'has_prescription' => 'boolean',
+            'medical_advice' => 'nullable|string',
+            'illness_tag_ids' => 'nullable|array',
+            'illness_tag_ids.*' => 'exists:illness_tags,id',
+            'specialist_ids' => 'nullable|array',
+            'specialist_ids.*' => 'exists:external_specialists,id',
         ];
     }
 }

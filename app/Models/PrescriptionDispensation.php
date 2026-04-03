@@ -18,12 +18,13 @@ class PrescriptionDispensation extends Model
         'dispensed_by',
         'dispensed_at',
         'medicine_batch_id',
+        'alternative_medicine_id',
         'notes'
     ];
 
     protected $casts = [
-        'dispensed_at' => 'datetime',
-        'quantity_dispensed' => 'integer',
+        'dispensed_at'      => 'datetime',
+        'quantity_dispensed'=> 'integer',
     ];
 
     public function prescription(): BelongsTo
@@ -39,6 +40,22 @@ class PrescriptionDispensation extends Model
     public function medicineBatch(): BelongsTo
     {
         return $this->belongsTo(MedicineBatch::class);
+    }
+
+    /**
+     * The alternative medicine dispensed (same generic name, different brand).
+     */
+    public function alternativeMedicine(): BelongsTo
+    {
+        return $this->belongsTo(Medicine::class, 'alternative_medicine_id');
+    }
+
+    /**
+     * Returns true when an alternative medicine was substituted.
+     */
+    public function getIsAlternativeAttribute(): bool
+    {
+        return !is_null($this->alternative_medicine_id);
     }
 
     public function inventoryLogs()

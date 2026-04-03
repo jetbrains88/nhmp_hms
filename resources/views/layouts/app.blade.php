@@ -331,6 +331,15 @@
     </style>
 
     @stack('styles')
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(79, 70, 229, 0.3); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 
 <body class="font-sans antialiased text-slate-600 bg-slate-50 overflow-hidden" x-data="{
@@ -612,9 +621,33 @@
                                     <i class="fas fa-chart-line w-6 text-center"></i>
                                     <span class="ml-2">Reports</span>
                                 </a>
+
+                                {{-- ── Setup / Configuration ── --}}
+                                <div class="pt-2 pb-1">
+                                    <p class="px-3 text-[9px] font-semibold uppercase tracking-widest text-slate-400">Setup</p>
+                                </div>
+
+                                <a href="{{ route('doctor.setup.illness-tags.index') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-blue-50 {{ request()->routeIs('doctor.setup.illness-tags.*') ? 'text-blue-600 bg-blue-50' : 'text-slate-600' }}">
+                                    <i class="fas fa-tags w-6 text-center"></i>
+                                    <span class="ml-2">Illness Tags</span>
+                                </a>
+
+                                <a href="{{ route('doctor.setup.physicians.index') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-blue-50 {{ request()->routeIs('doctor.setup.physicians.*') ? 'text-blue-600 bg-blue-50' : 'text-slate-600' }}">
+                                    <i class="fas fa-user-md w-6 text-center"></i>
+                                    <span class="ml-2">Physicians</span>
+                                </a>
+
+                                <a href="{{ route('doctor.setup.prescription-abbreviations.index') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-blue-50 {{ request()->routeIs('doctor.setup.prescription-abbreviations.*') ? 'text-blue-600 bg-blue-50' : 'text-slate-600' }}">
+                                    <i class="fas fa-file-prescription w-6 text-center"></i>
+                                    <span class="ml-2">Rx Abbreviations</span>
+                                </a>
                             </div>
                         </div>
                     @endif
+
 
                     @if (auth()->user()->hasRole('reception'))
                         <!-- Reception Menu -->

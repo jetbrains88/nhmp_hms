@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Medicine;
 use App\Models\LabTestType;
 use App\Models\Visit;
+use App\Models\IllnessTag;
+use App\Models\ExternalSpecialist;
+use App\Models\PrescriptionAbbreviation;
 use App\Services\VisitService;
 use App\Services\VitalService;
 use Illuminate\Http\Request;
@@ -180,6 +183,9 @@ class ConsultationController extends Controller
 
         $medicines     = Medicine::active()->get();
         $labTestTypes  = LabTestType::orderBy('name')->get();
+        $illnessTags   = IllnessTag::active()->orderBy('name')->get();
+        $externalSpecialists = ExternalSpecialist::where('branch_id', $branchId)->active()->orderBy('name')->get();
+        $prescriptionAbbreviations = PrescriptionAbbreviation::orderBy('abbreviation')->get();
 
         $waitingQueue = Visit::with(['patient', 'latestVital'])
             ->where('doctor_id', auth()->id())
@@ -202,7 +208,10 @@ class ConsultationController extends Controller
             ]);
         }
 
-        return view('doctor.consultations.show', compact('visit', 'medicines', 'labTestTypes', 'waitingQueue', 'inProgressQueue'));
+        return view('doctor.consultations.show', compact(
+            'visit', 'medicines', 'labTestTypes', 'waitingQueue', 'inProgressQueue',
+            'illnessTags', 'externalSpecialists', 'prescriptionAbbreviations'
+        ));
     }
 
     /**
@@ -262,7 +271,7 @@ class ConsultationController extends Controller
         // Fetch visits with main diagnosis
         $visits = \App\Models\Visit::where('patient_id', $patientId)
             ->with(['diagnoses' => function($q) {
-                $q->latest()->limit(1); // Get the primary/latest diagnosis
+                $q->with(['illnessTags', 'externalSpecialists'])->latest()->limit(1); // Get the primary/latest diagnosis
             }])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -271,7 +280,7 @@ class ConsultationController extends Controller
         $prescriptions = \App\Models\Prescription::whereHas('diagnosis.visit', function($q) use ($patientId) {
                 $q->where('patient_id', $patientId);
             })
-            ->with('medicine')
+            ->with(['medicine', 'dispensations.alternativeMedicine'])
             ->orderBy('created_at', 'desc')
             ->get();
 
