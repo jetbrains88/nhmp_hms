@@ -7,7 +7,7 @@ use App\Models\Medicine;
 use App\Models\LabTestType;
 use App\Models\Visit;
 use App\Models\IllnessTag;
-use App\Models\ExternalSpecialist;
+use App\Models\MedicalSpecialty;
 use App\Models\PrescriptionAbbreviation;
 use App\Services\VisitService;
 use App\Services\VitalService;
@@ -184,7 +184,7 @@ class ConsultationController extends Controller
         $medicines     = Medicine::active()->get();
         $labTestTypes  = LabTestType::orderBy('name')->get();
         $illnessTags   = IllnessTag::active()->orderBy('name')->get();
-        $externalSpecialists = ExternalSpecialist::where('branch_id', $branchId)->active()->orderBy('name')->get();
+        $medicalSpecialties = MedicalSpecialty::active()->orderBy('name')->get();
         $prescriptionAbbreviations = PrescriptionAbbreviation::orderBy('abbreviation')->get();
 
         $waitingQueue = Visit::with(['patient', 'latestVital'])
@@ -210,7 +210,7 @@ class ConsultationController extends Controller
 
         return view('doctor.consultations.show', compact(
             'visit', 'medicines', 'labTestTypes', 'waitingQueue', 'inProgressQueue',
-            'illnessTags', 'externalSpecialists', 'prescriptionAbbreviations'
+            'illnessTags', 'medicalSpecialties', 'prescriptionAbbreviations'
         ));
     }
 
@@ -271,7 +271,7 @@ class ConsultationController extends Controller
         // Fetch visits with main diagnosis
         $visits = \App\Models\Visit::where('patient_id', $patientId)
             ->with(['diagnoses' => function($q) {
-                $q->with(['illnessTags', 'externalSpecialists'])->latest()->limit(1); // Get the primary/latest diagnosis
+                $q->with(['illnessTags', 'medicalSpecialties'])->latest()->limit(1); // Get the primary/latest diagnosis
             }])
             ->orderBy('created_at', 'desc')
             ->get();

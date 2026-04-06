@@ -22,7 +22,7 @@
         <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Shorthand Filters</span>
     </button>
 
-    <div class="flex overflow-x-auto pb-6 gap-6 mt-4 no-scrollbar custom-scrollbar">
+    <div class="flex overflow pb-6 gap-6 mt-4 no-scrollbar custom-scrollbar">
         <template x-for="(stat, key) in statCards" :key="key">
             <div class="flex-shrink-0 w-[240px] relative flex flex-col rounded-2xl shadow-lg border hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
                  :class="stat.label === 'Offline' ? 'bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200 shadow-slate-500/10' : 'bg-gradient-to-br from-violet-50 to-purple-50 border-purple-100 shadow-purple-500/10'"
@@ -402,6 +402,7 @@ function rxAbbreviationRegistry() {
     return {
         abbreviations: [],
         stats: { total: 0, active: 0, inactive: 0, frequency: 0, route: 0, timing: 0, dosage: 0 },
+        statCards: [],
         meta: {},
         paginationLinks: [],
         loading: false,
@@ -427,7 +428,6 @@ function rxAbbreviationRegistry() {
                 const r = await fetch("{{ route('doctor.setup.prescription-abbreviations.stats') }}");
                 const data = await r.json();
                 this.statCards = [
-                    { label: 'Total', value: data.total, icon: 'fas fa-book', gradient: 'linear-gradient(135deg,#4f46e5,#7c3aed)' },
                     { label: 'Active', value: data.active, icon: 'fas fa-check-double', gradient: 'linear-gradient(135deg,#10b981,#059669)' },
                     { label: 'Freq', value: data.frequency, filter: 'Frequency & Timing', icon: 'fas fa-clock', gradient: 'linear-gradient(135deg,#6366f1,#4338ca)' },
                     { label: 'Route', value: data.route, filter: 'Route of Administration', icon: 'fas fa-syringe', gradient: 'linear-gradient(135deg,#14b8a6,#0d9488)' },

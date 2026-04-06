@@ -280,11 +280,11 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">Refer To External Specialist</label>
-                                        <select multiple x-model="diagnosis.specialist_ids"
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Refer To Medical Specialty</label>
+                                        <select multiple x-model="diagnosis.medical_specialty_ids"
                                                 class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]">
-                                            @foreach($externalSpecialists as $specialist)
-                                                <option value="{{ $specialist->id }}">{{ $specialist->name }} ({{ $specialist->specialty }})</option>
+                                            @foreach($medicalSpecialties as $specialty)
+                                                <option value="{{ $specialty->id }}">{{ $specialty->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -1362,7 +1362,7 @@
                     is_chronic: false,
                     has_prescription: true,
                     illness_tag_ids: [],
-                    specialist_ids: [],
+                    medical_specialty_ids: [],
                     medical_advice: ''
                 },
 
@@ -1524,9 +1524,9 @@
                                 this.diagnosis.has_prescription = latestDiag.has_prescription !== false;
                                 this.diagnosis.medical_advice = latestDiag.medical_advice || '';
                                 this.diagnosis.illness_tag_ids = (latestDiag.illness_tags || []).map(t => String(t.id));
-                                this.diagnosis.specialist_ids = (latestDiag.external_specialists || []).map(s => String(s.id));
+                                this.diagnosis.medical_specialty_ids = (latestDiag.medical_specialties || []).map(s => String(s.id));
                             } else {
-                                this.diagnosis = { text: '', notes: '', severity: 'moderate', is_urgent: false, is_chronic: false, has_prescription: true, medical_advice: '', illness_tag_ids: [], specialist_ids: [] };
+                                this.diagnosis = { text: '', notes: '', severity: 'moderate', is_urgent: false, is_chronic: false, has_prescription: true, medical_advice: '', illness_tag_ids: [], medical_specialty_ids: [] };
                             }
 
                             window.history.pushState({}, '', `/doctor/consultancy/${visitId}`);
@@ -1575,7 +1575,7 @@
                                 has_prescription: this.diagnosis.has_prescription ? 1 : 0,
                                 medical_advice: this.diagnosis.medical_advice,
                                 illness_tag_ids: this.diagnosis.illness_tag_ids,
-                                specialist_ids: this.diagnosis.specialist_ids
+                                medical_specialty_ids: this.diagnosis.medical_specialty_ids
                             })
                         });
                         const data = await response.json();

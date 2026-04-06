@@ -90,13 +90,13 @@ class Diagnosis extends Model
     }
 
     /**
-     * External specialists referred for this diagnosis.
+     * Medical specialties referred for this diagnosis.
      */
-    public function externalSpecialists()
+    public function medicalSpecialties()
     {
         return $this->belongsToMany(
-            ExternalSpecialist::class,
-            'diagnosis_external_specialist'
+            MedicalSpecialty::class,
+            'diagnosis_medical_specialty'
         )->withPivot('referral_notes')->withTimestamps();
     }
 

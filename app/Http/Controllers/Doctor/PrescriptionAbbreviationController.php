@@ -17,10 +17,10 @@ class PrescriptionAbbreviationController extends Controller
             'total'     => PrescriptionAbbreviation::count(),
             'active'    => PrescriptionAbbreviation::where('is_active', true)->count(),
             'inactive'  => PrescriptionAbbreviation::where('is_active', false)->count(),
-            'frequency' => PrescriptionAbbreviation::where('category', 'frequency')->count(),
-            'route'     => PrescriptionAbbreviation::where('category', 'route')->count(),
-            'timing'    => PrescriptionAbbreviation::where('category', 'timing')->count(),
-            'dosage'    => PrescriptionAbbreviation::where('category', 'dosage')->count(),
+            'frequency' => PrescriptionAbbreviation::where('category', 'Frequency & Timing')->count(),
+            'route'     => PrescriptionAbbreviation::where('category', 'Route of Administration')->count(),
+            'timing'    => PrescriptionAbbreviation::where('category', 'Instructions')->count(),
+            'dosage'    => PrescriptionAbbreviation::where('category', 'Medication Terms')->count(),
         ];
 
         return view('doctor.setup.prescription-abbreviations.index', compact('stats'));
@@ -86,10 +86,10 @@ class PrescriptionAbbreviationController extends Controller
             'total'     => PrescriptionAbbreviation::count(),
             'active'    => PrescriptionAbbreviation::where('is_active', true)->count(),
             'inactive'  => PrescriptionAbbreviation::where('is_active', false)->count(),
-            'frequency' => PrescriptionAbbreviation::where('category', 'frequency')->count(),
-            'route'     => PrescriptionAbbreviation::where('category', 'route')->count(),
-            'timing'    => PrescriptionAbbreviation::where('category', 'timing')->count(),
-            'dosage'    => PrescriptionAbbreviation::where('category', 'dosage')->count(),
+            'frequency' => PrescriptionAbbreviation::where('category', 'Frequency & Timing')->count(),
+            'route'     => PrescriptionAbbreviation::where('category', 'Route of Administration')->count(),
+            'timing'    => PrescriptionAbbreviation::where('category', 'Instructions')->count(),
+            'dosage'    => PrescriptionAbbreviation::where('category', 'Medication Terms')->count(),
         ]);
     }
 
@@ -101,7 +101,7 @@ class PrescriptionAbbreviationController extends Controller
         $validated = $request->validate([
             'abbreviation' => 'required|string|max:20|unique:prescription_abbreviations,abbreviation',
             'full_meaning' => 'required|string|max:500',
-            'category'     => 'required|in:frequency,route,timing,dosage,general',
+            'category'     => 'required|in:Frequency & Timing,Route of Administration,Instructions,Medication Terms,General',
             'doses_per_day'=> 'nullable|integer|min:1|max:24',
             'is_active'    => 'boolean',
         ]);
@@ -123,7 +123,7 @@ class PrescriptionAbbreviationController extends Controller
         $validated = $request->validate([
             'abbreviation' => 'required|string|max:20|unique:prescription_abbreviations,abbreviation,' . $prescriptionAbbreviation->id,
             'full_meaning' => 'required|string|max:500',
-            'category'     => 'required|in:frequency,route,timing,dosage,general',
+            'category'     => 'required|in:Frequency & Timing,Route of Administration,Instructions,Medication Terms,General',
             'doses_per_day'=> 'nullable|integer|min:1|max:24',
             'is_active'    => 'boolean',
         ]);

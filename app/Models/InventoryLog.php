@@ -12,7 +12,7 @@ class InventoryLog extends Model
 {
     use HasUUID, MultiTenant;
 
-    protected $fillable = [
+    protected $fillable = [ç
         'uuid',
         'branch_id',
         'medicine_id',
@@ -28,7 +28,7 @@ class InventoryLog extends Model
         'rc_number',
         'medicine_batch_id'
     ];
-
+    protected $table = 'inventory_logs';
     protected $casts = [
         'type' => 'string',
         'quantity' => 'integer',

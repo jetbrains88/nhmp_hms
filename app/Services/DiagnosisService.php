@@ -37,15 +37,15 @@ class DiagnosisService
             $diagnosis->illnessTags()->sync($data['illness_tag_ids']);
         }
 
-        // Sync external specialist referrals
-        if (isset($data['specialist_ids']) && is_array($data['specialist_ids'])) {
-            $specialistSync = [];
-            foreach ($data['specialist_ids'] as $specialistId) {
-                $specialistSync[$specialistId] = [
+        // Sync medical specialty referrals
+        if (isset($data['medical_specialty_ids']) && is_array($data['medical_specialty_ids'])) {
+            $specialtySync = [];
+            foreach ($data['medical_specialty_ids'] as $specialtyId) {
+                $specialtySync[$specialtyId] = [
                     'referral_notes' => $data['referral_notes'] ?? null,
                 ];
             }
-            $diagnosis->externalSpecialists()->sync($specialistSync);
+            $diagnosis->medicalSpecialties()->sync($specialtySync);
         }
 
         return $diagnosis;
@@ -73,15 +73,15 @@ class DiagnosisService
             $diagnosis->illnessTags()->sync((array) $data['illness_tag_ids']);
         }
 
-        // Re-sync external specialists
-        if (isset($data['specialist_ids'])) {
-            $specialistSync = [];
-            foreach ((array) $data['specialist_ids'] as $specialistId) {
-                $specialistSync[$specialistId] = [
+        // Re-sync medical specialties
+        if (isset($data['medical_specialty_ids'])) {
+            $specialtySync = [];
+            foreach ((array) $data['medical_specialty_ids'] as $specialtyId) {
+                $specialtySync[$specialtyId] = [
                     'referral_notes' => $data['referral_notes'] ?? null,
                 ];
             }
-            $diagnosis->externalSpecialists()->sync($specialistSync);
+            $diagnosis->medicalSpecialties()->sync($specialtySync);
         }
 
         return $diagnosis;
@@ -95,7 +95,7 @@ class DiagnosisService
         return Diagnosis::whereHas('visit', function ($query) use ($patientId) {
                 $query->where('patient_id', $patientId);
             })
-            ->with(['visit', 'doctor', 'illnessTags', 'externalSpecialists'])
+            ->with(['visit', 'doctor', 'illnessTags', 'medicalSpecialties'])
             ->orderBy('created_at', 'desc')
             ->get();
     }

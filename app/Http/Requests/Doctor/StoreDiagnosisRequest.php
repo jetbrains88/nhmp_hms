@@ -27,8 +27,8 @@ class StoreDiagnosisRequest extends FormRequest
             'medical_advice' => 'nullable|string',
             'illness_tag_ids' => 'nullable|array',
             'illness_tag_ids.*' => 'exists:illness_tags,id',
-            'specialist_ids' => 'nullable|array',
-            'specialist_ids.*' => 'exists:external_specialists,id',
+            'medical_specialty_ids' => 'nullable|array',
+            'medical_specialty_ids.*' => 'exists:medical_specialties,id',
         ];
     }
 }

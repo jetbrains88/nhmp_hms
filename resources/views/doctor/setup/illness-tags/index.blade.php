@@ -25,26 +25,9 @@
     {{-- ═══════════════════════════════════════════════
          STATS CARDS (Compact Grid)
     ═══════════════════════════════════════════════ --}}
-    <div class="flex overflow-x-auto pb-6 gap-6 gap-y-10 mt-4 no-scrollbar custom-scrollbar">
-        <!-- Total Tags -->
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="clearFilters()">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-400 shadow-xl shadow-indigo-900/20 border border-indigo-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-tags text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-indigo-500 uppercase">Total Tags</p>
-                <h4 class="text-3xl font-bold text-indigo-700 drop-shadow-sm font-mono" x-text="stats.total">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-indigo-200 pt-2 text-indigo-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Clinical Classification</span>
-                </div>
-            </div>
-        </div>
-
+    <div class="flex overflow pb-6 gap-6 gap-y-10 mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
         <!-- Active Tags -->
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.status = 'active'; fetchData()">
+        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.status = 'active'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-xl shadow-emerald-900/20 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-check-circle text-xl text-white drop-shadow-md"></i>
             </div>
@@ -61,7 +44,7 @@
         </div>
 
         <!-- Chronic Tags -->
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'chronic'; fetchData()">
+        <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'chronic'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-pink-400 shadow-xl shadow-rose-900/20 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-heartbeat text-xl text-white drop-shadow-md"></i>
             </div>
@@ -78,7 +61,7 @@
         </div>
 
         <!-- Acute Tags -->
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'acute'; fetchData()">
+        <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'acute'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 shadow-xl shadow-amber-900/20 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-bolt text-xl text-white drop-shadow-md"></i>
             </div>
@@ -95,7 +78,7 @@
         </div>
 
         <!-- Infectious Tags -->
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl shadow-lg shadow-orange-500/10 border border-orange-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'infectious'; fetchData()">
+        <div class="relative flex flex-col bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl shadow-lg shadow-orange-500/10 border border-orange-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'infectious'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-orange-600 to-orange-400 shadow-xl shadow-orange-900/20 border border-orange-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-virus text-xl text-white drop-shadow-md"></i>
             </div>
@@ -112,7 +95,7 @@
         </div>
 
         <!-- Inactive Card -->
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl shadow-lg shadow-slate-500/10 border border-slate-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.status = 'inactive'; fetchData()">
+        <div class="relative flex flex-col bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl shadow-lg shadow-slate-500/10 border border-slate-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.status = 'inactive'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-slate-600 to-gray-400 shadow-xl shadow-slate-900/20 border border-slate-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-toggle-off text-xl text-white drop-shadow-md"></i>
             </div>

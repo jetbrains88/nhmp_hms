@@ -15,9 +15,15 @@ class MedicalSpecialty extends Model
         'is_active' => 'boolean',
     ];
 
-    public function externalSpecialists()
+    public function diagnoses()
     {
-        return $this->hasMany(ExternalSpecialist::class, 'medical_specialty_id');
+        return $this->belongsToMany(Diagnosis::class, 'diagnosis_medical_specialty')
+                    ->withPivot('referral_notes')
+                    ->withTimestamps();
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }
 

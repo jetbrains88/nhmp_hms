@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Physician Registry — Doctor Setup')
-@section('page-title', 'Physician Registry')
-@section('breadcrumb', 'Doctor Setup / Physicians')
+@section('title', 'Medical Specialties — Doctor Setup')
+@section('page-title', 'Medical Specialties')
+@section('breadcrumb', 'Doctor Setup / Specialties')
 
 @section('content')
 <div x-data="physicianRegistry()" x-init="init()" x-cloak class="space-y-8 relative">
@@ -19,20 +19,20 @@
             <div class="absolute inset-0 bg-indigo-500/10 blur-md rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
             <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
         </div>
-        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Physician Filters</span>
+        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Specialty Filters</span>
     </button>
 
     {{-- ═══════════════════════════════════════════════
          STATS CARDS
     ═══════════════════════════════════════════════ --}}
-    <div class="flex overflow-x-auto pb-6 gap-6 gap-y-10 mt-4 no-scrollbar custom-scrollbar">
+    <div class="flex overflow pb-6 pt-10 gap-6 gap-y-10 mt-8 no-scrollbar custom-scrollbar">
         <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-400 shadow-xl shadow-indigo-900/20 border border-indigo-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-user-md text-xl text-white drop-shadow-md"></i>
+                <i class="fas fa-stethoscope text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-indigo-500 uppercase">Total Physicians</p>
+                <p class="text-xs font-bold tracking-wider text-indigo-500 uppercase">Total Specialties</p>
                 <h4 class="text-3xl font-bold text-indigo-700 drop-shadow-sm font-mono" x-text="stats.total">0</h4>
             </div>
             <div class="mx-4 mb-4 border-t border-indigo-200 pt-2">
@@ -55,7 +55,7 @@
             <div class="mx-4 mb-4 border-t border-teal-200 pt-2">
                 <div class="flex items-center gap-2">
                     <span class="h-1.5 w-1.5 rounded-full bg-teal-600"></span>
-                    <span class="text-[10px] text-teal-700 font-bold uppercase tracking-tight">Available for Referrals</span>
+                    <span class="text-[10px] text-teal-700 font-bold uppercase tracking-tight">Active Medical Fields</span>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
                 <i class="fas fa-stethoscope text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-amber-600 uppercase">Specialties</p>
+                <p class="text-xs font-bold tracking-wider text-amber-600 uppercase">Registry Status</p>
                 <h4 class="text-3xl font-bold text-amber-700 drop-shadow-sm font-mono" x-text="stats.specialties">0</h4>
             </div>
             <div class="mx-4 mb-4 border-t border-amber-200 pt-2">
@@ -113,12 +113,12 @@
                             </div>
                             <div>
                                 <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600 tracking-tight flex items-center gap-3">
-                                    Physician Registry
+                                    Medical Specialties
                                     <span class="text-lg font-normal text-gray-600">
                                         (<span x-text="meta.total"></span> records)
                                     </span>
                                 </h2>
-                                <p class="text-gray-600 text-sm font-medium mt-1">Specialized Medical Care referral network</p>
+                                <p class="text-gray-600 text-sm font-medium mt-1">Available Medical Fields for referrals</p>
                             </div>
                         </div>
 
@@ -137,7 +137,7 @@
                             <button @click="openModal()"
                                 class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95 group">
                                 <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
-                                Add Specialist
+                                Add Specialty
                             </button>
                             
                             <button @click="showSidebar = !showSidebar"
@@ -163,13 +163,7 @@
                                 <tr>
                                     <th @click="sort('name')" class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest cursor-pointer hover:text-indigo-600 transition-colors group">
                                         <div class="flex items-center gap-2">
-                                            Specialist Name
-                                            <i class="fas fa-sort text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
-                                        </div>
-                                    </th>
-                                    <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest cursor-pointer hover:text-indigo-600 transition-colors group">
-                                        <div class="flex items-center gap-2">
-                                            Medical Specialty
+                                            Specialty Name
                                             <i class="fas fa-sort text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
                                         </div>
                                     </th>
@@ -199,9 +193,9 @@
 
                                 <template x-if="!loading && physicians.length === 0">
                                     <tr>
-                                        <td colspan="5" class="py-24 text-center text-slate-400">
-                                            <i class="fas fa-user-md text-5xl mb-4 opacity-20"></i>
-                                            <p class="text-sm font-bold tracking-tight">No specialists found matching your search</p>
+                                        <td colspan="4" class="py-24 text-center text-slate-400">
+                                            <i class="fas fa-stethoscope text-5xl mb-4 opacity-20"></i>
+                                            <p class="text-sm font-bold tracking-tight">No specialties found matching your search</p>
                                         </td>
                                     </tr>
                                 </template>
@@ -211,15 +205,12 @@
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-4">
                                                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-indigo-600 border border-indigo-200 group-hover:scale-110 transition-transform shadow-sm">
-                                                    <i class="fas fa-user-md text-sm"></i>
+                                                    <i class="fas fa-stethoscope text-sm"></i>
                                                 </div>
                                                 <div>
                                                     <div class="text-sm font-black text-slate-800 tracking-tight" x-text="sp.name"></div>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-700 border border-blue-100" x-text="sp.medical_specialty ? sp.medical_specialty.name : sp.specialty"></span>
                                         </td>
 
                                         <td class="px-6 py-4">
@@ -301,28 +292,15 @@
 
                     {{-- Search Input --}}
                     <div class="space-y-3">
-                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Specialist Search</label>
+                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Specialty Search</label>
                         <div class="relative group">
                             <input x-model="filters.search" @input.debounce.400ms="fetchData()"
-                                   type="text" placeholder="Search specialists..." 
+                                   type="text" placeholder="Search specialties..." 
                                    class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-xs text-slate-800 placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-400 transition-all outline-none font-bold">
                             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
                         </div>
                     </div>
 
-                    {{-- Specialty Filter --}}
-                    <div class="space-y-4">
-                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Focus Areas</label>
-                        <div class="space-y-2">
-                            <select x-model="filters.medical_specialty_id" @change="fetchData()" 
-                                    class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-4 text-xs font-bold text-slate-800 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-400 transition-all outline-none appearance-none">
-                                <option value="">All Specialties</option>
-                                @foreach($specialtiesList as $spec)
-                                    <option value="{{ $spec->id }}">{{ $spec->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
 
                     {{-- Status Filter --}}
                     <div class="space-y-4">
@@ -363,7 +341,7 @@
                         <i class="fas" :class="editing ? 'fa-user-edit' : 'fa-user-plus'"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-black text-indigo-900 tracking-tight" x-text="editing ? 'Edit Specialist' : 'Register Specialist'"></h3>
+                        <h3 class="text-xl font-black text-indigo-900 tracking-tight" x-text="editing ? 'Edit Medical Specialty' : 'Add Medical Specialty'"></h3>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Medical Referral Network</p>
                     </div>
                 </div>
@@ -375,24 +353,10 @@
             <form @submit.prevent="save()" class="p-8 space-y-6">
                 <!-- Name -->
                 <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Full Doctor Name</label>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Specialty Name</label>
                     <div class="relative group">
-                        <input x-model="form.name" type="text" placeholder="Dr. " required class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-slate-800 placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500/50 transition-all outline-none">
+                        <input x-model="form.name" type="text" placeholder="e.g. Cardiology" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-slate-800 placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500/50 transition-all outline-none">
                         <i class="fas fa-stethoscope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                    </div>
-                </div>
-
-                <!-- Specialty -->
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Medical Specialty</label>
-                    <div class="relative group">
-                        <select x-model="form.medical_specialty_id" required class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-slate-800 focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500/50 transition-all outline-none appearance-none">
-                            <option value="">Select Specialty...</option>
-                            @foreach($specialtiesList as $spec)
-                                <option value="{{ $spec->id }}">{{ $spec->name }}</option>
-                            @endforeach
-                        </select>
-                        <i class="fas fa-award absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
                     </div>
                 </div>
 
@@ -404,7 +368,7 @@
                         <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-100 group-hover:rotate-12 transition-transform">
                             <i class="fas fa-power-off text-xs"></i>
                         </div>
-                        <span class="text-xs font-black uppercase tracking-widest text-indigo-900">Affiliation Status</span>
+                        <span class="text-xs font-black uppercase tracking-widest text-indigo-900">Active Status</span>
                     </div>
                     <button type="button" @click="form.is_active = !form.is_active" class="relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-500 shadow-inner" :class="form.is_active ? 'bg-indigo-600' : 'bg-slate-300'">
                         <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow-xl transition-transform duration-500" :class="form.is_active ? 'translate-x-6' : 'translate-x-1'"></span>
@@ -418,7 +382,7 @@
                     <button type="submit" class="flex-1 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-2">
                         <i class="fas fa-save" x-show="!saving"></i>
                         <i class="fas fa-spinner fa-spin" x-show="saving"></i>
-                        <span x-text="editing ? 'Update Specialist' : 'Register Specialist'"></span>
+                        <span x-text="editing ? 'Update Specialty' : 'Add Specialty'"></span>
                     </button>
                 </div>
             </form>
@@ -431,7 +395,7 @@
 @push('scripts')
 <script>
 function physicianRegistry() {
-    const STORAGE_KEY = 'physician_registry_filters_v3';
+    const STORAGE_KEY = 'medical_specialties_filters_v1';
 
     return {
         physicians: [],
@@ -445,10 +409,10 @@ function physicianRegistry() {
         saving: false,
 
         filters: JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
-            search: '', status: '', medical_specialty_id: '', per_page: '15', sort_by: 'name', sort_dir: 'asc'
+            search: '', status: '', per_page: '15', sort_by: 'name', sort_dir: 'asc'
         })),
 
-        form: { name: '', medical_specialty_id: '', is_active: true },
+        form: { name: '', is_active: true },
 
         init() {
             this.fetchStats();
@@ -493,7 +457,7 @@ function physicianRegistry() {
         },
 
         clearFilters() {
-            this.filters = { search: '', status: '', medical_specialty_id: '', per_page: '15', sort_by: 'name', sort_dir: 'asc' };
+            this.filters = { search: '', status: '', per_page: '15', sort_by: 'name', sort_dir: 'asc' };
             this.fetchData();
         },
 
@@ -502,11 +466,10 @@ function physicianRegistry() {
             if (sp) {
                 this.form = { 
                     name: sp.name, 
-                    medical_specialty_id: sp.medical_specialty_id, 
                     is_active: !!sp.is_active 
                 };
             } else {
-                this.form = { name: '', medical_specialty_id: '', is_active: true };
+                this.form = { name: '', is_active: true };
             }
             this.showModal = true;
         },
@@ -555,7 +518,7 @@ function physicianRegistry() {
         },
 
         async deletePhysician(sp) {
-            if (!confirm(`Permanently remove ${sp.name} from the registry?`)) return;
+            if (!confirm(`Permanently remove ${sp.name} from the specialty registry?`)) return;
             try {
                 const url = `{{ route('doctor.setup.physicians.destroy', ['externalSpecialist' => ':id']) }}`.replace(':id', sp.id);
                 const r = await fetch(url, {
