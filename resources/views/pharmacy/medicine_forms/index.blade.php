@@ -139,6 +139,14 @@
                                         </button>
                                     </div>
                                 </th>
+                                <th class="px-5 py-4 text-center border-b border-slate-50">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                            <i class="fas fa-toggle-on text-[10px]"></i>
+                                        </div>
+                                        <span>Status</span>
+                                    </div>
+                                </th>
                                 <th class="px-5 py-4 text-center whitespace-nowrap w-32 border-b border-slate-50">
                                     <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                         <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
@@ -152,7 +160,7 @@
                         <tbody class="divide-y divide-slate-100">
                             <template x-if="loading">
                                 <tr>
-                                    <td colspan="3" class="p-8 text-center text-slate-500">
+                                    <td colspan="4" class="p-8 text-center text-slate-500">
                                         <i class="fas fa-circle-notch fa-spin text-3xl text-indigo-400 mb-2"></i>
                                         <p class="text-sm font-medium">Syncing Data...</p>
                                     </td>
@@ -161,7 +169,7 @@
 
                             <template x-if="!loading && forms.length === 0">
                                 <tr>
-                                    <td colspan="3" class="py-24 text-center">
+                                    <td colspan="4" class="py-24 text-center">
                                         <div class="w-32 h-32 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
                                             <i class="fas fa-ghost text-4xl text-slate-300"></i>
                                         </div>
@@ -188,6 +196,19 @@
                                             <div>
                                                 <p class="text-sm font-bold text-navy-800" x-text="item.name"></p>
                                             </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 border-b border-slate-50 transition-all text-center" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                        <div class="flex flex-col items-center gap-1">
+                                            <button @click="toggleStatus(item)" 
+                                                class="relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none"
+                                                :class="item.is_active ? 'bg-emerald-500' : 'bg-rose-500'">
+                                                <span class="inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm"
+                                                    :class="item.is_active ? 'translate-x-6' : 'translate-x-1'"></span>
+                                            </button>
+                                            <div class="text-[9px] font-black uppercase tracking-widest"
+                                                :class="item.is_active ? 'text-emerald-600' : 'text-rose-600'"
+                                                x-text="item.is_active ? 'Active' : 'Inactive'"></div>
                                         </div>
                                     </td>
                                     <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap" :class="density === 'condensed' ? 'py-2' : 'py-5'">
@@ -362,7 +383,7 @@
             <div x-show="showAddModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block w-full max-w-md overflow-hidden text-left align-bottom transition-all transform bg-white shadow-2xl rounded-3xl sm:my-8 sm:align-middle border border-slate-100">
                 
                 {{-- Modal Header --}}
-                <div class="px-6 py-5 border-b border-indigo-100/50 bg-gradient-to-r from-blue-50 to-indigo-50 flex justify-between items-center relative overflow-hidden">
+                <div class="px-8 py-6 border-b border-indigo-100/50 bg-gradient-to-r from-blue-50 to-indigo-50 flex justify-between items-center relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-indigo-100 shadow-sm text-indigo-600 relative z-10">
@@ -376,7 +397,7 @@
                 </div>
 
                 {{-- Modal Body --}}
-                <div class="px-6 py-5">
+                <div class="p-8">
                     <form @submit.prevent="saveForm" class="space-y-5">
                         <div class="space-y-1.5 focus-within:text-indigo-600 transition-colors">
                             <label class="text-[10px] uppercase tracking-widest font-black text-slate-500 ml-1 flex items-center gap-2">Form Name <span class="text-rose-500">*</span></label>
@@ -387,7 +408,7 @@
                 </div>
 
                 {{-- Modal Footer --}}
-                <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 rounded-b-3xl">
+                <div class="px-8 py-6 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 rounded-b-3xl">
                     <button type="button" @click="closeAddModal()" class="px-5 py-2.5 bg-white border-2 border-slate-200 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-50 hover:text-slate-800 transition-colors shadow-sm cursor-pointer">
                         Cancel
                     </button>
@@ -405,7 +426,7 @@
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
             <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false"></div>
             
-            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
+            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-8 text-center border border-slate-100">
                 <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-indigo-100 text-indigo-600'">
                     <i class="fas text-3xl" :class="confirmConfig.icon"></i>
                 </div>
@@ -746,6 +767,31 @@
                     window.Notification.error('A network error occurred');
                 } finally {
                     this.confirming = false;
+                }
+            },
+
+            async toggleStatus(item) {
+                const originalStatus = item.is_active;
+                item.is_active = !originalStatus; // optimistic update
+
+                try {
+                    const response = await fetch(`/pharmacy/medicine-forms/${item.id}/toggle-status`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) throw new Error('Status update failed');
+                    
+                    const data = await response.json();
+                    window.Notification.success(data.message || 'Status updated successfully');
+                    await this.fetchStats(); 
+                } catch (error) {
+                    item.is_active = originalStatus; // revert
+                    window.Notification.error('Failed to update status');
                 }
             },
 

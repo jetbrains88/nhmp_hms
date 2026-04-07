@@ -106,4 +106,16 @@ class MedicineFormController extends Controller
 
         return response()->json($forms);
     }
+
+    public function toggleStatus(MedicineForm $medicineForm)
+    {
+        $medicineForm->is_active = !$medicineForm->is_active;
+        $medicineForm->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully.',
+            'data' => $medicineForm
+        ]);
+    }
 }

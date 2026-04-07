@@ -324,17 +324,17 @@
                                                 :class="density === 'condensed' ? 'py-2' : 'py-5'">
                                                 <div class="flex items-center justify-center gap-1.5">
                                                     <button @click="openViewModal(category)"
-                                                        class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100"
+                                                        class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-blue-100"
                                                         title="View Detail">
                                                         <i class="fas fa-eye text-[10px]"></i>
                                                     </button>
                                                     <button @click="openEditModal(category)"
-                                                        class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100"
+                                                        class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm border border-indigo-100"
                                                         title="Modify Node">
                                                         <i class="fas fa-edit text-[10px]"></i>
                                                     </button>
                                                     <button @click="confirmBulkAction('delete_single', category)"
-                                                        class="h-8 w-8 flex items-center justify-center bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100"
+                                                        class="h-8 w-8 flex items-center justify-center bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100"
                                                         title="Purge Record">
                                                         <i class="fas fa-trash-alt text-[10px]"></i>
                                                     </button>

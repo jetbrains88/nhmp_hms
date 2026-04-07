@@ -104,9 +104,6 @@ class MedicineController extends Controller
         return view('pharmacy.medicines.edit', compact('medicine', 'categories', 'forms'));
     }
 
-    /**
-     * Update medicine
-     */
     public function update(StoreMedicineRequest $request, Medicine $medicine)
     {
         $medicine->update($request->validated());
@@ -114,6 +111,22 @@ class MedicineController extends Controller
         return redirect()
             ->route('pharmacy.medicines.show', $medicine)
             ->with('success', 'Medicine updated successfully');
+    }
+
+    /**
+     * Toggle medicine status
+     */
+    public function toggleStatus(Medicine $medicine)
+    {
+        $medicine->update([
+            'is_active' => !$medicine->is_active
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Medicine status updated successfully',
+            'is_active' => $medicine->is_active
+        ]);
     }
 
     /**
@@ -206,6 +219,7 @@ class MedicineController extends Controller
                 'unit' => $medicine->unit,
                 'reorder_level' => (int)$medicine->reorder_level,
                 'requires_prescription' => (bool)$medicine->requires_prescription,
+                'is_active' => (bool)$medicine->is_active,
                 'view_url' => route('pharmacy.medicines.show', $medicine->id),
                 'edit_url' => route('pharmacy.medicines.edit', $medicine->id),
                 'delete_url' => route('pharmacy.medicines.destroy', $medicine->id),

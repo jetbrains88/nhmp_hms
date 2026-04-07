@@ -28,7 +28,7 @@
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
         <!-- Total Medicines Card -->
         <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
@@ -79,6 +79,24 @@
                 <div class="flex items-center gap-2">
                     <span class="h-1.5 w-1.5 rounded-full bg-teal-600"></span>
                     <span class="text-[10px] text-teal-700 font-bold uppercase tracking-tight">Restricted meds</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Catalog Card -->
+        <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/20 border border-amber-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="filters.search = ''; fetchMedicines()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-600 to-orange-400 shadow-lg shadow-amber-900/30 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-globe text-xl text-white drop-shadow-md"></i>
+            </div>
+            <div class="p-4 text-right pt-4">
+                <p class="text-xs font-bold tracking-wider text-orange-500 uppercase">Global Catalog</p>
+                <h4 class="text-3xl font-bold text-orange-700 drop-shadow-sm font-mono" x-text="stats.global">0</h4>
+            </div>
+            <div class="mx-4 mb-4 border-t border-amber-200 pt-2 pb-1">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-amber-600"></span>
+                    <span class="text-[10px] text-amber-700 font-bold uppercase tracking-tight">Shared branch med</span>
                 </div>
             </div>
         </div>
@@ -193,6 +211,14 @@
                                             <i class="fas" :class="sortIcon('total_stock')"></i>
                                         </button>
                                     </th>
+                                    <th class="px-5 py-4 text-center">
+                                        <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shadow-sm border border-blue-100">
+                                                <i class="fas fa-toggle-on text-[10px]"></i>
+                                            </div>
+                                            <span>Status</span>
+                                        </div>
+                                    </th>
                                     <th class="px-5 py-4 text-right text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                         Actions
                                     </th>
@@ -257,13 +283,25 @@
                                                 <span class="text-[9px] text-gray-400 font-bold uppercase mt-0.5" x-text="medicine.unit"></span>
                                             </div>
                                         </td>
+                                        <td class="px-5 py-4 text-center">
+                                            <button @click="toggleStatus(medicine)" 
+                                                    class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 focus:outline-none shadow-inner cursor-pointer"
+                                                    :class="medicine.is_active ? 'bg-emerald-500' : 'bg-slate-200'">
+                                                <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-300"
+                                                      :class="medicine.is_active ? 'translate-x-[18px]' : 'translate-x-1'"></span>
+                                            </button>
+                                            <div class="text-[9px] font-black uppercase tracking-widest mt-1" 
+                                                 :class="medicine.is_active ? 'text-emerald-500' : 'text-slate-400'"
+                                                 x-text="medicine.is_active ? 'Active' : 'Offline'">
+                                            </div>
+                                        </td>
                                         <td class="px-5 py-4">
-                                            <div class="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <a :href="medicine.view_url" class="w-8 h-8 rounded-lg bg-gray-50 hover:bg-emerald-500 hover:text-white text-gray-500 flex items-center justify-center transition-all border border-gray-200 hover:border-emerald-600">
-                                                    <i class="fas fa-eye text-xs"></i>
+                                            <div class="flex flex-wrap items-center justify-end gap-1.5 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <a :href="medicine.view_url" class="h-8 w-8 flex items-center justify-center bg-sky-50 text-sky-600 rounded-lg hover:bg-sky-500 hover:text-white transition-all shadow-sm border border-sky-100" title="View Details">
+                                                    <i class="fas fa-eye text-[10px]"></i>
                                                 </a>
-                                                <a :href="medicine.edit_url" class="w-8 h-8 rounded-lg bg-gray-50 hover:bg-blue-600 hover:text-white text-gray-500 flex items-center justify-center transition-all border border-gray-200 hover:border-blue-700">
-                                                    <i class="fas fa-pen text-xs"></i>
+                                                <a :href="medicine.edit_url" class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100" title="Modify Medicine">
+                                                    <i class="fas fa-edit text-[10px]"></i>
                                                 </a>
                                             </div>
                                         </td>
@@ -336,12 +374,18 @@
                                         <span class="text-2xl font-black font-mono" :class="medicine.is_low_stock ? 'text-rose-600' : 'text-emerald-600'" x-text="medicine.total_stock"></span>
                                         <span class="text-[10px] text-slate-400 font-bold uppercase ml-1" x-text="medicine.unit"></span>
                                     </div>
-                                    <div class="flex gap-2">
-                                        <a :href="medicine.view_url" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all border border-slate-200 hover:border-emerald-600">
-                                            <i class="fas fa-eye text-xs"></i>
+                                    <div class="flex flex-wrap gap-1.5 justify-end">
+                                        <button @click="toggleStatus(medicine)" 
+                                                class="h-8 px-2 flex items-center justify-center gap-1.5 rounded-lg transition-all shadow-sm border focus:outline-none"
+                                                :class="medicine.is_active ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-500 hover:text-white' : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-200 hover:text-slate-700'"
+                                                :title="medicine.is_active ? 'Set Offline' : 'Set Active'">
+                                            <i class="fas fa-power-off text-[10px]"></i>
+                                        </button>
+                                        <a :href="medicine.view_url" class="h-8 w-8 flex items-center justify-center bg-sky-50 text-sky-600 rounded-lg hover:bg-sky-500 hover:text-white transition-all shadow-sm border border-sky-100" title="View Details">
+                                            <i class="fas fa-eye text-[10px]"></i>
                                         </a>
-                                        <a :href="medicine.edit_url" class="w-9 h-9 rounded-lg bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all border border-slate-200 hover:border-blue-700">
-                                            <i class="fas fa-pen text-xs"></i>
+                                        <a :href="medicine.edit_url" class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100" title="Modify Medicine">
+                                            <i class="fas fa-edit text-[10px]"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -600,6 +644,30 @@
                     l = i;
                 }
                 return rangeWithDots;
+            },
+
+            async toggleStatus(medicine) {
+                const original = medicine.is_active;
+                medicine.is_active = !original; // optimistic update
+
+                try {
+                    const response = await fetch(`/pharmacy/medicines/${medicine.id}/toggle-status`, {
+                        method: 'PATCH',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    const result = await response.json();
+                    if (!result.success) {
+                        medicine.is_active = original; // revert on failure
+                    }
+                } catch (error) {
+                    medicine.is_active = original; // revert on error
+                    console.error('Toggle status error:', error);
+                }
             }
         };
     }

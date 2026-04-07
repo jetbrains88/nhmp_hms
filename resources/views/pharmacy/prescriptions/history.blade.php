@@ -10,7 +10,7 @@
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Same colors as User Management
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 gap-y-10 mt-8 p-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
 
         {{-- Total Dispensed Card (Blue - matches Total Users) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/30 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
@@ -679,12 +679,12 @@
                             </td>
 
                             {{-- Actions Column --}}
-                            <td class="px-5 py-4 whitespace-nowrap text-center">
-                                <a href="javascript:void(0)" @click="openDetails(item)"
-                                   class="inline-flex items-center gap-1.5 px-4 py-2 text-gray-600 hover:text-gray-900 rounded-lg text-xs font-bold transition-all duration-200 shadow-md hover:shadow-lg">
-                                    <i class="fas fa-eye"></i>
-                                    View Details
-                                </a>
+                            <td class="px-5 py-4 text-center">
+                                <div class="flex justify-center items-center">
+                                    <button @click="openDetails(item)" class="h-8 w-8 flex items-center justify-center bg-sky-50 text-sky-600 rounded-lg hover:bg-sky-500 hover:text-white transition-all shadow-sm border border-sky-100" title="View Dispensation Details">
+                                        <i class="fas fa-eye text-[10px]"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </template>
@@ -784,7 +784,7 @@
              @click.outside="showDetailModal = false">
 
             {{-- Modal Header --}}
-            <div class="sticky top-0 bg-white px-6 py-4 border-b border-gray-200 flex justify-between items-center z-10 rounded-t-2xl">
+            <div class="sticky top-0 bg-white px-8 py-5 border-b border-gray-200 flex justify-between items-center z-10 rounded-t-2xl">
                 <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                         <i class="fas fa-pills text-white"></i>
@@ -795,7 +795,7 @@
             </div>
 
             {{-- Modal Body --}}
-            <div class="p-6 space-y-5" x-show="selectedItem">
+            <div class="p-8 space-y-6" x-show="selectedItem">
 
                 {{-- Medicine highlight --}}
                 <div class="p-5 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100">
@@ -900,7 +900,7 @@
             </div>
 
             {{-- Modal Footer --}}
-            <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+            <div class="px-8 py-5 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl bg-gray-50/50">
                 <button @click="showDetailModal = false"
                         class="px-6 py-2.5 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg">
                     <i class="fas fa-times mr-2"></i> Close

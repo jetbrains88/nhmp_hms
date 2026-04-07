@@ -430,6 +430,7 @@ Route::middleware(['auth', 'branch.context', 'role:pharmacy'])->prefix('pharmacy
 
     // Medicine Management
     Route::get('/medicines/api-list', [MedicineController::class, 'apiList'])->name('medicines.api-list');
+    Route::patch('/medicines/{medicine}/toggle-status', [MedicineController::class, 'toggleStatus'])->name('medicines.toggle-status');
     Route::resource('medicines', MedicineController::class);
 
     // Medicine Categories & Forms
@@ -443,6 +444,7 @@ Route::middleware(['auth', 'branch.context', 'role:pharmacy'])->prefix('pharmacy
     Route::get('/medicine-forms/stats', [MedicineFormController::class, 'stats'])->name('medicine-forms.stats');
     Route::get('/medicine-forms/data', [MedicineFormController::class, 'data'])->name('medicine-forms.data');
     Route::post('/medicine-forms/bulk-destroy', [MedicineFormController::class, 'bulkDestroy'])->name('medicine-forms.bulk-destroy');
+    Route::patch('/medicine-forms/{medicine_form}/toggle-status', [MedicineFormController::class, 'toggleStatus'])->name('medicine-forms.toggle-status');
     Route::resource('medicine-forms', MedicineFormController::class)->except(['show', 'create', 'edit']);
 
     // Inventory Management

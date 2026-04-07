@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MedicineForm extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'is_active'];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function medicines(): HasMany
     {
