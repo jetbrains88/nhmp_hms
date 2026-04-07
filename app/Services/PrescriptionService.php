@@ -42,12 +42,12 @@ class PrescriptionService
     }
     
     /**
-     * Dispense a prescription
+     * Dispense a prescription (Supports Multi-Batch FIFO)
      */
-    public function dispensePrescription(Prescription $prescription, int $pharmacistId, array $data): PrescriptionDispensation
+    public function dispensePrescription(Prescription $prescription, int $pharmacistId, array $data): array
     {
         return DB::transaction(function () use ($prescription, $pharmacistId, $data) {
-            // Check if prescription can be dispensed
+            // 1. Validation
             if ($prescription->status === 'completed') {
                 throw new \InvalidArgumentException('Prescription already fully dispensed');
             }
@@ -56,77 +56,108 @@ class PrescriptionService
                 throw new \InvalidArgumentException('Prescription is cancelled');
             }
             
-            $quantityToDispense = $data['quantity'] ?? $prescription->remaining_quantity;
+            $quantityToDispense = $data['quantity_dispensed'] ?? $prescription->remaining_quantity;
             
             if ($quantityToDispense <= 0) {
                 throw new \InvalidArgumentException('Invalid quantity to dispense');
             }
-            
-            // Find suitable batch
-            $batch = null;
-            if (!empty($data['batch_number'])) {
-                $batch = MedicineBatch::where('batch_number', $data['batch_number'])
-                    ->where('medicine_id', $prescription->medicine_id)
-                    ->where('branch_id', $prescription->branch_id)
-                    ->where('remaining_quantity', '>=', $quantityToDispense)
-                    ->first();
+
+            if ($quantityToDispense > $prescription->remaining_quantity) {
+                throw new \InvalidArgumentException("Cannot dispense more than remaining ({$prescription->remaining_quantity})");
             }
             
-            if (!$batch) {
-                $batch = $this->findSuitableBatch($prescription->medicine_id, $prescription->branch_id, $quantityToDispense);
+            // 2. Batch Selection Logic (Prioritize Assigned -> FIFO)
+            $availableBatches = $this->getAvailableBatches($prescription->medicine_id, $prescription->branch_id);
+            $selectedBatches = [];
+            $remainingToPull = $quantityToDispense;
+
+            // If a specific batch was assigned, pull from it first
+            if (!empty($data['medicine_batch_id'])) {
+                $assignedBatch = $availableBatches->firstWhere('id', $data['medicine_batch_id']);
+                if (!$assignedBatch) {
+                    throw new \InvalidArgumentException('Selected batch is unavailable or empty');
+                }
+                
+                $pullAmount = min($remainingToPull, $assignedBatch->remaining_quantity);
+                $selectedBatches[] = ['batch' => $assignedBatch, 'quantity' => $pullAmount];
+                $remainingToPull -= $pullAmount;
+            }
+
+            // Pull remainder from other batches using FIFO (Expiry Date)
+            if ($remainingToPull > 0) {
+                foreach ($availableBatches as $batch) {
+                    // Skip if this was the already partially used assigned batch
+                    if (isset($assignedBatch) && $batch->id === $assignedBatch->id) continue;
+                    
+                    if ($batch->remaining_quantity <= 0) continue;
+
+                    $pullAmount = min($remainingToPull, $batch->remaining_quantity);
+                    $selectedBatches[] = ['batch' => $batch, 'quantity' => $pullAmount];
+                    $remainingToPull -= $pullAmount;
+
+                    if ($remainingToPull <= 0) break;
+                }
+            }
+
+            if ($remainingToPull > 0) {
+                throw new \InvalidArgumentException('Insufficient total stock available across all batches');
             }
             
-            if (!$batch) {
-                throw new \InvalidArgumentException('Insufficient stock available');
+            // 3. Execution (Create Dispenations & Update Inventory)
+            $dispensations = [];
+            foreach ($selectedBatches as $item) {
+                $batch = $item['batch'];
+                $qty = $item['quantity'];
+
+                $dispensation = PrescriptionDispensation::create([
+                    'uuid' => (string) Str::uuid(),
+                    'prescription_id' => $prescription->id,
+                    'quantity_dispensed' => $qty,
+                    'dispensed_by' => $pharmacistId,
+                    'dispensed_at' => now(),
+                    'medicine_batch_id' => $batch->id,
+                    'alternative_medicine_id' => $data['alternative_medicine_id'] ?? null,
+                    'notes' => $data['notes'] ?? null,
+                ]);
+
+                $this->inventoryService->removeStock(
+                    $batch,
+                    $qty,
+                    $pharmacistId,
+                    'dispense',
+                    "Dispensed for prescription #{$prescription->id}",
+                    $dispensation
+                );
+
+                $dispensations[] = $dispensation;
             }
             
-            // Create dispensation record
-            $dispensation = PrescriptionDispensation::create([
-                'uuid' => (string) Str::uuid(),
-                'prescription_id' => $prescription->id,
-                'quantity_dispensed' => $quantityToDispense,
-                'dispensed_by' => $pharmacistId,
-                'dispensed_at' => now(),
-                'medicine_batch_id' => $batch->id,
-                'notes' => $data['notes'] ?? null,
-            ]);
+            // 4. Update Prescription Status
+            $totalDispensedNow = collect($selectedBatches)->sum('quantity');
+            $newRemaining = $prescription->remaining_quantity - $totalDispensedNow;
             
-            // Update stock using inventory service
-            $this->inventoryService->removeStock(
-                $batch,
-                $quantityToDispense,
-                $pharmacistId,
-                'dispense',
-                "Dispensed for prescription #{$prescription->id}",
-                $dispensation
-            );
-            
-            // Update prescription status
-            $remainingAfter = $prescription->remaining_quantity - $quantityToDispense;
-            
-            if ($remainingAfter <= 0) {
+            if ($newRemaining <= 0) {
                 $prescription->update(['status' => 'completed']);
-            } elseif ($prescription->status === 'pending') {
+            } else {
                 $prescription->update(['status' => 'partially_dispensed']);
             }
             
-            return $dispensation;
+            return $dispensations;
         });
     }
     
     /**
-     * Find the most suitable batch for dispensing
-     * Uses FIFO (First In, First Out) based on expiry date
+     * Get all active, in-stock batches for a medicine (FEFO)
      */
-    protected function findSuitableBatch(int $medicineId, int $branchId, int $quantityNeeded): ?MedicineBatch
+    protected function getAvailableBatches(int $medicineId, int $branchId)
     {
         return MedicineBatch::where('medicine_id', $medicineId)
             ->where('branch_id', $branchId)
-            ->where('remaining_quantity', '>=', $quantityNeeded)
+            ->where('remaining_quantity', '>', 0)
             ->where('expiry_date', '>', now())
             ->where('is_active', true)
-            ->orderBy('expiry_date', 'asc') // Use soonest expiring first
-            ->first();
+            ->orderBy('expiry_date', 'asc')
+            ->get();
     }
     
     /**

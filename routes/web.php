@@ -300,6 +300,8 @@ Route::middleware(['auth', 'branch.context', 'role:doctor'])->prefix('doctor')->
         Route::post('/illness-tags', [IllnessTagController::class, 'store'])->name('illness-tags.store');
         Route::put('/illness-tags/{illnessTag}', [IllnessTagController::class, 'update'])->name('illness-tags.update');
         Route::patch('/illness-tags/{illnessTag}/toggle', [IllnessTagController::class, 'toggleStatus'])->name('illness-tags.toggle');
+        Route::post('/illness-tags/bulk-status', [IllnessTagController::class, 'bulkStatus'])->name('illness-tags.bulk-status');
+        Route::post('/illness-tags/bulk-destroy', [IllnessTagController::class, 'bulkDestroy'])->name('illness-tags.bulk-destroy');
         Route::delete('/illness-tags/{illnessTag}', [IllnessTagController::class, 'destroy'])->name('illness-tags.destroy');
 
         // External Specialists (branch-scoped)
@@ -309,6 +311,8 @@ Route::middleware(['auth', 'branch.context', 'role:doctor'])->prefix('doctor')->
         Route::post('/physicians', [ExternalSpecialistController::class, 'store'])->name('physicians.store');
         Route::put('/physicians/{externalSpecialist}', [ExternalSpecialistController::class, 'update'])->name('physicians.update');
         Route::patch('/physicians/{externalSpecialist}/toggle', [ExternalSpecialistController::class, 'toggleStatus'])->name('physicians.toggle');
+        Route::post('/physicians/bulk-status', [ExternalSpecialistController::class, 'bulkStatus'])->name('physicians.bulk-status');
+        Route::post('/physicians/bulk-destroy', [ExternalSpecialistController::class, 'bulkDestroy'])->name('physicians.bulk-destroy');
         Route::delete('/physicians/{externalSpecialist}', [ExternalSpecialistController::class, 'destroy'])->name('physicians.destroy');
 
         // Prescription Abbreviations
@@ -319,6 +323,8 @@ Route::middleware(['auth', 'branch.context', 'role:doctor'])->prefix('doctor')->
         Route::post('/prescription-abbreviations', [DoctorPrescriptionAbbreviationController::class, 'store'])->name('prescription-abbreviations.store');
         Route::put('/prescription-abbreviations/{prescriptionAbbreviation}', [DoctorPrescriptionAbbreviationController::class, 'update'])->name('prescription-abbreviations.update');
         Route::patch('/prescription-abbreviations/{prescriptionAbbreviation}/toggle', [DoctorPrescriptionAbbreviationController::class, 'toggleStatus'])->name('prescription-abbreviations.toggle');
+        Route::post('/prescription-abbreviations/bulk-status', [DoctorPrescriptionAbbreviationController::class, 'bulkStatus'])->name('prescription-abbreviations.bulk-status');
+        Route::post('/prescription-abbreviations/bulk-destroy', [DoctorPrescriptionAbbreviationController::class, 'bulkDestroy'])->name('prescription-abbreviations.bulk-destroy');
         Route::delete('/prescription-abbreviations/{prescriptionAbbreviation}', [DoctorPrescriptionAbbreviationController::class, 'destroy'])->name('prescription-abbreviations.destroy');
     });
 });

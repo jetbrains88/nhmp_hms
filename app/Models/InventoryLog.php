@@ -12,7 +12,7 @@ class InventoryLog extends Model
 {
     use HasUUID, MultiTenant;
 
-    protected $fillable = [ç
+    protected $fillable = [
         'uuid',
         'branch_id',
         'medicine_id',

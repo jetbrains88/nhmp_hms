@@ -27,38 +27,74 @@
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
-        <!-- Total Types Card -->
-        <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/20 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-             @click="filterDepartment = ''; searchQuery = ''; fetchTestTypes(); showSidebar = true">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 shadow-lg shadow-purple-900/30 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-vials text-xl text-white drop-shadow-md"></i>
+        <!-- Total Test Types -->
+        <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="clearFilters()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 shadow-lg shadow-blue-900/30 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-microscope text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-purple-600 uppercase">Total Types</p>
-                <h4 class="text-3xl font-bold text-purple-800 drop-shadow-sm font-mono" x-text="stats.total">0</h4>
+                <p class="text-[10px] font-black tracking-widest text-sky-500 uppercase">Total Test Types</p>
+                <h4 class="text-3xl font-bold text-sky-700 drop-shadow-sm font-mono" x-text="stats.total">0</h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-purple-200 pt-2 text-purple-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-purple-600 animate-pulse"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">System Classifications</span>
+            <div class="mx-4 mb-4 border-t border-sky-200 pt-2">
+                <div class="flex items-center gap-2 text-sky-700">
+                    <span class="h-1.5 w-1.5 rounded-full bg-sky-600 animate-pulse"></span>
+                    <span class="text-[9px] font-black uppercase tracking-tight">Active Diagnostics</span>
                 </div>
             </div>
         </div>
 
-        <!-- Departments Card -->
-        <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-             @click="showSidebar = true">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-lg shadow-blue-900/30 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-building text-xl text-white drop-shadow-md"></i>
+        <!-- Routine Card -->
+        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/20 border border-emerald-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="filterDepartment = 'Routine'; fetchTestTypes()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-lg shadow-emerald-900/30 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-calendar-check text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-blue-600 uppercase">Departments</p>
-                <h4 class="text-3xl font-bold text-blue-800 drop-shadow-sm font-mono" x-text="stats.departments">0</h4>
+                <p class="text-[10px] font-black tracking-widest text-teal-500 uppercase">Routine Tests</p>
+                <h4 class="text-3xl font-bold text-teal-700 drop-shadow-sm font-mono" x-text="stats.routine">0</h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-blue-200 pt-2 text-blue-700">
+            <div class="mx-4 mb-4 border-t border-teal-200 pt-2 text-teal-700">
                 <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Active Lab Sections</span>
+                    <span class="h-1.5 w-1.5 rounded-full bg-teal-600 animate-pulse"></span>
+                    <span class="text-[9px] font-black uppercase tracking-tight">Standard Batch</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Special Card -->
+        <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl shadow-lg shadow-rose-500/20 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="filterDepartment = 'Special'; fetchTestTypes()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-pink-400 shadow-lg shadow-rose-900/30 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-star text-xl text-white drop-shadow-md"></i>
+            </div>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-rose-500 uppercase">Special Tests</p>
+                <h4 class="text-3xl font-bold text-rose-700 drop-shadow-sm font-mono" x-text="stats.special">0</h4>
+            </div>
+            <div class="mx-4 mb-4 border-t border-rose-200 pt-2 text-rose-700">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+                    <span class="text-[9px] font-black uppercase tracking-tight">Premium Analytics</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Urgent Card -->
+        <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl shadow-lg shadow-purple-500/20 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="filterDepartment = 'Urgent'; fetchTestTypes()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-900/30 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-bolt text-xl text-white drop-shadow-md"></i>
+            </div>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-fuchsia-500 uppercase">Urgent Load</p>
+                <h4 class="text-3xl font-bold text-fuchsia-700 drop-shadow-sm font-mono" x-text="stats.urgent">0</h4>
+            </div>
+            <div class="mx-4 mb-4 border-t border-purple-200 pt-2 text-fuchsia-700">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-fuchsia-600 animate-pulse"></span>
+                    <span class="text-[9px] font-black uppercase tracking-tight">Priority Queue</span>
                 </div>
             </div>
         </div>
@@ -81,43 +117,36 @@
                             <i class="fas fa-vial text-2xl text-purple-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 tracking-tight flex items-center gap-3">
-                                Test Types
+                            <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight flex items-center gap-3">
+                                Diagnostic Vault
                                 <span class="text-lg font-normal text-gray-600">
                                     (<span x-text="pagination.total"></span> records)
                                 </span>
                             </h2>
-                            <p class="text-gray-600 text-sm font-medium mt-1">Manage laboratory test classifications and sample requirements</p>
+                            <p class="text-gray-600 text-sm font-medium mt-1">Experimental diagnostic parameter registry</p>
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-4 items-center">
-                        {{-- Rows Selector moved here --}}
-                        <div class="flex items-center gap-2 bg-white border border-purple-200 rounded-xl px-3 py-1.5 shadow-sm">
-                            <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase">Rows</span>
-                            <select x-model="pagination.per_page" @change="searchTestTypes()" class="bg-transparent text-purple-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </div>
-
+                    <div class="flex flex-wrap gap-3 items-center">
                         <button @click="openAddModal()"
-                            class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-purple-500/40 transition-all active:scale-95 group">
-                            <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
+                            class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-purple-500/30 transition-all active:scale-95 group">
+                            <i class="fas fa-plus group-hover:rotate-90 transition-transform duration-300"></i>
                             New Type
                         </button>
+                        
+                        <div class="h-8 w-px bg-purple-100 mx-1"></div>
+
                         <button @click="showSidebar = !showSidebar"
-                            class="w-10 h-10 flex items-center justify-center bg-white border border-purple-200 text-purple-600 rounded-xl hover:bg-purple-50 transition-colors shadow-sm"
+                            class="w-10 h-10 flex items-center justify-center bg-white border border-purple-200 text-purple-600 rounded-xl hover:bg-purple-50 transition-colors shadow-sm relative group"
                             :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
-                            <i class="fas" :class="showSidebar ? 'fa-eye-slash' : 'fa-filter'"></i>
+                            <i class="fas" :class="showSidebar ? 'fa-eye-slash text-rose-500' : 'fa-filter'"></i>
+                            <span x-show="hasActiveFilters()" class="absolute -top-1 -right-1 w-3 h-3 bg-rose-500 border-2 border-white rounded-full"></span>
                         </button>
                         
                         <button @click="fetchTestTypes()" 
-                            class="w-10 h-10 flex items-center justify-center bg-white border border-purple-200 text-purple-600 rounded-xl hover:bg-purple-50 transition-colors shadow-sm"
-                            title="Refresh">
-                            <i class="fas fa-sync-alt" :class="loading ? 'animate-spin' : ''"></i>
+                            class="w-10 h-10 flex items-center justify-center bg-white border border-purple-200 text-purple-600 rounded-xl hover:bg-purple-50 transition-colors shadow-sm group"
+                            title="Refresh Sync">
+                            <i class="fas fa-sync-alt group-hover:rotate-180 transition-transform duration-700" :class="loading ? 'animate-spin text-purple-400' : ''"></i>
                         </button>
                     </div>
                 </div>
@@ -134,10 +163,11 @@
                         <span x-text="selectedIds.length"></span> Types Selected
                     </span>
                     <div class="flex items-center gap-2">
-                        <button @click="bulkDelete()" class="px-3 py-1.5 bg-rose-500/80 hover:bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Purge</button>
+                        <button @click="confirmBulkAction('deactivate')" class="px-3 py-1.5 bg-amber-500 shadow-lg shadow-amber-500/20 hover:bg-amber-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all px-4 cursor-pointer">Deactivate Selection</button>
+                        <button @click="confirmBulkAction('activate')" class="px-3 py-1.5 bg-emerald-500 shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all px-4 cursor-pointer">Activate Selection</button>
                     </div>
                 </div>
-                <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2">
+                <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2 cursor-pointer">
                     Dismiss <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -147,48 +177,48 @@
                 {{-- Table View --}}
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                         <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                        <thead class="bg-gradient-to-r from-slate-50 to-white border-b border-purple-100">
                             <tr>
-                                <th class="px-5 py-5 w-10">
+                                <th class="px-5 py-4 w-12">
                                     <div class="flex items-center justify-center">
                                         <input type="checkbox" @change="toggleAll($event)" :checked="selectedIds.length === testTypes.length && testTypes.length > 0"
-                                            class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 transition-all shadow-sm cursor-pointer">
+                                            class="w-5 h-5 rounded-lg border-purple-200 text-purple-600 focus:ring-purple-500 transition-all shadow-sm cursor-pointer hover:border-purple-400">
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 shadow-sm border border-blue-500/20">
-                                            <i class="fas fa-tag text-xs"></i>
+                                <th class="px-5 py-4">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shadow-sm border border-blue-100">
+                                            <i class="fas fa-tag text-[10px]"></i>
                                         </div>
-                                        <button @click="sortBy('name')" class="flex items-center gap-1.5 hover:text-purple-600 transition-colors group">
+                                        <button @click="sortBy('name')" class="flex items-center gap-1.5 hover:text-purple-700 transition-colors group">
                                             Test Name
-                                            <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('name')"></i>
+                                            <i class="fas text-[10px] transition-all duration-300 opacity-0 group-hover:opacity-100" :class="getSortIcon('name')"></i>
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-500/20">
-                                            <i class="fas fa-building text-xs"></i>
+                                <th class="px-5 py-4">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                            <i class="fas fa-building text-[10px]"></i>
                                         </div>
-                                        <button @click="sortBy('department')" class="flex items-center gap-1.5 hover:text-purple-600 transition-colors group">
+                                        <button @click="sortBy('department')" class="flex items-center gap-1.5 hover:text-purple-700 transition-colors group">
                                             Department
-                                            <i class="fas text-[10px] transition-transform duration-300" :class="getSortIcon('department')"></i>
+                                            <i class="fas text-[10px] transition-all duration-300 opacity-0 group-hover:opacity-100" :class="getSortIcon('department')"></i>
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-500/20">
-                                            <i class="fas fa-tint text-xs"></i>
+                                <th class="px-5 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100">
+                                            <i class="fas fa-tint text-[10px]"></i>
                                         </div>
-                                        <span>Sample Type</span>
+                                        Sample Type
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center whitespace-nowrap w-48">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 shadow-sm border border-amber-500/20">
-                                            <i class="fas fa-bolt text-xs"></i>
+                                <th class="px-5 py-4 text-center whitespace-nowrap w-40">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-100">
+                                            <i class="fas fa-bolt-lightning text-[10px]"></i>
                                         </div>
                                         Actions
                                     </div>
@@ -219,16 +249,16 @@
                             </template>
 
                             <template x-for="type in testTypes" :key="type.id">
-                                <tr class="hover:bg-purple-50/40 transition-colors group">
-                                    <td class="px-5 py-4">
+                                <tr class="hover:bg-purple-50/40 transition-colors group" :class="density === 'condensed' ? 'bg-white' : ''">
+                                    <td class="px-5 border-b border-slate-50 transition-all" :class="density === 'condensed' ? 'py-2' : 'py-5'">
                                         <div class="flex items-center justify-center">
                                             <input type="checkbox" :value="type.id" x-model="selectedIds"
-                                                class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 transition-all cursor-pointer">
+                                                class="w-5 h-5 rounded-lg border-purple-200 text-purple-600 focus:ring-purple-500 transition-all cursor-pointer">
                                         </div>
                                     </td>
-                                    <td class="px-5 py-4">
+                                    <td class="px-5 border-b border-slate-50 transition-all" :class="density === 'condensed' ? 'py-2' : 'py-5'">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform bg-purple-600 text-white">
+                                            <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform bg-purple-600 text-white shrink-0">
                                                 <i class="fas fa-vial text-sm"></i>
                                             </div>
                                             <div>
@@ -236,25 +266,25 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-5 py-4">
-                                        <span class="inline-flex items-center justify-center px-3 py-1 text-gray-700 text-xs font-black uppercase tracking-widest" x-text="type.department || 'General'"></span>
+                                    <td class="px-5 border-b border-slate-50 transition-all" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                        <span class="inline-flex items-center justify-center px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded text-[9px] font-black uppercase tracking-widest whitespace-nowrap" x-text="type.department || 'General'"></span>
                                     </td>
-                                    <td class="px-5 py-4 text-center">
-                                        <span class="inline-flex items-center justify-center px-3 py-1 text-gray-700 text-xs font-black uppercase tracking-widest" x-text="type.sample_type || 'N/A'"></span>
+                                    <td class="px-5 border-b border-slate-50 transition-all text-center" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                        <span class="inline-flex items-center justify-center px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded text-[9px] font-black uppercase tracking-widest whitespace-nowrap" x-text="type.sample_type || 'N/A'"></span>
                                     </td>
-                                    <td class="px-5 py-4 text-center whitespace-nowrap">
-                                        <div class="flex flex-col items-center justify-center gap-1">
-                                            <button @click="viewParameters(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Parameters">
-                                                <i class="fas fa-list-check"></i> Parameters
+                                    <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                        <div class="flex items-center justify-center gap-1.5">
+                                            <button @click="viewParameters(type)" class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100 group/btn" title="Analytical Metrics">
+                                                <i class="fas fa-list-check text-[10px] group-hover/btn:scale-110 transition-transform"></i>
                                             </button>
-                                            <button @click="openViewModal(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider" title="View Details">
-                                                <i class="fas fa-eye"></i> View
+                                            <button @click="openViewModal(type)" class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100 group/btn" title="View Detail">
+                                                <i class="fas fa-eye text-[10px] group-hover/btn:scale-110 transition-transform"></i>
                                             </button>
-                                            <button @click="openEditModal(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
-                                                <i class="fas fa-edit"></i> Edit
+                                            <button @click="openEditModal(type)" class="h-8 w-8 flex items-center justify-center bg-violet-50 text-violet-600 rounded-lg hover:bg-violet-500 hover:text-white transition-all shadow-sm border border-violet-100 group/btn" title="Modify Node">
+                                                <i class="fas fa-edit text-[10px] group-hover/btn:scale-110 transition-transform"></i>
                                             </button>
-                                            <button @click="confirmDelete(type)" class="w-full flex items-center gap-1.5 px-3 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider">
-                                                <i class="fas fa-trash-alt"></i> Delete
+                                            <button @click="confirmDelete(type)" class="h-8 w-8 flex items-center justify-center bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-sm border border-rose-100 group/btn" title="Purge Record">
+                                                <i class="fas fa-trash-alt text-[10px] group-hover/btn:scale-110 transition-transform"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -360,21 +390,28 @@
                     <div x-show="hasActiveFilters()" class="space-y-2 pt-1">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Intelligence:</span>
                         <div class="flex flex-wrap items-center gap-2">
-                            <template x-if="searchQuery">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-600 border border-purple-100 rounded-lg text-[9px] font-black uppercase tracking-widest group">
-                                    <i class="fas fa-search opacity-50"></i>
-                                    <span x-text="searchQuery"></span>
-                                    <button @click="searchQuery=''; searchTestTypes()" class="hover:text-rose-600 transition-colors"><i class="fas fa-times-circle"></i></button>
-                                </span>
-                            </template>
-                            <template x-if="filterDepartment">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-lg text-[9px] font-black uppercase tracking-widest group">
-                                    <i class="fas fa-building opacity-50"></i>
-                                    <span x-text="filterDepartment"></span>
-                                    <button @click="filterDepartment=''; searchTestTypes()" class="hover:text-rose-600 transition-colors"><i class="fas fa-times-circle"></i></button>
-                                </span>
-                            </template>
-                        </div>
+                             <template x-if="searchQuery">
+                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-600 border border-purple-100 rounded-lg text-[9px] font-black uppercase tracking-widest group">
+                                     <i class="fas fa-search opacity-50"></i>
+                                     <span x-text="searchQuery"></span>
+                                     <button @click="searchQuery=''; searchTestTypes()" class="hover:text-rose-600 transition-colors"><i class="fas fa-times-circle"></i></button>
+                                 </span>
+                             </template>
+                             <template x-if="filterDepartment">
+                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-lg text-[9px] font-black uppercase tracking-widest group">
+                                     <i class="fas fa-building opacity-50"></i>
+                                     <span x-text="filterDepartment"></span>
+                                     <button @click="filterDepartment=''; searchTestTypes()" class="hover:text-rose-600 transition-colors"><i class="fas fa-times-circle"></i></button>
+                                 </span>
+                             </template>
+                             <template x-if="filterStatus">
+                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-lg text-[9px] font-black uppercase tracking-widest group" :class="filterStatus === 'inactive' ? 'bg-rose-50 text-rose-600 border-rose-100' : ''">
+                                     <i class="fas opacity-50" :class="filterStatus === 'active' ? 'fa-check-circle' : 'fa-lock'"></i>
+                                     <span x-text="filterStatus.toUpperCase()"></span>
+                                     <button @click="filterStatus=''; searchTestTypes()" class="hover:text-rose-600 transition-colors"><i class="fas fa-times-circle"></i></button>
+                                 </span>
+                             </template>
+                         </div>
                     </div>
                     <div x-show="hasActiveFilters()" class="border-b border-dashed border-slate-200"></div>
 
@@ -386,25 +423,90 @@
                         <div class="relative group">
                             <input type="text" x-model.debounce.500ms="searchQuery" @input="searchTestTypes()"
                                 placeholder="Search Type Name..."
-                                class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all font-bold text-slate-600 text-sm shadow-inner group-hover:border-slate-200">
-                            <i class="fas fa-vial absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-purple-500 transition-colors"></i>
+                                class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all font-bold text-slate-800 placeholder:text-slate-400 outline-none">
+                            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-purple-500 transition-colors"></i>
                         </div>
                     </div>
 
                     {{-- Department Filter --}}
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            <i class="fas fa-building text-indigo-500"></i> Department Link
+                            <i class="fas fa-building text-indigo-500"></i> Department
                         </label>
-                        <select x-model="filterDepartment" @change="searchTestTypes()"
-                            class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:ring-4 focus:ring-purple-500/10 focus:border-purple-500 outline-none transition-all font-bold text-slate-600 text-sm shadow-inner appearance-none cursor-pointer">
-                            <option value="">All Departments</option>
-                            <template x-for="dept in stats.available_departments" :key="dept">
-                                <option :value="dept" x-text="dept"></option>
-                            </template>
-                        </select>
+                        <div class="relative group">
+                            <select x-model="filterDepartment" @change="searchTestTypes()" 
+                                class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-400/10 transition-all font-bold text-slate-800 appearance-none outline-none cursor-pointer">
+                                <option value="">All Departments</option>
+                                <template x-for="dept in stats.available_departments" :key="dept">
+                                    <option :value="dept" x-text="dept"></option>
+                                </template>
+                            </select>
+                            <i class="fas fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none text-[10px]"></i>
+                        </div>
                     </div>
 
+                    {{-- Page Density Filter --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-compress-alt text-purple-500"></i> Page Density
+                        </label>
+                        <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
+                            <button @click="density = 'condensed'" 
+                                :class="density === 'condensed' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Condensed
+                            </button>
+                            <button @click="density = 'spacious'" 
+                                :class="density === 'spacious' ? 'bg-white text-purple-600 shadow-sm font-black' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Spacious
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Records Per Page - Bento Style --}}
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-list-ol text-indigo-500"></i> Records Per Page
+                        </label>
+                        <div class="grid grid-cols-4 gap-2">
+                            <template x-for="count in [10, 25, 50, 100]" :key="count">
+                                <button @click="pagination.per_page = count; fetchTestTypes()"
+                                    :class="pagination.per_page == count ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                    class="py-2.5 rounded-xl text-[10px] font-black transition-all flex items-center justify-center border-transparent"
+                                    x-text="count">
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    {{-- Status Buttons - Golden Pattern --}}
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-shield-virus text-emerald-500"></i> Auth Status
+                        </label>
+                        <div class="grid grid-cols-1 gap-2">
+                            <button @click="filterStatus = ''; fetchTestTypes()" 
+                                :class="filterStatus === '' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between border-transparent">
+                                <span>Global Data</span>
+                                <i class="fas fa-globe-americas transition-opacity" :class="filterStatus === '' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                            <button @click="filterStatus = 'active'; fetchTestTypes()" 
+                                :class="filterStatus === 'active' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between border-transparent">
+                                <span>Authorized Only</span>
+                                <i class="fas fa-check-circle transition-opacity" :class="filterStatus === 'active' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                            <button @click="filterStatus = 'inactive'; fetchTestTypes()" 
+                                :class="filterStatus === 'inactive' ? 'bg-rose-600 text-white shadow-lg shadow-rose-200' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between border-transparent">
+                                <span>Locked Vaults</span>
+                                <i class="fas fa-lock transition-opacity" :class="filterStatus === 'inactive' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- Clearance & Actions (Sticky Bottom) --}}
@@ -482,23 +584,21 @@
         </div>
     </div>
 
-    {{-- Delete Modal --}}
-    <div x-show="showDeleteModal" class="fixed inset-0 z-[70] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div x-show="showDeleteModal" class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="showDeleteModal = false"></div>
-            <div x-show="showDeleteModal" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
-                <div class="w-16 h-16 rounded-full bg-rose-100 mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-exclamation-triangle text-2xl text-rose-600"></i>
-                </div>
-                <h3 class="text-xl font-black text-slate-800 mb-2">Delete Test Type</h3>
-                <p class="text-xs font-bold text-slate-500 mb-6 px-4 uppercase tracking-wider leading-relaxed">System erasure of <br><span class="font-black text-slate-700 text-base normal-case tracking-normal" x-text="typeToDelete?.name"></span></p>
-                <div class="flex items-center justify-center gap-3">
-                    <button @click="showDeleteModal = false" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors w-full cursor-pointer">Cancel</button>
-                    <button @click="deleteTestType()" :disabled="deleting" class="px-5 py-2.5 bg-gradient-to-r from-rose-500 to-rose-700 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:from-rose-600 hover:to-rose-800 hover:-translate-y-0.5 transition-all shadow-md shadow-rose-500/30 w-full flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fas fa-spinner fa-spin" x-show="deleting"></i>
-                        <span x-text="deleting ? 'Purging...' : 'Confirm Purge'"></span>
-                    </button>
-                </div>
+    {{-- Generic Confirmation Modal --}}
+    <div x-show="showConfirmModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="display: none;">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false" x-transition.opacity></div>
+        <div class="relative bg-white w-full max-w-md rounded-[2.5rem] p-8 text-center shadow-2xl border border-slate-100" x-transition.scale>
+            <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : (confirmConfig.type === 'warning' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600')">
+                <i class="fas text-3xl" :class="confirmConfig.icon"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 mb-2 uppercase tracking-tight" x-text="confirmConfig.title"></h3>
+            <p class="text-xs font-bold text-slate-500 mb-8 px-4 uppercase tracking-wider leading-relaxed" x-text="confirmConfig.message"></p>
+            <div class="flex gap-3">
+                <button @click="showConfirmModal = false" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase cursor-pointer">Cancel Action</button>
+                <button @click="executeConfirmedAction()" :disabled="confirming" class="flex-1 py-3 text-white rounded-2xl font-black text-xs uppercase shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2" :class="confirmConfig.type === 'danger' ? 'bg-rose-600 shadow-rose-500/30 hover:bg-rose-700' : (confirmConfig.type === 'warning' ? 'bg-amber-600 shadow-amber-500/30 hover:bg-amber-700' : 'bg-blue-600 shadow-blue-500/30 hover:bg-blue-700')">
+                    <i class="fas fa-spinner fa-spin" x-show="confirming"></i>
+                    <span x-text="confirming ? 'Processing...' : confirmConfig.confirmText"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -640,7 +740,7 @@
             loading: false,
             parametersLoading: false,
             saving: false,
-            deleting: false,
+            confirming: false,
             editing: false,
             
             testTypes: [],
@@ -648,14 +748,28 @@
             
             searchQuery: '',
             filterDepartment: '',
+            filterStatus: '',
             sortField: 'name',
             sortDirection: 'asc',
             pagination: { current_page: 1, last_page: 1, per_page: 10, total: 0, from: 0, to: 0 },
             
             form: { id: null, name: '', department: '', sample_type: '' },
+            density: 'spacious',
             selectedIds: [],
             typeToDelete: null,
             currentParameters: [],
+
+            // Confirmation Modal State
+            showConfirmModal: false,
+            confirming: false,
+            confirmConfig: {
+                title: '',
+                message: '',
+                icon: '',
+                confirmText: '',
+                type: 'primary',
+                action: null
+            },
 
             async init() {
                 await this.fetchTestTypes();
@@ -663,7 +777,7 @@
             },
 
             hasActiveFilters() {
-                return this.searchQuery !== '' || this.filterDepartment !== '';
+                return this.searchQuery !== '' || this.filterDepartment !== '' || this.filterStatus !== '';
             },
 
             getSortIcon(field) {
@@ -688,6 +802,7 @@
 
                 if (this.searchQuery) params.append('search', this.searchQuery);
                 if (this.filterDepartment) params.append('department', this.filterDepartment);
+                if (this.filterStatus) params.append('status', this.filterStatus);
 
                 try {
                     const response = await fetch(`/lab/test-types/data?${params.toString()}`);
@@ -723,7 +838,7 @@
                     this.currentParameters = data.data || [];
                 } catch (error) {
                     console.error('Error fetching parameters:', error);
-                    if (window.notification) notification.error('Failed to load metrics');
+                    window.Notification.error('Failed to load metrics');
                 } finally {
                     this.parametersLoading = false;
                 }
@@ -827,7 +942,34 @@
 
             confirmDelete(type) {
                 this.typeToDelete = type;
-                this.showDeleteModal = true;
+                this.confirmConfig = {
+                    title: 'Purge Test Type',
+                    message: `Are you sure you want to permanently delete "${type.name}"? This action cannot be undone.`,
+                    icon: 'fa-exclamation-triangle',
+                    confirmText: 'Confirm Purge',
+                    type: 'danger',
+                    action: () => this.deleteTestType()
+                };
+                this.showConfirmModal = true;
+            },
+
+            confirmBulkAction(type) {
+                const actionText = type === 'activate' ? 'Activation' : 'Deactivation';
+                this.confirmConfig = { 
+                    title: `Mass ${actionText}`, 
+                    message: `Confirm ${type} of ${this.selectedIds.length} records?`, 
+                    icon: type === 'activate' ? 'fa-check-circle' : 'fa-times-circle', 
+                    confirmText: `Mass ${type === 'activate' ? 'Activate' : 'Deactivate'}`, 
+                    type: type === 'activate' ? 'primary' : 'warning', 
+                    action: () => this.executeBulkStatusUpdate(type === 'activate') 
+                };
+                this.showConfirmModal = true;
+            },
+
+            async executeConfirmedAction() {
+                if (this.confirmConfig.action) {
+                    await this.confirmConfig.action();
+                }
             },
 
             async saveTestType() {
@@ -906,30 +1048,31 @@
                 }
             },
 
-            async bulkDelete() {
-                if (!confirm(`Are you sure you want to permanently purge ${this.selectedIds.length} test types?`)) return;
-
+            async executeBulkStatusUpdate(isActive) {
+                this.confirming = true;
                 try {
-                    const response = await fetch('/lab/test-types/bulk-destroy', {
+                    const response = await fetch('/lab/test-types/bulk-status', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ ids: this.selectedIds })
+                        body: JSON.stringify({ ids: this.selectedIds, is_active: isActive })
                     });
-
                     if (response.ok) {
-                        window.Notification.success(`Successfully purged ${this.selectedIds.length} types`);
+                        window.Notification.success(`Successfully updated ${this.selectedIds.length} types`);
                         this.selectedIds = [];
+                        this.showConfirmModal = false;
                         await this.fetchTestTypes();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error('Failed to perform mass purge');
+                        window.Notification.error('Failed to perform mass status update');
                     }
                 } catch (error) {
                     window.Notification.error('A network error occurred');
+                } finally {
+                    this.confirming = false;
                 }
             }
         };

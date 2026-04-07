@@ -149,4 +149,46 @@ class IllnessTagController extends Controller
             'message' => 'Illness tag deleted successfully.',
         ]);
     }
+
+    /**
+     * Bulk toggle status.
+     */
+    public function bulkStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:illness_tags,id',
+            'is_active' => 'required|boolean'
+        ]);
+
+        IllnessTag::whereIn('id', $validated['ids'])->update([
+            'is_active' => $validated['is_active']
+        ]);
+
+        $count = count($validated['ids']);
+        $action = $validated['is_active'] ? 'activated' : 'deactivated';
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully {$action} {$count} tags."
+        ]);
+    }
+
+    /**
+     * Bulk destroy.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:illness_tags,id'
+        ]);
+
+        IllnessTag::whereIn('id', $validated['ids'])->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => count($validated['ids']) . ' tags purged successfully.'
+        ]);
+    }
 }

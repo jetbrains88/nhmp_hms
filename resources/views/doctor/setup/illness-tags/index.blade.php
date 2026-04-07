@@ -23,93 +23,29 @@
     </button>
 
     {{-- ═══════════════════════════════════════════════
-         STATS CARDS (Compact Grid)
+         STATS CARDS (Full Width Bento-style)
     ═══════════════════════════════════════════════ --}}
-    <div class="flex overflow pb-6 gap-6 gap-y-10 mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
-        <!-- Active Tags -->
-        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.status = 'active'; fetchData()">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-xl shadow-emerald-900/20 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-check-circle text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-teal-500 uppercase">Active</p>
-                <h4 class="text-3xl font-bold text-teal-700 drop-shadow-sm font-mono" x-text="stats.active">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-teal-200 pt-2 text-teal-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-teal-600"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Currently Visible</span>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-4">
+        <template x-for="(stat, key) in statCards" :key="key">
+            <div class="relative flex flex-col rounded-2xl shadow-lg border hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                 :class="stat.label === 'Offline' ? 'bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200 shadow-slate-500/10' : 'bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-100 shadow-indigo-500/10'"
+                 @click="stat.filter ? (filters.category = stat.filter, fetchData()) : (key === 0 ? clearFilters() : (key === 1 ? (filters.status = 'active', fetchData()) : null))">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl shadow-xl border group-hover:scale-110 transition-transform duration-300"
+                     :style="`background: ${stat.gradient}; border-color: rgba(255,255,255,0.2)`">
+                    <i :class="stat.icon + ' text-xl text-white drop-shadow-md'"></i>
+                </div>
+                <div class="p-4 text-right pt-4">
+                    <p class="text-xs font-bold tracking-wider uppercase" :class="stat.label === 'Offline' ? 'text-slate-500' : 'text-indigo-500'" x-text="stat.label"></p>
+                    <h4 class="text-3xl font-bold drop-shadow-sm font-mono" :class="stat.label === 'Offline' ? 'text-slate-700' : 'text-indigo-700'" x-text="stat.value">0</h4>
+                </div>
+                <div class="mx-4 mb-4 border-t pt-2" :class="stat.label === 'Offline' ? 'border-slate-200 text-slate-700' : 'border-indigo-200 text-indigo-700'">
+                    <div class="flex items-center gap-2">
+                        <span class="h-1.5 w-1.5 rounded-full animate-pulse" :class="stat.label === 'Offline' ? 'bg-slate-600' : 'bg-indigo-600'"></span>
+                        <span class="text-[10px] font-bold uppercase tracking-tight" x-text="stat.filter || 'Tag Records'"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Chronic Tags -->
-        <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'chronic'; fetchData()">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-pink-400 shadow-xl shadow-rose-900/20 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-heartbeat text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-rose-500 uppercase">Chronic</p>
-                <h4 class="text-3xl font-bold text-rose-700 drop-shadow-sm font-mono" x-text="stats.chronic">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-rose-200 pt-2 text-rose-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-rose-600"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Long-term Records</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Acute Tags -->
-        <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'acute'; fetchData()">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 shadow-xl shadow-amber-900/20 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-bolt text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-amber-600 uppercase">Acute</p>
-                <h4 class="text-3xl font-bold text-amber-700 drop-shadow-sm font-mono" x-text="stats.acute">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-amber-200 pt-2 text-amber-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Urgent Mapping</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Infectious Tags -->
-        <div class="relative flex flex-col bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl shadow-lg shadow-orange-500/10 border border-orange-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.category = 'infectious'; fetchData()">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-orange-600 to-orange-400 shadow-xl shadow-orange-900/20 border border-orange-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-virus text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-orange-600 uppercase">Infectious</p>
-                <h4 class="text-3xl font-bold text-orange-700 drop-shadow-sm font-mono" x-text="stats.infectious">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-orange-200 pt-2 text-orange-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-orange-600"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Communicable Risks</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Inactive Card -->
-        <div class="relative flex flex-col bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl shadow-lg shadow-slate-500/10 border border-slate-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" @click="filters.status = 'inactive'; fetchData()">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-slate-600 to-gray-400 shadow-xl shadow-slate-900/20 border border-slate-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-toggle-off text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-slate-500 uppercase">Inactive</p>
-                <h4 class="text-3xl font-bold text-slate-700 drop-shadow-sm font-mono" x-text="stats.inactive">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-slate-200 pt-2 text-slate-700">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-tight">Hidden Entities</span>
-                </div>
-            </div>
-        </div>
+        </template>
     </div>
 
     {{-- ═══════════════════════════════════════════════
@@ -119,41 +55,67 @@
         
         {{-- Left Column - Table --}}
         <div class="space-y-6 transition-all duration-300" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
-            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden flex flex-col">
                 
-                {{-- Toolbar --}}
-                <div class="p-6 bg-slate-50/50 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                {{-- Panel Header --}}
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-indigo-100/50">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center border border-indigo-100 shadow-sm hover:scale-105 transition-transform duration-300">
+                                <i class="fas fa-book-medical text-2xl text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600 tracking-tight flex items-center gap-3">
+                                    Illness Library
+                                    <span class="text-lg font-normal text-gray-600">
+                                        (<span x-text="meta.total"></span> records)
+                                    </span>
+                                </h2>
+                                <p class="text-gray-600 text-sm font-medium mt-1">Clinical Classification System</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4 items-center">
+                            <button @click="openModal()" 
+                                class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95 flex items-center gap-2 group">
+                                <i class="fas fa-plus group-hover:rotate-90 transition-transform duration-300"></i>
+                                New Entry
+                            </button>
+
+                            <button @click="showSidebar = !showSidebar" 
+                                class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+                                :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
+                                <i class="fas" :class="showSidebar ? 'fa-eye-slash' : 'fa-filter'"></i>
+                            </button>
+                            
+                            <button @click="fetchData()" 
+                                class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+                                title="Refresh Data">
+                                <i class="fas fa-sync-alt" :class="loading ? 'animate-spin' : ''"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Bulk Actions Toolbar --}}
+                <div x-show="selectedIds.length > 0" 
+                     x-transition:enter="transition ease-out duration-300 transform"
+                     x-transition:enter-start="-translate-y-full"
+                     x-transition:enter-end="translate-y-0"
+                     class="bg-indigo-600 px-6 py-3 flex items-center justify-between text-white sticky top-0 z-10 shadow-2xl rounded-b-xl mx-6">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200">
-                            <i class="fas fa-book-medical text-lg"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-black text-slate-800 tracking-tight">Illness Library</h2>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-0.5">Clinical Classification System</p>
+                        <span class="text-[10px] font-black uppercase tracking-widest border-r border-white/20 pr-4">
+                            <span x-text="selectedIds.length"></span> Tags Selected
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <button @click="confirmBulkAction('activate')" class="px-3 py-1.5 bg-emerald-500/80 hover:bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Activate</button>
+                            <button @click="confirmBulkAction('deactivate')" class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Deactivate</button>
+                            <button @click="confirmBulkAction('delete')" class="px-3 py-1.5 bg-rose-500/80 hover:bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Purge</button>
                         </div>
                     </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-1.5 shadow-sm">
-                            <span class="text-[9px] font-black text-slate-400 uppercase pr-2 border-r border-slate-100 whitespace-nowrap">View</span>
-                            <select x-model="filters.per_page" @change="fetchData()" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none border-none p-0 pr-4">
-                                <option value="15">15 Tags</option>
-                                <option value="25">25 Tags</option>
-                                <option value="50">50 Tags</option>
-                            </select>
-                        </div>
-
-                        <button @click="openModal()" 
-                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-200 transition-all active:scale-95 flex items-center gap-2 group">
-                            <i class="fas fa-plus group-hover:rotate-90 transition-transform duration-300"></i>
-                            New Entry
-                        </button>
-
-                        <button @click="showSidebar = !showSidebar" 
-                            class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-400 rounded-xl hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm">
-                            <i class="fas" :class="showSidebar ? 'fa-eye-slash' : 'fa-filter'"></i>
-                        </button>
-                    </div>
+                    <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2">
+                        Dismiss <i class="fas fa-times"></i>
+                    </button>
                 </div>
 
                 {{-- Table Body --}}
@@ -161,23 +123,55 @@
                     <table class="w-full text-left">
                         <thead class="bg-slate-50/50 border-b border-slate-100">
                             <tr>
+                                <th class="px-6 py-4 w-10">
+                                    <div class="flex items-center justify-center">
+                                        <input type="checkbox" @change="toggleAll($event)" :checked="selectedIds.length === tags.length && tags.length > 0"
+                                            class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all shadow-sm cursor-pointer">
+                                    </div>
+                                </th>
                                 <th @click="sort('name')" class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] cursor-pointer hover:text-indigo-600 transition-colors group">
-                                    <div class="flex items-center gap-2 text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-file-medical text-[10px]"></i>
                                         Condition Name
                                         <i class="fas fa-sort text-[10px] opacity-20 group-hover:opacity-100"></i>
                                     </div>
                                 </th>
-                                <th @click="sort('category')" class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] cursor-pointer hover:text-indigo-600 transition-colors group text-xs text-center">Category</th>
-                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-xs">ICD-10 Code</th>
-                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-xs">Clinical Note</th>
-                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-xs text-center border-l border-slate-50">Status</th>
-                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-xs text-right whitespace-nowrap">Admin</th>
+                                <th @click="sort('category')" class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] cursor-pointer hover:text-indigo-600 transition-colors group text-center border-l border-slate-50">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <i class="fas fa-layer-group text-[10px]"></i>
+                                        Category
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-barcode text-[10px]"></i>
+                                        ICD-10 Code
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-notes-medical text-[10px]"></i>
+                                        Clinical Note
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center border-l border-slate-50">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <i class="fas fa-toggle-on text-[10px]"></i>
+                                        Status
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <i class="fas fa-tools text-[10px]"></i>
+                                        Admin
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50 bg-white">
                             <template x-if="loading">
                                 <tr>
-                                    <td colspan="6" class="py-24 text-center">
+                                    <td colspan="7" class="py-24 text-center">
                                         <div class="inline-flex flex-col items-center gap-4 animate-pulse">
                                             <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 border border-indigo-200">
                                                 <i class="fas fa-sync fa-spin"></i>
@@ -190,7 +184,7 @@
 
                             <template x-if="!loading && tags.length === 0">
                                 <tr>
-                                    <td colspan="6" class="py-24 text-center">
+                                    <td colspan="7" class="py-24 text-center">
                                         <i class="fas fa-tags text-4xl text-slate-100 mb-4 scale-150"></i>
                                         <p class="text-xs font-black text-slate-400 uppercase tracking-widest">No matching illness profiles</p>
                                     </td>
@@ -199,22 +193,26 @@
 
                             <template x-for="tag in tags" :key="tag.id">
                                 <tr class="hover:bg-indigo-50/30 transition-all duration-300 group">
+                                    <td class="px-6 py-4 text-center">
+                                        <input type="checkbox" :value="tag.id" x-model="selectedIds"
+                                            class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer">
+                                    </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-4">
-                                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs shadow-sm border" :class="getCategoryIconClass(tag.category)">
+                                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs shadow-sm border group-hover:scale-110 transition-transform" :class="getCategoryIconClass(tag.category)">
                                                 <i :class="getCategoryIcon(tag.category)"></i>
                                             </div>
                                             <div class="text-sm font-black text-slate-800 tracking-tight" x-text="tag.name"></div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-center">
+                                    <td class="px-6 py-4 text-center border-l border-slate-50/50">
                                         <span class="inline-flex px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border" :class="getCategoryBadgeClass(tag.category)" x-text="tag.category"></span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="text-[10px] font-mono font-black text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200" x-text="tag.icd_code || '---'"></span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <p class="text-[11px] text-slate-500 font-medium line-clamp-1 italic" x-text="tag.description || 'No notes available'"></p>
+                                        <p class="text-[11px] text-slate-500 font-medium line-clamp-1 italic whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]" x-text="tag.description || 'No notes available'"></p>
                                     </td>
                                     <td class="px-6 py-4 text-center border-l border-slate-50/50">
                                         <button @click="toggleStatus(tag)" 
@@ -228,7 +226,7 @@
                                             <button @click="openModal(tag)" class="w-8 h-8 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm" title="Edit Profile">
                                                 <i class="fas fa-pencil-alt text-[10px]"></i>
                                             </button>
-                                            <button @click="deleteTag(tag)" class="w-8 h-8 flex items-center justify-center bg-white border border-rose-100 text-rose-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm" title="Delete Profile">
+                                            <button @click="confirmBulkAction('delete', tag)" class="w-8 h-8 flex items-center justify-center bg-white border border-rose-100 text-rose-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm" title="Delete Profile">
                                                 <i class="fas fa-trash-alt text-[10px]"></i>
                                             </button>
                                         </div>
@@ -240,7 +238,7 @@
                 </div>
 
                 {{-- Pagination Footer --}}
-                <div class="p-6 bg-slate-50/30 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-slate-100">
+                <div class="p-6 bg-slate-50/30 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-slate-100 mt-auto">
                     <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                         Index <span class="text-indigo-600" x-text="meta.from || 0"></span>-<span class="text-indigo-600" x-text="meta.to || 0"></span>
                         of <span class="text-indigo-600" x-text="meta.total || 0"></span> conditions
@@ -265,7 +263,7 @@
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-x-12"
              x-transition:enter-end="opacity-100 translate-x-0"
-             class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2">
+             class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2 group/sidebar">
             
             <div class="bg-white rounded-[2.5rem] p-8 text-slate-800 shadow-2xl relative overflow-hidden border border-slate-100">
                 <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
@@ -297,6 +295,49 @@
                         </div>
                     </div>
 
+                    {{-- Page Intelligence Section (Bento Box) --}}
+                    <div class="bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100 shadow-inner space-y-8">
+                        {{-- Status Filter --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-toggle-on text-emerald-500"></i> Status State
+                            </label>
+                            <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                                <button @click="filters.status = ''; fetchData()" 
+                                    :class="filters.status === '' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    All
+                                </button>
+                                <button @click="filters.status = 'active'; fetchData()" 
+                                    :class="filters.status === 'active' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Act
+                                </button>
+                                <button @click="filters.status = 'inactive'; fetchData()" 
+                                    :class="filters.status === 'inactive' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Off
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Page Density --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-list-ol text-indigo-500"></i> Page Density
+                            </label>
+                            <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                                <template x-for="size in ['15', '25', '50']">
+                                    <button @click="filters.per_page = size; fetchData()" 
+                                        :class="filters.per_page === size ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                        <span x-text="size"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Category --}}
                     <div class="space-y-3">
                         <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Condition Class</label>
@@ -315,17 +356,31 @@
                         </div>
                     </div>
 
-                    {{-- Status --}}
-                    <div class="space-y-3">
-                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Status</label>
-                        <div class="flex gap-2 bg-slate-50 p-2 rounded-[2rem] border border-slate-100 shadow-inner">
-                            <button @click="filters.status = 'active'; fetchData()" class="flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all" :class="filters.status === 'active' ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-slate-400 hover:text-slate-600'">Active</button>
-                            <button @click="filters.status = 'inactive'; fetchData()" class="flex-1 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all" :class="filters.status === 'inactive' ? 'bg-white text-rose-600 shadow-sm border border-rose-100' : 'text-slate-400 hover:text-slate-600'">Inactive</button>
-                        </div>
-                    </div>
-
                     <button @click="clearFilters()" class="w-full py-5 mt-8 bg-slate-100 hover:bg-indigo-600 text-slate-400 hover:text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 border border-slate-100 hover:border-indigo-600 flex items-center justify-center gap-3 active:scale-95 font-bold">
                         <i class="fas fa-broom"></i> Reset Registry
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Generic Confirmation Modal --}}
+    <div x-show="showConfirmModal" class="fixed inset-0 z-[70] overflow-y-auto px-4 py-6" x-transition.opacity style="display: none;">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false"></div>
+            
+            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
+                <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600'">
+                    <i class="fas text-3xl" :class="confirmConfig.icon"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-800 mb-2" x-text="confirmConfig.title"></h3>
+                <p class="text-xs font-bold text-slate-500 mb-8 px-4 uppercase tracking-wider leading-relaxed" x-text="confirmConfig.message"></p>
+                
+                <div class="flex items-center justify-center gap-3">
+                    <button @click="showConfirmModal = false" class="px-5 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors w-full cursor-pointer">Abort Action</button>
+                    <button @click="executeConfirmedAction()" :disabled="confirming" class="px-5 py-3 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md w-full flex items-center justify-center gap-2 cursor-pointer" :class="confirmConfig.type === 'danger' ? 'bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-rose-500/30' : 'bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-blue-500/30'">
+                        <i class="fas fa-spinner fa-spin" x-show="confirming"></i>
+                        <span x-text="confirming ? 'Processing...' : confirmConfig.confirmText"></span>
                     </button>
                 </div>
             </div>
@@ -425,11 +480,12 @@
 @push('scripts')
 <script>
 function illnessTagRegistry() {
-    const STORAGE_KEY = 'illness_tags_filters_v2';
+    const STORAGE_KEY = 'illness_tags_filters_v3';
 
     return {
         tags: [],
         stats: { total: 0, active: 0, inactive: 0, chronic: 0, acute: 0, infectious: 0 },
+        statCards: [],
         meta: {},
         paginationLinks: [],
         loading: false,
@@ -437,6 +493,19 @@ function illnessTagRegistry() {
         showModal: false,
         editingTag: null,
         saving: false,
+
+        selectedIds: [],
+        showConfirmModal: false,
+        confirming: false,
+        confirmConfig: {
+            title: '',
+            message: '',
+            icon: '',
+            confirmText: '',
+            type: 'primary',
+            action: null,
+            payload: null
+        },
 
         filters: JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
             search: '', category: '', status: '', per_page: '15', sort_by: 'name', sort_dir: 'asc'
@@ -453,12 +522,21 @@ function illnessTagRegistry() {
         async fetchStats() {
             try {
                 const r = await fetch("{{ route('doctor.setup.illness-tags.stats') }}");
-                this.stats = await r.json();
+                const data = await r.json();
+                this.statCards = [
+                    { label: 'Active', value: data.active, icon: 'fas fa-check-double', gradient: 'linear-gradient(135deg,#10b981,#059669)' },
+                    { label: 'Chronic', value: data.chronic, filter: 'chronic', icon: 'fas fa-heartbeat', gradient: 'linear-gradient(135deg,#f43f5e,#e11d48)' },
+                    { label: 'Acute', value: data.acute, filter: 'acute', icon: 'fas fa-bolt', gradient: 'linear-gradient(135deg,#f59e0b,#d97706)' },
+                    { label: 'Infect', value: data.infectious, filter: 'infectious', icon: 'fas fa-virus', gradient: 'linear-gradient(135deg,#ea580c,#c2410c)' },
+                    { label: 'Offline', value: data.inactive, icon: 'fas fa-cloud-moon', gradient: 'linear-gradient(135deg,#64748b,#475569)' },
+                ];
+                this.stats = data;
             } catch (e) { console.error('Stats fetch failed'); }
         },
 
         async fetchData(url = null) {
             this.loading = true;
+            this.selectedIds = [];
             const params = new URLSearchParams(this.filters);
             const endpoint = url || `{{ route('doctor.setup.illness-tags.data') }}?${params}`;
             
@@ -468,7 +546,7 @@ function illnessTagRegistry() {
                 this.tags = data.data;
                 this.meta = { total: data.total, from: data.from, to: data.to };
                 this.paginationLinks = data.links;
-            } catch (e) { console.error('Data fetch failed'); }
+            } catch (e) { window.showError('Registry sync failure'); }
             this.loading = false;
         },
 
@@ -522,8 +600,9 @@ function illnessTagRegistry() {
                     this.closeModal();
                     this.fetchData();
                     this.fetchStats();
+                    window.showSuccess(data.message || 'Tag entry updated');
                 }
-            } catch (e) { console.error('Save failed'); }
+            } catch (e) { window.showError('Neural uplink failure during save'); }
             this.saving = false;
         },
 
@@ -537,23 +616,102 @@ function illnessTagRegistry() {
                 if (data.success) {
                     tag.is_active = data.tag.is_active;
                     this.fetchStats();
+                    window.showSuccess(`Tag "${tag.name}" is now ${tag.is_active ? 'Active' : 'Offline'}`);
                 }
-            } catch (e) { console.error('Toggle failed'); }
+            } catch (e) { window.showError('Toggle sequence interrupted'); }
         },
 
-        async deleteTag(tag) {
-            if (!confirm(`Permanently remove ${tag.name} from library?`)) return;
+        // Selection Helpers
+        toggleAll(e) {
+            if (e.target.checked) {
+                this.selectedIds = this.tags.map(t => t.id);
+            } else {
+                this.selectedIds = [];
+            }
+        },
+
+        // Confirmation Modal Logic
+        confirmBulkAction(type, singleItem = null) {
+            const count = singleItem ? 1 : this.selectedIds.length;
+            
+            if (type === 'delete') {
+                this.confirmConfig = {
+                    title: singleItem ? 'Purge Tag?' : 'Purge Registry Nodes?',
+                    message: singleItem 
+                        ? `Permanently remove entry "${singleItem.name}" from library?`
+                        : `Identify and remove ${count} illness tags from the global database? Action is irreversible.`,
+                    icon: 'fa-trash-alt',
+                    confirmText: 'Execute Purge',
+                    type: 'danger',
+                    action: 'bulkDestroy',
+                    payload: singleItem ? [singleItem.id] : this.selectedIds
+                };
+            } else {
+                const active = type === 'activate';
+                this.confirmConfig = {
+                    title: active ? 'Re-engage Tags?' : 'De-optimize Registry?',
+                    message: `Set ${count} illness tags to ${active ? 'Active' : 'Offline'} status?`,
+                    icon: active ? 'fa-bolt' : 'fa-power-off',
+                    confirmText: active ? 'Resume Access' : 'Suspend Tags',
+                    type: 'primary',
+                    action: 'bulkStatus',
+                    payload: {
+                        ids: singleItem ? [singleItem.id] : this.selectedIds,
+                        active: active
+                    }
+                };
+            }
+            this.showConfirmModal = true;
+        },
+
+        async executeConfirmedAction() {
+            this.confirming = true;
             try {
-                const r = await fetch(`/doctor/setup/illness-tags/${tag.id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                if (this.confirmConfig.action === 'bulkStatus') {
+                    await this.executeBulkStatus();
+                } else if (this.confirmConfig.action === 'bulkDestroy') {
+                    await this.executeBulkDestroy();
+                }
+            } finally {
+                this.confirming = false;
+                this.showConfirmModal = false;
+            }
+        },
+
+        async executeBulkStatus() {
+            const { ids, active } = this.confirmConfig.payload;
+            try {
+                const r = await fetch("{{ route('doctor.setup.illness-tags.bulk-status') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ ids, is_active: active })
                 });
                 const data = await r.json();
                 if (data.success) {
+                    window.showSuccess(data.message);
                     this.fetchData();
                     this.fetchStats();
+                    this.selectedIds = [];
                 }
-            } catch (e) { console.error('Delete failed'); }
+            } catch (e) { window.showError('Bulk status update failed'); }
+        },
+
+        async executeBulkDestroy() {
+            const ids = this.confirmConfig.payload;
+            try {
+                const r = await fetch("{{ route('doctor.setup.illness-tags.bulk-destroy') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ ids })
+                });
+                const data = await r.json();
+                if (data.success) {
+                    window.showSuccess(data.message);
+                    this.fetchData();
+                    this.fetchStats();
+                    this.selectedIds = [];
+                }
+            } catch (e) { window.showError('Bulk purge failed'); }
         },
 
         // Style Helpers

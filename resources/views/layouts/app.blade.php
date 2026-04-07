@@ -24,6 +24,17 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+    <!-- Global Notification Shim (Prevents early initialization crashes) -->
+    <script>
+        window.Notification = window.Notification || {
+            success: (m) => console.log('🔔 [Success]:', m),
+            error: (m) => console.error('🔔 [Error]:', m),
+            warning: (m) => console.warn('🔔 [Warning]:', m),
+            info: (m) => console.info('🔔 [Info]:', m)
+        };
+    </script>
+
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

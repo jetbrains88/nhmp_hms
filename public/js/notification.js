@@ -305,6 +305,14 @@
         window.notificationSystem = new NotificationSystem();
     }
 
+    // Global take-over from shim (Force overwrite to replace dummy console logs)
+    window.Notification = {
+        success: (msg, title, duration) => window.notificationSystem.show(msg, 'success', title, duration),
+        error: (msg, title, duration) => window.notificationSystem.show(msg, 'error', title, duration),
+        warning: (msg, title, duration) => window.notificationSystem.show(msg, 'warning', title, duration),
+        info: (msg, title, duration) => window.notificationSystem.show(msg, 'info', title, duration)
+    };
+
     // Global functions
     if (!window.showNotification) {
         window.showNotification = function (message, type = 'info', title = null, duration = null) {

@@ -14,19 +14,19 @@
         x-transition:leave="transition ease-in duration-300"
         x-transition:leave-start="translate-x-0 opacity-100"
         x-transition:leave-end="translate-x-full opacity-0"
-        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-gradient-to-b from-indigo-500 to-indigo-700 text-white p-2.5 py-6 rounded-l-2xl shadow-[0_0_30px_-5px_rgba(79,70,229,0.4)] hover:shadow-[-5px_0_40px_-5px_rgba(79,70,229,0.7)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-400/50 group cursor-pointer"
+        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(79,70,229,0.2)] hover:shadow-[-10px_0_40px_-5px_rgba(79,70,229,0.3)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
         title="Open Office Filters">
         <div class="relative">
-            <div class="absolute inset-0 bg-white/20 blur-md rounded-full group-hover:bg-white/40 transition-colors duration-300"></div>
-            <i class="fas fa-sliders-h relative z-10 drop-shadow-lg group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
+            <div class="absolute inset-0 bg-indigo-500/10 blur-md rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
+            <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
         </div>
-        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 drop-shadow-md text-indigo-50">Office Filters</span>
+        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Office Filters</span>
     </button>
 
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 gap-y-10 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
         <!-- Total Offices Card -->
         <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
@@ -165,18 +165,18 @@
                 {{-- Table View --}}
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                        <thead class="bg-white border-b border-slate-100">
                             <tr>
-                                <th class="px-5 py-5 w-10">
+                                <th class="px-5 py-5 w-10 border-b border-slate-50">
                                     <div class="flex items-center justify-center">
                                         <input type="checkbox" @change="toggleAll($event)" :checked="selectedIds.length === offices.length && offices.length > 0"
                                             class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all shadow-sm cursor-pointer">
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 shadow-sm border border-blue-500/20">
-                                            <i class="fas fa-map-marker-alt text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shadow-sm border border-blue-100">
+                                            <i class="fas fa-map-marker-alt text-[10px]"></i>
                                         </div>
                                         <button @click="sortBy('name')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
                                             Office Name
@@ -184,10 +184,10 @@
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600 shadow-sm border border-purple-500/20">
-                                            <i class="fas fa-layer-group text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-100">
+                                            <i class="fas fa-layer-group text-[10px]"></i>
                                         </div>
                                         <button @click="sortBy('type')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
                                             Type / Scope
@@ -195,18 +195,18 @@
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-500/20">
-                                            <i class="fas fa-project-diagram text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100">
+                                            <i class="fas fa-project-diagram text-[10px]"></i>
                                         </div>
                                         <span>Parent Body</span>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-600 shadow-sm border border-green-500/20">
-                                            <i class="fas fa-toggle-on text-xs"></i>
+                                <th class="px-5 py-5 text-center border-b border-slate-50">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-500 shadow-sm border border-green-100">
+                                            <i class="fas fa-toggle-on text-[10px]"></i>
                                         </div>
                                         <button @click="sortBy('is_active')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
                                             Status
@@ -214,10 +214,10 @@
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center whitespace-nowrap">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 shadow-sm border border-amber-500/20">
-                                            <i class="fas fa-bolt text-xs"></i>
+                                <th class="px-5 py-5 text-center whitespace-nowrap border-b border-slate-50">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm border border-amber-100">
+                                            <i class="fas fa-bolt text-[10px]"></i>
                                         </div>
                                         Actions
                                     </div>
@@ -373,7 +373,14 @@
         </div>
 
         {{-- Right Column - Security Filters Sidebar --}}
-        <div class="lg:col-span-3 lg:sticky lg:top-0 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto scrollbar-hide pb-2" style="scrollbar-width: none;" x-show="showSidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4">
+        <div class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2 group/sidebar" 
+             x-show="showSidebar" 
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0 translate-x-12" 
+             x-transition:enter-end="opacity-100 translate-x-0" 
+             x-transition:leave="transition ease-in duration-300" 
+             x-transition:leave-start="opacity-100 translate-x-0" 
+             x-transition:leave-end="opacity-0 translate-x-12">
             
             {{-- Unified Filter Card --}}
             <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col min-h-0">

@@ -22,11 +22,11 @@
         <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Shorthand Filters</span>
     </button>
 
-    <div class="flex overflow pb-6 gap-6 mt-4 no-scrollbar custom-scrollbar">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mt-4">
         <template x-for="(stat, key) in statCards" :key="key">
-            <div class="flex-shrink-0 w-[240px] relative flex flex-col rounded-2xl shadow-lg border hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+            <div class="relative flex flex-col rounded-2xl shadow-lg border hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
                  :class="stat.label === 'Offline' ? 'bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200 shadow-slate-500/10' : 'bg-gradient-to-br from-violet-50 to-purple-50 border-purple-100 shadow-purple-500/10'"
-                 @click="stat.filter ? (filters.category = stat.filter, fetchData()) : (key === 0 ? clearFilters() : (key === 1 ? (filters.status = 'active', fetchData()) : null))">
+                 @click="stat.filter ? (filters.category = stat.filter, fetchData()) : (key === 0 ? (filters.status = 'active', fetchData()) : (key === 5 ? (filters.status = 'inactive', fetchData()) : clearFilters()))">
                 <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl shadow-xl border group-hover:scale-110 transition-transform duration-300"
                      :style="`background: ${stat.gradient}; border-color: rgba(255,255,255,0.2)`">
                     <i :class="stat.icon + ' text-xl text-white drop-shadow-md'"></i>
@@ -38,7 +38,7 @@
                 <div class="mx-4 mb-4 border-t pt-2" :class="stat.label === 'Offline' ? 'border-slate-200 text-slate-700' : 'border-purple-200 text-purple-700'">
                     <div class="flex items-center gap-2">
                         <span class="h-1.5 w-1.5 rounded-full animate-pulse" :class="stat.label === 'Offline' ? 'bg-slate-600' : 'bg-purple-600'"></span>
-                        <span class="text-[10px] font-bold uppercase tracking-tight" x-text="stat.filter || 'Shorthand Records'"></span>
+                        <span class="text-[10px] font-bold uppercase tracking-tight" x-text="stat.filter || (key === 0 ? 'Active Records' : 'Registry Nodes')"></span>
                     </div>
                 </div>
             </div>
@@ -81,6 +81,7 @@
                                     <option value="15">15</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
+                                    <option value="100">100</option>
                                 </select>
                             </div>
 
@@ -99,11 +100,38 @@
                     </div>
                 </div>
 
+                {{-- Bulk Actions Toolbar --}}
+                <div x-show="selectedIds.length > 0" 
+                     x-transition:enter="transition ease-out duration-300 transform"
+                     x-transition:enter-start="-translate-y-full"
+                     x-transition:enter-end="translate-y-0"
+                     class="bg-purple-600 px-6 py-3 flex items-center justify-between text-white sticky top-0 z-10 shadow-2xl rounded-b-xl mx-6">
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] font-black uppercase tracking-widest border-r border-white/20 pr-4">
+                            <span x-text="selectedIds.length"></span> Shorthands Selected
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <button @click="confirmBulkAction('activate')" class="px-3 py-1.5 bg-emerald-500/80 hover:bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Activate</button>
+                            <button @click="confirmBulkAction('deactivate')" class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Deactivate</button>
+                            <button @click="confirmBulkAction('delete')" class="px-3 py-1.5 bg-rose-500/80 hover:bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Purge</button>
+                        </div>
+                    </div>
+                    <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2">
+                        Dismiss <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
                 {{-- Table Body --}}
                 <div class="overflow-x-auto min-h-[460px] relative">
                     <table class="w-full text-left border-separate border-spacing-0">
                         <thead>
                             <tr class="bg-white">
+                                <th class="px-8 py-5 w-10 border-b border-slate-50">
+                                    <div class="flex items-center justify-center">
+                                        <input type="checkbox" @change="toggleAll($event)" :checked="selectedIds.length === abbreviations.length && abbreviations.length > 0"
+                                            class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 transition-all shadow-sm cursor-pointer">
+                                    </div>
+                                </th>
                                 <th @click="sort('abbreviation')" class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] cursor-pointer hover:text-purple-600 transition-colors group border-b border-slate-50">
                                     <div class="flex items-center gap-2">
                                         Shorthand
@@ -111,9 +139,24 @@
                                     </div>
                                 </th>
                                 <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50">Full Meaning</th>
-                                <th @click="sort('category')" class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50 text-center">Category</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50 text-center">Doses</th>
-                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50 text-right">Actions</th>
+                                <th @click="sort('category')" class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50 text-center cursor-pointer hover:text-purple-600 group">
+                                    <div class="flex items-center justify-center gap-2">
+                                        Category
+                                        <i class="fas fa-sort text-[10px] opacity-20 group-hover:opacity-100"></i>
+                                    </div>
+                                </th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <i class="fas fa-list-ol text-[10px]"></i>
+                                        Doses
+                                    </div>
+                                </th>
+                                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <i class="fas fa-tools text-[10px]"></i>
+                                        Actions
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
@@ -133,7 +176,7 @@
 
                             <template x-if="!loading && abbreviations.length === 0">
                                 <tr>
-                                    <td colspan="5" class="py-32 text-center">
+                                    <td colspan="6" class="py-32 text-center">
                                         <div class="flex flex-col items-center opacity-30">
                                             <i class="fas fa-file-signature text-6xl text-slate-200 mb-6 group-hover:rotate-12 transition-transform"></i>
                                             <p class="text-xs font-black text-slate-400 uppercase tracking-widest">No shorthand records found</p>
@@ -144,6 +187,12 @@
 
                             <template x-for="abbr in abbreviations" :key="abbr.id">
                                 <tr class="hover:bg-purple-50/30 transition-all duration-300 group">
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center justify-center">
+                                            <input type="checkbox" :value="abbr.id" x-model="selectedIds"
+                                                class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 transition-all cursor-pointer">
+                                        </div>
+                                    </td>
                                     <td class="px-8 py-5">
                                         <div class="flex items-center gap-4">
                                             <div class="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:border-purple-200 transition-all duration-300">
@@ -252,43 +301,78 @@
                         </div>
                     </div>
 
-                    {{-- Category --}}
+                    {{-- Page Intelligence Section (Bento Box) --}}
+                    <div class="bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100 shadow-inner space-y-8">
+                        {{-- Status Filter --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-toggle-on text-emerald-500"></i> Status State
+                            </label>
+                            <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                                <button @click="filters.status = ''; fetchData()" 
+                                    :class="filters.status === '' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    All
+                                </button>
+                                <button @click="filters.status = 'active'; fetchData()" 
+                                    :class="filters.status === 'active' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Act
+                                </button>
+                                <button @click="filters.status = 'inactive'; fetchData()" 
+                                    :class="filters.status === 'inactive' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Off
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Page Density --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-list-ol text-purple-500"></i> Page Density
+                            </label>
+                            <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                                <template x-for="size in ['25', '50', '100']">
+                                    <button @click="filters.per_page = size; fetchData()" 
+                                        :class="filters.per_page === size ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-purple-600'"
+                                        class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                        <span x-text="size"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Category Bento Box --}}
                     <div class="space-y-4">
                         <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 italic">Lexicon Class</label>
-                        <div class="grid grid-cols-1 gap-3">
+                        <div class="grid grid-cols-1 gap-2.5">
                             <template x-for="cat in ['Frequency & Timing', 'Route of Administration', 'Instructions', 'Medication Terms']">
                                 <button @click="filters.category = (filters.category === cat ? '' : cat); fetchData()"
-                                        class="flex items-center justify-between px-6 py-4 rounded-[1.5rem] border transition-all duration-500 text-left relative group shadow-sm active:scale-95"
-                                        :class="filters.category === cat ? 'bg-purple-600 text-white border-purple-600 shadow-purple-200 z-10' : 'bg-white text-slate-600 border-slate-100 hover:bg-slate-50 hover:border-slate-200'">
-                                    <span class="text-[11px] font-black uppercase tracking-tight leading-none pr-4" x-text="cat"></span>
-                                    <i class="fas fa-chevron-right text-[10px] opacity-20 group-hover:opacity-100 transition-all" :class="filters.category === cat ? 'translate-x-1 opacity-100' : ''"></i>
+                                        class="flex items-center justify-between px-5 py-4 rounded-2xl border transition-all duration-300 text-left relative group active:scale-[0.98]"
+                                        :class="filters.category === cat ? 'bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-500/20' : 'bg-white text-slate-600 border-slate-100 hover:border-purple-200 hover:bg-purple-50/50'">
+                                    <span class="text-[10px] font-black uppercase tracking-tight leading-none pr-4" x-text="cat"></span>
+                                    <div class="w-6 h-6 rounded-lg flex items-center justify-center transition-all" :class="filters.category === cat ? 'bg-white/20' : 'bg-slate-50 group-hover:bg-purple-100'">
+                                        <i class="fas fa-chevron-right text-[8px] transition-transform" :class="filters.category === cat ? 'translate-x-0.5' : 'text-slate-300 group-hover:text-purple-500'"></i>
+                                    </div>
                                 </button>
                             </template>
                         </div>
                     </div>
 
-                    {{-- Per Page Toggle --}}
-                    <div class="space-y-4">
-                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 italic">Page Density</label>
-                        <div class="flex p-2 bg-slate-50 rounded-[1.5rem] border border-slate-100 shadow-inner gap-2">
-                            <template x-for="size in ['25', '50', '100']">
-                                <button @click="filters.per_page = size; fetchData()" 
-                                        class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300"
-                                        :class="filters.per_page === size ? 'bg-white text-purple-600 shadow-sm border border-purple-100' : 'text-slate-400 hover:text-slate-600'">
-                                    <span x-text="size"></span>
-                                </button>
-                            </template>
-                        </div>
+                    <div class="pt-6">
+                        <button @click="clearFilters()" class="w-full py-4 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border border-rose-100 flex items-center justify-center gap-3 active:scale-95">
+                            <i class="fas fa-broom text-xs"></i> Purge Filters
+                        </button>
                     </div>
-
-                    <button @click="clearFilters()" class="w-full py-5 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.4em] transition-all duration-300 border border-slate-100 hover:border-rose-100 flex items-center justify-center gap-3 active:scale-95 font-bold">
-                        <i class="fas fa-broom"></i> Reset Glossary
-                    </button>
                     
-                    <div class="pt-10 opacity-40 group-hover/sidebar:opacity-100 transition-opacity duration-1000">
-                        <div class="p-6 rounded-[2rem] bg-black/20 border border-white/5 text-center">
-                            <i class="fas fa-lightbulb text-amber-300 mb-3 block text-lg"></i>
-                            <p class="text-[10px] text-purple-200 font-bold leading-relaxed tracking-wide italic">"BID means Bis In Die (Twice a Day). Accurate abbreviations speed up clinical workflows."</p>
+                    <div class="pt-6 opacity-40 group-hover/sidebar:opacity-100 transition-opacity duration-1000">
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+                            <div class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-lightbulb text-amber-400 text-xs"></i>
+                            </div>
+                            <p class="text-[9px] text-slate-400 font-bold leading-relaxed tracking-wide italic">"Accurate abbreviations speed up clinical workflows and reduce prescription errors."</p>
                         </div>
                     </div>
                 </div>
@@ -296,9 +380,32 @@
         </div>
     </div>
 
+    {{-- Generic Confirmation Modal --}}
+    <div x-show="showConfirmModal" class="fixed inset-0 z-[70] overflow-y-auto px-4 py-6" x-transition.opacity style="display: none;">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false"></div>
+            
+            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
+                <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-violet-100 text-violet-600'">
+                    <i class="fas text-3xl" :class="confirmConfig.icon"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-800 mb-2" x-text="confirmConfig.title"></h3>
+                <p class="text-xs font-bold text-slate-500 mb-8 px-4 uppercase tracking-wider leading-relaxed" x-text="confirmConfig.message"></p>
+                
+                <div class="flex items-center justify-center gap-3">
+                    <button @click="showConfirmModal = false" class="px-5 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors w-full cursor-pointer">Abort Action</button>
+                    <button @click="executeConfirmedAction()" :disabled="confirming" class="px-5 py-3 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md w-full flex items-center justify-center gap-2 cursor-pointer" :class="confirmConfig.type === 'danger' ? 'bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-rose-500/30' : 'bg-gradient-to-r from-violet-500 to-violet-700 hover:from-violet-600 hover:to-violet-800 shadow-violet-500/30'">
+                        <i class="fas fa-spinner fa-spin" x-show="confirming"></i>
+                        <span x-text="confirming ? 'Processing...' : confirmConfig.confirmText"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- ═══════════════════════════════════════════════
          MODAL: LEXICON EDITOR
-    ═══════════════════════════════════════════════ --}}
+         ═══════════════════════════════════════════════ --}}
     <div x-show="showModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl">
         <div @click.away="closeModal()" x-show="showModal" x-transition:enter="transition ease-out duration-500 transform" x-transition:enter-start="scale-90 opacity-0 translate-y-12" x-transition:enter-end="scale-100 opacity-100 translate-y-0" class="bg-white rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden border border-white relative">
             
@@ -411,6 +518,19 @@ function rxAbbreviationRegistry() {
         editing: null,
         saving: false,
 
+        selectedIds: [],
+        showConfirmModal: false,
+        confirming: false,
+        confirmConfig: {
+            title: '',
+            message: '',
+            icon: '',
+            confirmText: '',
+            type: 'primary',
+            action: null,
+            payload: null
+        },
+
         filters: JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
             search: '', category: '', status: '', per_page: '25', sort_by: 'category', sort_dir: 'asc'
         })),
@@ -418,8 +538,15 @@ function rxAbbreviationRegistry() {
         form: { abbreviation: '', full_meaning: '', category: '', doses_per_day: '', is_active: true },
 
         init() {
+            // Restore filters from localStorage if they exist
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                this.filters = { ...this.filters, ...JSON.parse(saved) };
+            }
+            
             this.fetchStats();
             this.fetchData();
+            
             this.$watch('filters', (v) => localStorage.setItem(STORAGE_KEY, JSON.stringify(v)), { deep: true });
         },
 
@@ -441,6 +568,7 @@ function rxAbbreviationRegistry() {
 
         async fetchData(url = null) {
             this.loading = true;
+            this.selectedIds = [];
             const params = new URLSearchParams(this.filters);
             const endpoint = url || `{{ route('doctor.setup.prescription-abbreviations.data') }}?${params}`;
             
@@ -450,7 +578,9 @@ function rxAbbreviationRegistry() {
                 this.abbreviations = data.data;
                 this.meta = { total: data.total, from: data.from, to: data.to };
                 this.paginationLinks = data.links;
-            } catch (e) { console.error('Data error'); }
+            } catch (e) { 
+                window.showError('Registry sync failure');
+            }
             this.loading = false;
         },
 
@@ -504,8 +634,11 @@ function rxAbbreviationRegistry() {
                     this.closeModal();
                     this.fetchData();
                     this.fetchStats();
+                    window.showSuccess(data.message || 'Lexicon updated');
                 }
-            } catch (e) { console.error('Save error'); }
+            } catch (e) { 
+                window.showError('Neural uplink failure during save');
+            }
             this.saving = false;
         },
 
@@ -519,23 +652,108 @@ function rxAbbreviationRegistry() {
                 if (data.success) {
                     abbr.is_active = data.abbreviation.is_active;
                     this.fetchStats();
+                    window.showSuccess(`Entry "${abbr.abbreviation}" is now ${abbr.is_active ? 'Active' : 'Offline'}`);
                 }
-            } catch (e) { console.error('Toggle error'); }
+            } catch (e) { 
+                window.showError('Toggle sequence interrupted');
+            }
         },
 
-        async deleteAbbr(abbr) {
-            if (!confirm(`Permanently remove shorthand entry "${abbr.abbreviation}"?`)) return;
+        // Selection Helpers
+        toggleAll(e) {
+            if (e.target.checked) {
+                this.selectedIds = this.abbreviations.map(a => a.id);
+            } else {
+                this.selectedIds = [];
+            }
+        },
+
+        // Confirmation Modal Logic
+        confirmBulkAction(type, singleItem = null) {
+            const count = singleItem ? 1 : this.selectedIds.length;
+            
+            if (type === 'delete') {
+                this.confirmConfig = {
+                    title: singleItem ? 'Purge Shorthand?' : 'Purge Registry Nodes?',
+                    message: singleItem 
+                        ? `Permanently remove entry "${singleItem.abbreviation}" from clinical lexicon?`
+                        : `Identify and remove ${count} shorthand entries from the global database? Action is irreversible.`,
+                    icon: 'fa-trash-alt',
+                    confirmText: 'Execute Purge',
+                    type: 'danger',
+                    action: 'bulkDestroy',
+                    payload: singleItem ? [singleItem.id] : this.selectedIds
+                };
+            } else {
+                const active = type === 'activate';
+                this.confirmConfig = {
+                    title: active ? 'Re-engage Shorthands?' : 'De-optimize Registry?',
+                    message: `Set ${count} shorthand entries to ${active ? 'Active' : 'Offline'} status?`,
+                    icon: active ? 'fa-bolt' : 'fa-power-off',
+                    confirmText: active ? 'Resume Access' : 'Suspend Shorthands',
+                    type: 'primary',
+                    action: 'bulkStatus',
+                    payload: {
+                        ids: singleItem ? [singleItem.id] : this.selectedIds,
+                        active: active
+                    }
+                };
+            }
+            this.showConfirmModal = true;
+        },
+
+        async executeConfirmedAction() {
+            this.confirming = true;
             try {
-                const r = await fetch(`/doctor/setup/prescription-abbreviations/${abbr.id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                if (this.confirmConfig.action === 'bulkStatus') {
+                    await this.executeBulkStatus();
+                } else if (this.confirmConfig.action === 'bulkDestroy') {
+                    await this.executeBulkDestroy();
+                }
+            } finally {
+                this.confirming = false;
+                this.showConfirmModal = false;
+            }
+        },
+
+        async executeBulkStatus() {
+            const { ids, active } = this.confirmConfig.payload;
+            try {
+                const r = await fetch("{{ route('doctor.setup.prescription-abbreviations.bulk-status') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ ids, is_active: active })
                 });
                 const data = await r.json();
                 if (data.success) {
+                    window.showSuccess(data.message);
                     this.fetchData();
                     this.fetchStats();
+                    this.selectedIds = [];
                 }
-            } catch (e) { console.error('Delete error'); }
+            } catch (e) { window.showError('Bulk status update failed'); }
+        },
+
+        async executeBulkDestroy() {
+            const ids = this.confirmConfig.payload;
+            try {
+                const r = await fetch("{{ route('doctor.setup.prescription-abbreviations.bulk-destroy') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ ids })
+                });
+                const data = await r.json();
+                if (data.success) {
+                    window.showSuccess(data.message);
+                    this.fetchData();
+                    this.fetchStats();
+                    this.selectedIds = [];
+                }
+            } catch (e) { window.showError('Bulk purge failed'); }
+        },
+
+        async deleteAbbr(abbr) {
+            this.confirmBulkAction('delete', abbr);
         },
 
         // Style Helpers

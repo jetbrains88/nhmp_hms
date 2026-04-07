@@ -7,7 +7,7 @@
 @section('content')
 <div x-data="auditManagement({{ json_encode($entityTypes) }}, {{ json_encode($actions) }})" x-init="init()" x-cloak class="space-y-8 relative">
 
-    {{-- Futuristic Floating Filter Toggle --}}
+    <!-- Futuristic Floating Filter Toggle -->
     <button @click="showSidebar = true"
         x-show="!showSidebar"
         x-transition:enter="transition ease-out duration-500 delay-100"
@@ -16,13 +16,13 @@
         x-transition:leave="transition ease-in duration-300"
         x-transition:leave-start="translate-x-0 opacity-100"
         x-transition:leave-end="translate-x-full opacity-0"
-        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-gradient-to-b from-indigo-500 to-indigo-700 text-white p-2.5 py-6 rounded-l-2xl shadow-[0_0_30px_-5px_rgba(79,70,229,0.4)] hover:shadow-[-5px_0_40px_-5px_rgba(79,70,229,0.7)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-400/50 group cursor-pointer"
+        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(79,70,229,0.2)] hover:shadow-[-10px_0_40px_-5px_rgba(79,70,229,0.3)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
         title="Open Audit Filters">
         <div class="relative">
-            <div class="absolute inset-0 bg-white/20 blur-md rounded-full group-hover:bg-white/40 transition-colors duration-300"></div>
-            <i class="fas fa-sliders-h relative z-10 drop-shadow-lg group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
+            <div class="absolute inset-0 bg-indigo-500/10 blur-md rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
+            <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
         </div>
-        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 drop-shadow-md text-indigo-50">Audit Filters</span>
+        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Audit Filters</span>
     </button>
 
     {{-- ═══════════════════════════════════════════════
@@ -164,14 +164,14 @@
 
                 <!-- Active Filters Summary Inline Row -->
                 <div x-show="searchQuery || filterEntity || filterAction || filterUserId || filterBranchId || dateFrom || dateTo"
-                     class="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-indigo-100">
+                     class="flex flex-wrap items-center gap-2 p-6 pt-4 border-t border-indigo-100 bg-white">
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-2">Active filters:</span>
                     
                     <template x-if="searchQuery">
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-100">
                             <i class="fas fa-search text-[10px]"></i>
                             <span x-text="searchQuery"></span>
-                            <button @click="searchQuery = ''; applyFilters()" class="hover:text-blue-900"><i class="fas fa-times"></i></button>
+                            <button @click="searchQuery = ''; applyFilters()" class="hover:text-blue-900 border-l border-blue-200 pl-2 ml-1"><i class="fas fa-times"></i></button>
                         </span>
                     </template>
 
@@ -179,7 +179,7 @@
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold border border-indigo-100">
                             <i class="fas fa-cube text-[10px]"></i>
                             <span x-text="filterEntity.split('\\').pop()"></span>
-                            <button @click="filterEntity = ''; applyFilters()" class="hover:text-indigo-900"><i class="fas fa-times"></i></button>
+                            <button @click="filterEntity = ''; applyFilters()" class="hover:text-indigo-900 border-l border-indigo-200 pl-2 ml-1"><i class="fas fa-times"></i></button>
                         </span>
                     </template>
 
@@ -187,7 +187,7 @@
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-bold border border-emerald-100">
                             <i class="fas fa-tag text-[10px]"></i>
                             <span x-text="filterAction"></span>
-                            <button @click="filterAction = ''; applyFilters()" class="hover:text-emerald-900"><i class="fas fa-times"></i></button>
+                            <button @click="filterAction = ''; applyFilters()" class="hover:text-emerald-900 border-l border-emerald-200 pl-2 ml-1"><i class="fas fa-times"></i></button>
                         </span>
                     </template>
 
@@ -195,7 +195,7 @@
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-violet-50 text-violet-700 rounded-lg text-xs font-bold border border-violet-100">
                             <i class="fas fa-user text-[10px]"></i>
                             <span x-text="getUserLabel(filterUserId)"></span>
-                            <button @click="filterUserId = ''; applyFilters()" class="hover:text-violet-900"><i class="fas fa-times"></i></button>
+                            <button @click="filterUserId = ''; applyFilters()" class="hover:text-violet-900 border-l border-violet-200 pl-2 ml-1"><i class="fas fa-times"></i></button>
                         </span>
                     </template>
 
@@ -203,7 +203,7 @@
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-cyan-50 text-cyan-700 rounded-lg text-xs font-bold border border-cyan-100">
                             <i class="fas fa-code-branch text-[10px]"></i>
                             <span x-text="getBranchLabel(filterBranchId)"></span>
-                            <button @click="filterBranchId = ''; applyFilters()" class="hover:text-cyan-900"><i class="fas fa-times"></i></button>
+                            <button @click="filterBranchId = ''; applyFilters()" class="hover:text-cyan-900 border-l border-cyan-200 pl-2 ml-1"><i class="fas fa-times"></i></button>
                         </span>
                     </template>
 
@@ -211,11 +211,11 @@
                         <span class="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100">
                             <i class="fas fa-calendar text-[10px]"></i>
                             <span x-text="`${dateFrom || '...'} to ${dateTo || '...'}`"></span>
-                            <button @click="dateFrom = ''; dateTo = ''; applyFilters()" class="hover:text-amber-900"><i class="fas fa-times"></i></button>
+                            <button @click="dateFrom = ''; dateTo = ''; applyFilters()" class="hover:text-amber-900 border-l border-amber-200 pl-2 ml-1"><i class="fas fa-times"></i></button>
                         </span>
                     </template>
 
-                    <button @click="clearFilters()" class="text-[10px] font-black text-rose-500 hover:text-rose-700 uppercase tracking-widest ml-auto transition-colors">
+                    <button @click="clearFilters()" class="text-[10px] font-black text-rose-500 hover:text-rose-700 uppercase tracking-widest ml-auto transition-colors px-3 py-1 rounded-lg hover:bg-rose-50 border border-transparent hover:border-rose-100">
                         Clear All
                     </button>
                 </div>
@@ -225,20 +225,20 @@
             <div class="relative min-h-[400px]">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
+                        <thead class="bg-white border-b border-slate-100">
                             <tr>
-                                <th class="px-5 py-5 text-left " >
-                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-500 shadow-sm border border-sky-200 transition-all">
-                                            <i class="fas fa-clock text-xs"></i>
+                                <th class="px-5 py-5 text-left border-b border-slate-50" >
+                                    <div class="flex items-center justify-start gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-500 shadow-sm border border-sky-100 transition-all">
+                                            <i class="fas fa-clock text-[10px]"></i>
                                         </div>
                                         <span>Timestamp</span>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('user_id')">
-                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-200 transition-all">
-                                            <i class="fas fa-user text-xs"></i>
+                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors border-b border-slate-50" @click="sortBy('user_id')">
+                                    <div class="flex items-center justify-start gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100 transition-all">
+                                            <i class="fas fa-user text-[10px]"></i>
                                         </div>
                                         <span>Performed By</span>
                                         <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'user_id'"></i>
@@ -246,10 +246,10 @@
                                         <i class="fas fa-sort-down ml-1 text-indigo-500" x-show="sortField === 'user_id' && sortDirection === 'desc'"></i>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('entity_type')">
-                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-200 transition-all">
-                                            <i class="fas fa-cube text-xs"></i>
+                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors border-b border-slate-50" @click="sortBy('entity_type')">
+                                    <div class="flex items-center justify-start gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-100 transition-all">
+                                            <i class="fas fa-cube text-[10px]"></i>
                                         </div>
                                         <span>Target Entity</span>
                                         <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'entity_type'"></i>
@@ -257,10 +257,10 @@
                                         <i class="fas fa-sort-down ml-1 text-purple-500" x-show="sortField === 'entity_type' && sortDirection === 'desc'"></i>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('action')">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-200 transition-all">
-                                            <i class="fas fa-tag text-xs"></i>
+                                <th class="px-5 py-5 text-center cursor-pointer group hover:bg-slate-50 transition-colors border-b border-slate-50" @click="sortBy('action')">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100 transition-all">
+                                            <i class="fas fa-tag text-[10px]"></i>
                                         </div>
                                         <span>Action</span>
                                         <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'action'"></i>
@@ -268,10 +268,10 @@
                                         <i class="fas fa-sort-down ml-1 text-emerald-500" x-show="sortField === 'action' && sortDirection === 'desc'"></i>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('branch_id')">
-                                    <div class="flex items-center justify-start gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm border border-amber-200 transition-all">
-                                            <i class="fas fa-code-branch text-xs"></i>
+                                <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors border-b border-slate-50" @click="sortBy('branch_id')">
+                                    <div class="flex items-center justify-start gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm border border-amber-100 transition-all">
+                                            <i class="fas fa-code-branch text-[10px]"></i>
                                         </div>
                                         <span>Branch</span>
                                         <i class="fas fa-sort ml-1 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300" x-show="sortField !== 'branch_id'"></i>
@@ -279,10 +279,10 @@
                                         <i class="fas fa-sort-down ml-1 text-amber-500" x-show="sortField === 'branch_id' && sortDirection === 'desc'"></i>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-right " >
-                                    <div class="flex items-center justify-end gap-2.5 text-xs font-black text-gray-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shadow-sm border border-slate-200 transition-all">
-                                            <i class="fas fa-search-plus text-xs"></i>
+                                <th class="px-5 py-5 text-right border-b border-slate-50" >
+                                    <div class="flex items-center justify-end gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shadow-sm border border-slate-100 transition-all">
+                                            <i class="fas fa-search-plus text-[10px]"></i>
                                         </div>
                                         <span>Details</span>
                                     </div>
@@ -406,7 +406,14 @@
         </div>
 
         {{-- Right Column - Security Filters Sidebar --}}
-        <div class="lg:col-span-3 lg:sticky lg:top-0 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto scrollbar-hide pb-2" style="scrollbar-width: none;" x-show="showSidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4">
+        <div class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2 group/sidebar" 
+             x-show="showSidebar" 
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0 translate-x-12" 
+             x-transition:enter-end="opacity-100 translate-x-0" 
+             x-transition:leave="transition ease-in duration-300" 
+             x-transition:leave-start="opacity-100 translate-x-0" 
+             x-transition:leave-end="opacity-0 translate-x-12">
             
             <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col min-h-0">
                 <div class="p-5 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white flex items-center justify-between shrink-0">

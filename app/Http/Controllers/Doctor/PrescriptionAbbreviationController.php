@@ -163,4 +163,43 @@ class PrescriptionAbbreviationController extends Controller
             'message' => 'Abbreviation deleted.',
         ]);
     }
+
+    /**
+     * Bulk update status for multiple abbreviations.
+     */
+    public function bulkStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:prescription_abbreviations,id',
+            'is_active' => 'required|boolean'
+        ]);
+
+        PrescriptionAbbreviation::whereIn('id', $validated['ids'])->update([
+            'is_active' => $validated['is_active']
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated for ' . count($validated['ids']) . ' entries.'
+        ]);
+    }
+
+    /**
+     * Bulk delete multiple abbreviations.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:prescription_abbreviations,id'
+        ]);
+
+        PrescriptionAbbreviation::whereIn('id', $validated['ids'])->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => count($validated['ids']) . ' entries purged successfully.'
+        ]);
+    }
 }

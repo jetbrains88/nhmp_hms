@@ -437,9 +437,8 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
                 {{-- Quantity --}}
-                <div>
+                <div :class="rx?.batches?.length > 0 ? '' : 'col-span-2'">
                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5" for="modal-quantity">
                         Outflow Count
                         <span class="text-rose-400 font-normal ml-1 border pl-1 rounded border-rose-200 bg-rose-50" x-text="'(Max limit: ' + (rx?.remaining_qty ?? 0) + ')'"></span>
@@ -458,18 +457,20 @@
                     <div class="relative">
                         <i class="fas fa-boxes absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         <select x-model="form.medicine_batch_id" id="modal-batch"
-                            class="w-full pl-10 pr-4 py-3 text-xs border border-slate-200 rounded-xl text-slate-600 font-bold focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-400 outline-none bg-slate-50 appearance-none transition-all h-[54px]">
+                            class="w-full pl-10 pr-4 py-[13px] text-xs border border-slate-200 rounded-xl text-slate-600 font-bold focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-400 outline-none bg-slate-50 appearance-none transition-all">
                             <option value="">Auto (FEFO Rules)</option>
                             <template x-for="b in (rx?.batches ?? [])" :key="b.id">
                                 <option :value="b.id"
-                                    x-text="'Batch ' + b.batch_number + ' (Exp: ' + b.expiry + ') - Rem: ' + b.remaining">
+                                    x-text="'Batch ' + b.batch_number + ' (' + b.remaining + ' left)'">
                                 </option>
                             </template>
                         </select>
                         <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[10px]"></i>
                     </div>
+                    <p class="text-[9px] text-emerald-500 font-bold mt-1 uppercase tracking-tight" x-show="!form.medicine_batch_id">
+                        <i class="fas fa-magic mr-1"></i> Multi-batch pull enabled
+                    </p>
                 </div>
-            </div>
 
             {{-- Notes --}}
             <div>
@@ -765,26 +766,30 @@ function dispenseModal() {
             if (this.form.alternative_medicine_id) payload.alternative_medicine_id = this.form.alternative_medicine_id;
             if (this.form.medicine_batch_id)       payload.medicine_batch_id = this.form.medicine_batch_id;
 
-            const r = await fetch(`/pharmacy/prescriptions/${this.rx.id}/dispense`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
-                },
-                body: JSON.stringify(payload),
-            });
+            try {
+                const r = await fetch(`/pharmacy/prescriptions/${this.rx.id}/dispense`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                    },
+                    body: JSON.stringify(payload),
+                });
 
-            const data = await r.json();
-            this.submitting = false;
+                const data = await r.json();
+                this.submitting = false;
 
-            if (data.success || r.ok) {
-                this.close();
-                window.dispatchEvent(new CustomEvent('dispense-success'));
-                // Refresh the list
-                window.dispatchEvent(new CustomEvent('refresh-prescriptions'));
-            } else {
-                this.error = data.message ?? 'Dispense failed. Please try again.';
+                if (data.success || r.ok) {
+                    this.close();
+                    window.dispatchEvent(new CustomEvent('dispense-success'));
+                    // The main component listens for 'dispense-success' and calls fetchData()
+                } else {
+                    this.error = data.message ?? 'Dispense failed. Please try again.';
+                }
+            } catch (err) {
+                this.submitting = false;
+                this.error = 'A network error occurred. Please try again.';
             }
         },
     };

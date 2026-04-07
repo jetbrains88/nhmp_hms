@@ -15,18 +15,18 @@
         x-transition:enter-end="translate-x-0 opacity-100"
         class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(79,70,229,0.2)] hover:shadow-[-10px_0_40px_-5px_rgba(79,70,229,0.3)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
         title="Open Registry Filters">
-        <div class="relative">
-            <div class="absolute inset-0 bg-indigo-500/10 blur-md rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
-            <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
-        </div>
-        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Specialty Filters</span>
+    <div class="relative">
+        <div class="absolute inset-0 bg-indigo-500/10 blur-md rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
+        <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
+    </div>
+    <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Specialty Filters</span>
     </button>
 
     {{-- ═══════════════════════════════════════════════
-         STATS CARDS
+         STATS CARDS (Full Width Bento-style)
     ═══════════════════════════════════════════════ --}}
-    <div class="flex overflow pb-6 pt-10 gap-6 gap-y-10 mt-8 no-scrollbar custom-scrollbar">
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div class="relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-400 shadow-xl shadow-indigo-900/20 border border-indigo-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-stethoscope text-xl text-white drop-shadow-md"></i>
@@ -43,14 +43,14 @@
             </div>
         </div>
 
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="filters.status = 'active'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-xl shadow-emerald-900/20 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-check-circle text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-xs font-bold tracking-wider text-teal-500 uppercase">Active Contacts</p>
-                <h4 class="text-3xl font-bold text-teal-700 drop-shadow-sm font-mono" x-text="stats.active">0</h4>
+                <h4 class="text-3xl font-bold text-teal-700 drop-shadow-sm font-mono" x-text="stats.active || 0">0</h4>
             </div>
             <div class="mx-4 mb-4 border-t border-teal-200 pt-2">
                 <div class="flex items-center gap-2">
@@ -60,31 +60,14 @@
             </div>
         </div>
 
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-             @click="viewMode = 'list'">
-            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 shadow-xl shadow-amber-900/20 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-stethoscope text-xl text-white drop-shadow-md"></i>
-            </div>
-            <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-amber-600 uppercase">Registry Status</p>
-                <h4 class="text-3xl font-bold text-amber-700 drop-shadow-sm font-mono" x-text="stats.specialties">0</h4>
-            </div>
-            <div class="mx-4 mb-4 border-t border-amber-200 pt-2">
-                <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                    <span class="text-[10px] text-amber-700 font-bold uppercase tracking-tight">Unique Medical Fields</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex-shrink-0 w-[280px] relative flex flex-col bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl shadow-lg shadow-slate-500/10 border border-slate-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+        <div class="relative flex flex-col bg-gradient-to-br from-slate-50 to-gray-50 rounded-2xl shadow-lg shadow-slate-500/10 border border-slate-100 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="filters.status = 'inactive'; fetchData()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-slate-600 to-gray-400 shadow-xl shadow-slate-900/20 border border-slate-300 group-hover:scale-110 transition-transform duration-300">
                 <i class="fas fa-toggle-off text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-xs font-bold tracking-wider text-slate-500 uppercase">Inactive</p>
-                <h4 class="text-3xl font-bold text-slate-700 drop-shadow-sm font-mono" x-text="stats.inactive">0</h4>
+                <h4 class="text-3xl font-bold text-slate-700 drop-shadow-sm font-mono" x-text="stats.inactive || 0">0</h4>
             </div>
             <div class="mx-4 mb-4 border-t border-slate-200 pt-2">
                 <div class="flex items-center gap-2">
@@ -123,17 +106,6 @@
                         </div>
 
                         <div class="flex flex-wrap gap-4 items-center">
-                            {{-- Rows Selector --}}
-                            <div class="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5 shadow-sm">
-                                <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase">Rows</span>
-                                <select x-model="filters.per_page" @change="fetchData()" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-
                             <button @click="openModal()"
                                 class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all active:scale-95 group">
                                 <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
@@ -155,25 +127,59 @@
                     </div>
                 </div>
 
+                {{-- Bulk Actions Toolbar --}}
+                <div x-show="selectedIds.length > 0" 
+                     x-transition:enter="transition ease-out duration-300 transform"
+                     x-transition:enter-start="-translate-y-full"
+                     x-transition:enter-end="translate-y-0"
+                     class="bg-indigo-600 px-6 py-3 flex items-center justify-between text-white sticky top-0 z-10 shadow-2xl rounded-b-xl mx-6">
+                    <div class="flex items-center gap-4">
+                        <span class="text-[10px] font-black uppercase tracking-widest border-r border-white/20 pr-4">
+                            <span x-text="selectedIds.length"></span> Specialties Selected
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <button @click="confirmBulkAction('activate')" class="px-3 py-1.5 bg-emerald-500/80 hover:bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Activate</button>
+                            <button @click="confirmBulkAction('deactivate')" class="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Deactivate</button>
+                            <button @click="confirmBulkAction('delete')" class="px-3 py-1.5 bg-rose-500/80 hover:bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Purge</button>
+                        </div>
+                    </div>
+                    <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2">
+                        Dismiss <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
                 {{-- Table Content --}}
                 <div class="relative min-h-[400px]">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
                             <thead class="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border-b border-indigo-100/50">
                                 <tr>
-                                    <th @click="sort('name')" class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest cursor-pointer hover:text-indigo-600 transition-colors group">
+                                    <th class="px-6 py-4 w-10">
+                                        <div class="flex items-center justify-center">
+                                            <input type="checkbox" @change="toggleAll($event)" :checked="selectedIds.length === physicians.length && physicians.length > 0"
+                                                class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all shadow-sm cursor-pointer">
+                                        </div>
+                                    </th>
+                                    <th @click="sort('name')" class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] cursor-pointer hover:text-indigo-600 transition-colors group border-b border-slate-50">
                                         <div class="flex items-center gap-2">
+                                            <i class="fas fa-stethoscope text-[10px]"></i>
                                             Specialty Name
-                                            <i class="fas fa-sort text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
+                                            <i class="fas fa-sort text-[10px] opacity-20 group-hover:opacity-100 transition-opacity"></i>
                                         </div>
                                     </th>
-                                    <th @click="sort('is_active')" class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest cursor-pointer hover:text-indigo-600 transition-colors group">
+                                    <th @click="sort('is_active')" class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] cursor-pointer hover:text-indigo-600 transition-colors group border-b border-slate-50">
                                         <div class="flex items-center gap-2">
+                                            <i class="fas fa-toggle-on text-[10px]"></i>
                                             Status
-                                            <i class="fas fa-sort text-[10px] text-slate-300 group-hover:text-indigo-400"></i>
+                                            <i class="fas fa-sort text-[10px] opacity-20 group-hover:opacity-100 transition-opacity"></i>
                                         </div>
                                     </th>
-                                    <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Actions</th>
+                                    <th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] text-right border-b border-slate-50">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <i class="fas fa-tools text-[10px]"></i>
+                                            Actions
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50 bg-white">
@@ -193,7 +199,7 @@
 
                                 <template x-if="!loading && physicians.length === 0">
                                     <tr>
-                                        <td colspan="4" class="py-24 text-center text-slate-400">
+                                        <td colspan="5" class="py-24 text-center text-slate-400">
                                             <i class="fas fa-stethoscope text-5xl mb-4 opacity-20"></i>
                                             <p class="text-sm font-bold tracking-tight">No specialties found matching your search</p>
                                         </td>
@@ -202,6 +208,10 @@
 
                                 <template x-for="sp in physicians" :key="sp.id">
                                     <tr class="hover:bg-indigo-50/30 transition-all duration-300 group">
+                                        <td class="px-6 py-4 text-center">
+                                            <input type="checkbox" :value="sp.id" x-model="selectedIds"
+                                                class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer">
+                                        </td>
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-4">
                                                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-indigo-600 border border-indigo-200 group-hover:scale-110 transition-transform shadow-sm">
@@ -226,7 +236,7 @@
                                                 <button @click="openModal(sp)" class="w-8 h-8 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
                                                     <i class="fas fa-pencil-alt text-[10px]"></i>
                                                 </button>
-                                                <button @click="deletePhysician(sp)" class="w-8 h-8 flex items-center justify-center bg-white border border-rose-100 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm">
+                                                <button @click="confirmBulkAction('delete', sp)" class="w-8 h-8 flex items-center justify-center bg-white border border-rose-100 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm">
                                                     <i class="fas fa-trash-alt text-[10px]"></i>
                                                 </button>
                                             </div>
@@ -268,7 +278,7 @@
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-x-12"
              x-transition:enter-end="opacity-100 translate-x-0"
-             class="lg:col-span-3 sticky top-8 lg:max-h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar pr-1">
+             class="lg:col-span-3 sticky top-8 lg:max-h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar pr-1 group/sidebar">
             
             <div class="bg-white rounded-[2.5rem] p-8 text-slate-800 shadow-2xl relative overflow-hidden border border-slate-100">
                 <div class="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-indigo-50 rounded-full blur-3xl opacity-50 italic"></div>
@@ -301,27 +311,74 @@
                         </div>
                     </div>
 
-
-                    {{-- Status Filter --}}
-                    <div class="space-y-4">
-                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Network Status</label>
-                        <div class="grid grid-cols-1 gap-3">
-                            <template x-for="status in ['active', 'inactive']">
-                                <button @click="filters.status = (filters.status === status ? '' : status); fetchData()"
-                                        class="flex items-center justify-between px-6 py-4 rounded-3xl border transition-all duration-300 group shadow-sm active:scale-95"
-                                        :class="filters.status === status ? 'bg-indigo-600 text-white border-indigo-600 shadow-indigo-200' : 'bg-white text-slate-600 border-slate-100 hover:bg-slate-50 hover:border-slate-200'">
-                                    <span class="text-[11px] font-black uppercase tracking-widest" x-text="status"></span>
-                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-transform group-hover:scale-110"
-                                         :class="filters.status === status ? 'border-white/50' : 'border-slate-200'">
-                                        <div x-show="filters.status === status" class="w-1.5 h-1.5 rounded-full bg-white"></div>
-                                    </div>
+                    {{-- Page Intelligence Section (Bento Box) --}}
+                    <div class="bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100 shadow-inner space-y-8">
+                        {{-- Status Filter --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-toggle-on text-emerald-500"></i> Status State
+                            </label>
+                            <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                                <button @click="filters.status = ''; fetchData()" 
+                                    :class="filters.status === '' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    All
                                 </button>
-                            </template>
+                                <button @click="filters.status = 'active'; fetchData()" 
+                                    :class="filters.status === 'active' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Act
+                                </button>
+                                <button @click="filters.status = 'inactive'; fetchData()" 
+                                    :class="filters.status === 'inactive' ? 'bg-rose-500 text-white shadow-md' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Off
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Page Density --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-list-ol text-indigo-500"></i> Page Density
+                            </label>
+                            <div class="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-100">
+                                <template x-for="size in ['15', '25', '50']">
+                                    <button @click="filters.per_page = size; fetchData()" 
+                                        :class="filters.per_page === size ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="py-2.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                        <span x-text="size"></span>
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                     </div>
 
                     <button @click="clearFilters()" class="w-full py-5 mt-8 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 border border-slate-100 hover:border-rose-100 flex items-center justify-center gap-3 active:scale-95 font-bold">
                         <i class="fas fa-broom"></i> Reset Registry
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Generic Confirmation Modal --}}
+    <div x-show="showConfirmModal" class="fixed inset-0 z-[70] overflow-y-auto px-4 py-6" x-transition.opacity style="display: none;">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false"></div>
+            
+            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
+                <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600'">
+                    <i class="fas text-3xl" :class="confirmConfig.icon"></i>
+                </div>
+                <h3 class="text-xl font-black text-slate-800 mb-2" x-text="confirmConfig.title"></h3>
+                <p class="text-xs font-bold text-slate-500 mb-8 px-4 uppercase tracking-wider leading-relaxed" x-text="confirmConfig.message"></p>
+                
+                <div class="flex items-center justify-center gap-3">
+                    <button @click="showConfirmModal = false" class="px-5 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors w-full cursor-pointer">Abort Action</button>
+                    <button @click="executeConfirmedAction()" :disabled="confirming" class="px-5 py-3 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md w-full flex items-center justify-center gap-2 cursor-pointer" :class="confirmConfig.type === 'danger' ? 'bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-rose-500/30' : 'bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-blue-500/30'">
+                        <i class="fas fa-spinner fa-spin" x-show="confirming"></i>
+                        <span x-text="confirming ? 'Processing...' : confirmConfig.confirmText"></span>
                     </button>
                 </div>
             </div>
@@ -360,8 +417,6 @@
                     </div>
                 </div>
 
-
-
                 <!-- Active Toggle -->
                 <div class="flex items-center justify-between p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100/50 group">
                     <div class="flex items-center gap-3">
@@ -395,7 +450,7 @@
 @push('scripts')
 <script>
 function physicianRegistry() {
-    const STORAGE_KEY = 'medical_specialties_filters_v1';
+    const STORAGE_KEY = 'medical_specialties_filters_v2';
 
     return {
         physicians: [],
@@ -407,6 +462,19 @@ function physicianRegistry() {
         showModal: false,
         editing: null,
         saving: false,
+
+        selectedIds: [],
+        showConfirmModal: false,
+        confirming: false,
+        confirmConfig: {
+            title: '',
+            message: '',
+            icon: '',
+            confirmText: '',
+            type: 'primary',
+            action: null,
+            payload: null
+        },
 
         filters: JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
             search: '', status: '', per_page: '15', sort_by: 'name', sort_dir: 'asc'
@@ -429,6 +497,7 @@ function physicianRegistry() {
 
         async fetchData(url = null) {
             this.loading = true;
+            this.selectedIds = [];
             const params = new URLSearchParams(this.filters);
             const endpoint = url || `{{ route('doctor.setup.physicians.data') }}?${params}`;
             
@@ -438,7 +507,9 @@ function physicianRegistry() {
                 this.physicians = data.data;
                 this.meta = { total: data.total, from: data.from, to: data.to };
                 this.paginationLinks = data.links;
-            } catch (e) { console.error('Data fetch failed', e); }
+            } catch (e) { 
+                window.showError('Registry sync failure');
+            }
             this.loading = false;
         },
 
@@ -497,8 +568,11 @@ function physicianRegistry() {
                     this.closeModal();
                     this.fetchData();
                     this.fetchStats();
+                    window.showSuccess(data.message || 'Specialty updated');
                 }
-            } catch (e) { console.error('Save failed', e); }
+            } catch (e) { 
+                window.showError('Neural uplink failure during save');
+            }
             this.saving = false;
         },
 
@@ -513,24 +587,102 @@ function physicianRegistry() {
                 if (data.success) {
                     sp.is_active = data.specialist.is_active;
                     this.fetchStats();
+                    window.showSuccess(`Specialty "${sp.name}" is now ${sp.is_active ? 'Active' : 'Archived'}`);
                 }
-            } catch (e) { console.error('Toggle failed', e); }
+            } catch (e) { window.showError('Toggle sequence interrupted'); }
         },
 
-        async deletePhysician(sp) {
-            if (!confirm(`Permanently remove ${sp.name} from the specialty registry?`)) return;
+        // Selection Helpers
+        toggleAll(e) {
+            if (e.target.checked) {
+                this.selectedIds = this.physicians.map(p => p.id);
+            } else {
+                this.selectedIds = [];
+            }
+        },
+
+        // Confirmation Modal Logic
+        confirmBulkAction(type, singleItem = null) {
+            const count = singleItem ? 1 : this.selectedIds.length;
+            
+            if (type === 'delete') {
+                this.confirmConfig = {
+                    title: singleItem ? 'Purge Specialty?' : 'Purge Registry Nodes?',
+                    message: singleItem 
+                        ? `Permanently remove "${singleItem.name}" from medical specialty registry?`
+                        : `Identify and remove ${count} specialties from the global database? Action is irreversible.`,
+                    icon: 'fa-trash-alt',
+                    confirmText: 'Execute Purge',
+                    type: 'danger',
+                    action: 'bulkDestroy',
+                    payload: singleItem ? [singleItem.id] : this.selectedIds
+                };
+            } else {
+                const active = type === 'activate';
+                this.confirmConfig = {
+                    title: active ? 'Re-engage Specialties?' : 'De-optimize Registry?',
+                    message: `Set ${count} specialties to ${active ? 'Active' : 'Archived'} status?`,
+                    icon: active ? 'fa-bolt' : 'fa-power-off',
+                    confirmText: active ? 'Resume Access' : 'Suspend Specialties',
+                    type: 'primary',
+                    action: 'bulkStatus',
+                    payload: {
+                        ids: singleItem ? [singleItem.id] : this.selectedIds,
+                        active: active
+                    }
+                };
+            }
+            this.showConfirmModal = true;
+        },
+
+        async executeConfirmedAction() {
+            this.confirming = true;
             try {
-                const url = `{{ route('doctor.setup.physicians.destroy', ['externalSpecialist' => ':id']) }}`.replace(':id', sp.id);
-                const r = await fetch(url, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                if (this.confirmConfig.action === 'bulkStatus') {
+                    await this.executeBulkStatus();
+                } else if (this.confirmConfig.action === 'bulkDestroy') {
+                    await this.executeBulkDestroy();
+                }
+            } finally {
+                this.confirming = false;
+                this.showConfirmModal = false;
+            }
+        },
+
+        async executeBulkStatus() {
+            const { ids, active } = this.confirmConfig.payload;
+            try {
+                const r = await fetch("{{ route('doctor.setup.physicians.bulk-status') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ ids, is_active: active })
                 });
                 const data = await r.json();
                 if (data.success) {
+                    window.showSuccess(data.message);
                     this.fetchData();
                     this.fetchStats();
+                    this.selectedIds = [];
                 }
-            } catch (e) { console.error('Delete failed', e); }
+            } catch (e) { window.showError('Bulk status update failed'); }
+        },
+
+        async executeBulkDestroy() {
+            const ids = this.confirmConfig.payload;
+            try {
+                const r = await fetch("{{ route('doctor.setup.physicians.bulk-destroy') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ ids })
+                });
+                const data = await r.json();
+                if (data.success) {
+                    window.showSuccess(data.message);
+                    this.fetchData();
+                    this.fetchStats();
+                    this.selectedIds = [];
+                }
+            } catch (e) { window.showError('Bulk purge failed'); }
         }
     };
 }

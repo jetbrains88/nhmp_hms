@@ -14,19 +14,19 @@
         x-transition:leave="transition ease-in duration-300"
         x-transition:leave-start="translate-x-0 opacity-100"
         x-transition:leave-end="translate-x-full opacity-0"
-        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-gradient-to-b from-indigo-500 to-indigo-700 text-white p-2.5 py-6 rounded-l-2xl shadow-[0_0_30px_-5px_rgba(79,70,229,0.4)] hover:shadow-[-5px_0_40px_-5px_rgba(79,70,229,0.7)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-400/50 group cursor-pointer"
+        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(79,70,229,0.2)] hover:shadow-[-10px_0_40px_-5px_rgba(79,70,229,0.3)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
         title="Open Designation Filters">
         <div class="relative">
-            <div class="absolute inset-0 bg-white/20 blur-md rounded-full group-hover:bg-white/40 transition-colors duration-300"></div>
-            <i class="fas fa-sliders-h relative z-10 drop-shadow-lg group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
+            <div class="absolute inset-0 bg-indigo-500/10 blur-md rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
+            <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
         </div>
-        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 drop-shadow-md text-indigo-50">Designation Filters</span>
+        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Designation Filters</span>
     </button>
 
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
         <!-- Total Designations Card -->
         <div class="relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/20 border border-indigo-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
@@ -122,21 +122,21 @@
                 </div>
             </div>
 
-            {{-- Bulk Actions Toolbar (Sticky below view controller) --}}
             <div x-show="selectedIds.length > 0" 
                  x-transition:enter="transition ease-out duration-300 transform"
                  x-transition:enter-start="-translate-y-full"
                  x-transition:enter-end="translate-y-0"
-                 class="bg-indigo-600 px-6 py-3 flex items-center justify-between text-white sticky top-[68px] z-10 shadow-2xl">
+                 class="bg-indigo-600 px-6 py-3 flex items-center justify-between text-white sticky top-[68px] z-10 shadow-2xl rounded-xl mx-4 mb-4">
                 <div class="flex items-center gap-4">
                     <span class="text-[10px] font-black uppercase tracking-widest border-r border-white/20 pr-4">
                         <span x-text="selectedIds.length"></span> Designations Selected
                     </span>
                     <div class="flex items-center gap-2">
-                        <button @click="bulkDelete()" class="px-3 py-1.5 bg-rose-500/80 hover:bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Purge Selection</button>
+                        <button @click="confirmBulkAction('deactivate')" class="px-3 py-1.5 bg-amber-500 shadow-lg shadow-amber-500/20 hover:bg-amber-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all px-4 cursor-pointer">Deactivate Selection</button>
+                        <button @click="confirmBulkAction('activate')" class="px-3 py-1.5 bg-emerald-500 shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all px-4 cursor-pointer">Activate Selection</button>
                     </div>
                 </div>
-                <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2">
+                <button @click="selectedIds = []" class="text-[10px] font-black uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2 cursor-pointer">
                     Dismiss <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -154,10 +154,10 @@
                                             class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all shadow-sm cursor-pointer">
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 shadow-sm border border-blue-500/20">
-                                            <i class="fas fa-tag text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500 shadow-sm border border-blue-100">
+                                            <i class="fas fa-tag text-[10px]"></i>
                                         </div>
                                         <button @click="sortBy('title')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
                                             Title / Abbr
@@ -165,10 +165,10 @@
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600 shadow-sm border border-purple-500/20">
-                                            <i class="fas fa-sort-numeric-up text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500 shadow-sm border border-purple-100">
+                                            <i class="fas fa-sort-numeric-up text-[10px]"></i>
                                         </div>
                                         <button @click="sortBy('bps')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
                                             Scale (BPS)
@@ -176,10 +176,10 @@
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-500/20">
-                                            <i class="fas fa-users-cog text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100">
+                                            <i class="fas fa-users-cog text-[10px]"></i>
                                         </div>
                                         <button @click="sortBy('cadre_type')" class="flex items-center gap-1.5 hover:text-indigo-600 transition-colors group">
                                             Cadre Type
@@ -187,18 +187,18 @@
                                         </button>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5">
-                                    <div class="flex items-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-500/20">
-                                            <i class="fas fa-layer-group text-xs"></i>
+                                <th class="px-5 py-5 border-b border-slate-50">
+                                    <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                            <i class="fas fa-layer-group text-[10px]"></i>
                                         </div>
                                         <span>Rank Group</span>
                                     </div>
                                 </th>
-                                <th class="px-5 py-5 text-center whitespace-nowrap">
-                                    <div class="flex items-center justify-center gap-2.5 text-xs font-black text-slate-700 uppercase tracking-widest">
-                                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 shadow-sm border border-amber-500/20">
-                                            <i class="fas fa-bolt text-xs"></i>
+                                <th class="px-5 py-5 text-center whitespace-nowrap border-b border-slate-50">
+                                    <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                        <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm border border-amber-100">
+                                            <i class="fas fa-bolt text-[10px]"></i>
                                         </div>
                                         Actions
                                     </div>
@@ -348,7 +348,14 @@
         </div>
 
         {{-- Right Column - Security Filters Sidebar --}}
-        <div class="lg:col-span-3 lg:sticky lg:top-0 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto scrollbar-hide pb-2" style="scrollbar-width: none;" x-show="showSidebar" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4">
+        <div class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2 group/sidebar" 
+             x-show="showSidebar" 
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="opacity-0 translate-x-12" 
+             x-transition:enter-end="opacity-100 translate-x-0" 
+             x-transition:leave="transition ease-in duration-300" 
+             x-transition:leave-start="opacity-100 translate-x-0" 
+             x-transition:leave-end="opacity-0 translate-x-12">
             
             {{-- Unified Filter Card --}}
             <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col min-h-0">
@@ -521,23 +528,21 @@
         </div>
     </div>
 
-    {{-- Delete Modal --}}
-    <div x-show="showDeleteModal" class="fixed inset-0 z-[70] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
-        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div x-show="showDeleteModal" class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="showDeleteModal = false"></div>
-            <div x-show="showDeleteModal" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
-                <div class="w-16 h-16 rounded-full bg-rose-100 mx-auto flex items-center justify-center mb-4">
-                    <i class="fas fa-exclamation-triangle text-2xl text-rose-600"></i>
-                </div>
-                <h3 class="text-xl font-black text-slate-800 mb-2">Delete Designation</h3>
-                <p class="text-xs font-bold text-slate-500 mb-6 px-4 uppercase tracking-wider leading-relaxed">System erasure of <br><span class="font-black text-slate-700 text-base normal-case tracking-normal" x-text="dataToDelete?.title"></span></p>
-                <div class="flex items-center justify-center gap-3">
-                    <button @click="showDeleteModal = false" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-slate-200 transition-colors w-full cursor-pointer">Cancel</button>
-                    <button @click="deleteData()" :disabled="deleting" class="px-5 py-2.5 bg-gradient-to-r from-rose-500 to-rose-700 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:from-rose-600 hover:to-rose-800 hover:-translate-y-0.5 transition-all shadow-md shadow-rose-500/30 w-full flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fas fa-spinner fa-spin" x-show="deleting"></i>
-                        <span x-text="deleting ? 'Purging...' : 'Confirm Purge'"></span>
-                    </button>
-                </div>
+    {{-- Generic Confirmation Modal --}}
+    <div x-show="showConfirmModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="display: none;">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false" x-transition.opacity></div>
+        <div class="relative bg-white w-full max-w-md rounded-[2.5rem] p-8 text-center shadow-2xl border border-slate-100" x-transition.scale>
+            <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : (confirmConfig.type === 'warning' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600')">
+                <i class="fas text-3xl" :class="confirmConfig.icon"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 mb-2 uppercase tracking-tight" x-text="confirmConfig.title"></h3>
+            <p class="text-xs font-bold text-slate-500 mb-8 px-4 uppercase tracking-wider leading-relaxed" x-text="confirmConfig.message"></p>
+            <div class="flex gap-3">
+                <button @click="showConfirmModal = false" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase cursor-pointer">Cancel Action</button>
+                <button @click="executeConfirmedAction()" :disabled="confirming" class="flex-1 py-3 text-white rounded-2xl font-black text-xs uppercase shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2" :class="confirmConfig.type === 'danger' ? 'bg-rose-600 shadow-rose-500/30 hover:bg-rose-700' : (confirmConfig.type === 'warning' ? 'bg-amber-600 shadow-amber-500/30 hover:bg-amber-700' : 'bg-blue-600 shadow-blue-500/30 hover:bg-blue-700')">
+                    <i class="fas fa-spinner fa-spin" x-show="confirming"></i>
+                    <span x-text="confirming ? 'Processing...' : confirmConfig.confirmText"></span>
+                </button>
             </div>
         </div>
     </div>
@@ -606,13 +611,11 @@
     function designationManagement() {
         return {
             showSidebar: false,
-            showAddModal: false,
-            showDeleteModal: false,
             showViewModal: false,
             dataToView: null,
             loading: false,
             saving: false,
-            deleting: false,
+            confirming: false,
             editing: false,
             
             designations: [],
@@ -628,6 +631,17 @@
             selectedIds: [],
             dataToDelete: null,
             dataToView: null,
+
+            // Confirmation Modal State
+            showConfirmModal: false,
+            confirmConfig: {
+                title: '',
+                message: '',
+                icon: '',
+                confirmText: '',
+                type: 'primary',
+                action: null
+            },
 
             async init() {
                 await this.fetchDesignations();
@@ -775,7 +789,7 @@
 
             async saveDesignation() {
                 if (!this.form.title) {
-                    showError('Please fill in required fields');
+                    window.Notification.warning('Designation title required');
                     return;
                 }
 
@@ -793,90 +807,102 @@
                         },
                         body: JSON.stringify(this.form)
                     });
-
                     const data = await response.json();
-
                     if (response.ok) {
-                        showSuccess(data.message);
+                        window.Notification.success(data.message || 'Operation successful');
                         this.closeAddModal();
                         await this.fetchDesignations();
                         await this.fetchStats();
                     } else {
-                        if (data.errors) {
-                            showError(Object.values(data.errors)[0][0]);
-                        } else {
-                            showError(data.message || 'Failed to merge Designation');
-                        }
+                        window.Notification.error(data.message || 'Validation failed');
                     }
                 } catch (error) {
-                    showError('A network error occurred');
+                    window.Notification.error('Network interruption');
                 } finally {
                     this.saving = false;
                 }
             },
 
+            confirmDelete(item) {
+                this.dataToDelete = item;
+                this.confirmConfig = {
+                    title: 'Purge Record',
+                    message: `Targeting "${item.title}" for permanent removal?`,
+                    icon: 'fa-trash-alt',
+                    confirmText: 'Confirm Purge',
+                    type: 'danger',
+                    action: () => this.deleteData()
+                };
+                this.showConfirmModal = true;
+            },
+
             async deleteData() {
-                if (!this.dataToDelete) return;
-                
-                this.deleting = true;
+                this.confirming = true;
                 try {
                     const response = await fetch(`/reception/designations/${this.dataToDelete.id}`, {
                         method: 'DELETE',
-                        headers: {
+                        headers: { 
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                             'Accept': 'application/json'
                         }
                     });
-
-                    const data = await response.json();
-
                     if (response.ok) {
-                        showSuccess('Designation purged successfully');
-                        this.showDeleteModal = false;
-                        this.dataToDelete = null;
-                        
-                        if (this.designations.length === 1 && this.pagination.current_page > 1) {
-                            this.pagination.current_page--;
-                        }
+                        window.Notification.success('Record Erased');
+                        this.showConfirmModal = false;
                         await this.fetchDesignations();
                         await this.fetchStats();
                     } else {
-                        showError(data.message || 'Failed to purge Designation');
+                        const data = await response.json();
+                        window.Notification.error(data.message || 'Purge failed');
                     }
                 } catch (error) {
-                    showError('A network error occurred');
+                    window.Notification.error('Network error during purge');
                 } finally {
-                    this.deleting = false;
+                    this.confirming = false;
                 }
             },
 
-            async bulkDelete() {
-                if (!confirm(`Are you sure you want to attempt purging ${this.selectedIds.length} designations?`)) return;
+            confirmBulkAction(type) {
+                const actionText = type === 'activate' ? 'Activation' : 'Deactivation';
+                this.confirmConfig = { 
+                    title: `Mass ${actionText}`, 
+                    message: `Confirm ${type} of ${this.selectedIds.length} records?`, 
+                    icon: type === 'activate' ? 'fa-check-circle' : 'fa-times-circle', 
+                    confirmText: `Mass ${type === 'activate' ? 'Activate' : 'Deactivate'}`, 
+                    type: type === 'activate' ? 'primary' : 'warning', 
+                    action: () => this.executeBulkStatusUpdate(type) 
+                };
+                this.showConfirmModal = true;
+            },
 
+            async executeBulkStatusUpdate(status) {
+                this.confirming = true;
                 try {
-                    const response = await fetch('/reception/designations/bulk-destroy', {
+                    const r = await fetch('/reception/designations/bulk-status', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
+                        headers: { 
+                            'Content-Type': 'application/json', 
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ ids: this.selectedIds })
+                        body: JSON.stringify({ ids: this.selectedIds, status: status })
                     });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        showSuccess(data.message);
-                        this.selectedIds = [];
-                        await this.fetchDesignations();
-                        await this.fetchStats();
+                    if (r.ok) { 
+                        window.Notification.success('Sector Cleaned'); 
+                        this.selectedIds = []; 
+                        this.showConfirmModal = false; 
+                        await this.fetchDesignations(); 
+                        await this.fetchStats(); 
                     } else {
-                        showError(data.message || 'Failed to perform mass purge');
+                        const d = await r.json();
+                        window.Notification.error(d.message || 'Mass update failed');
                     }
-                } catch (error) {
-                    showError('A network error occurred');
-                }
+                } catch(e) { window.Notification.error('Network error during mass update'); }
+                finally { this.confirming = false; }
+            },
+
+            executeConfirmedAction() {
+                if (this.confirmConfig.action) this.confirmConfig.action();
             }
         };
     }

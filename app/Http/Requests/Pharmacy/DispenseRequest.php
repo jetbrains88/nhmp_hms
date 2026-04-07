@@ -14,9 +14,10 @@ class DispenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quantity' => 'nullable|integer|min:1',
+            'quantity_dispensed' => 'required|integer|min:1',
             'notes' => 'nullable|string|max:500',
-            'batch_number' => 'nullable|string',
+            'medicine_batch_id' => 'nullable|exists:medicine_batches,id',
+            'alternative_medicine_id' => 'nullable|exists:medicines,id',
         ];
     }
 }

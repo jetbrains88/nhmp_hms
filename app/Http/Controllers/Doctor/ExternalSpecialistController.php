@@ -130,4 +130,46 @@ class ExternalSpecialistController extends Controller
             'message' => 'Medical Specialty deleted successfully.',
         ]);
     }
+
+    /**
+     * Bulk toggle status.
+     */
+    public function bulkStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:medical_specialties,id',
+            'is_active' => 'required|boolean'
+        ]);
+
+        MedicalSpecialty::whereIn('id', $validated['ids'])->update([
+            'is_active' => $validated['is_active']
+        ]);
+
+        $count = count($validated['ids']);
+        $action = $validated['is_active'] ? 'activated' : 'deactivated';
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully {$action} {$count} specialties."
+        ]);
+    }
+
+    /**
+     * Bulk destroy.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:medical_specialties,id'
+        ]);
+
+        MedicalSpecialty::whereIn('id', $validated['ids'])->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => count($validated['ids']) . ' specialties purged successfully.'
+        ]);
+    }
 }
