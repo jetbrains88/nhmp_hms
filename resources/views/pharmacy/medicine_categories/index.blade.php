@@ -22,7 +22,7 @@
         </button>
 
         {{-- Stats Cards Section --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-10 mt-4">
             <!-- Total Categories Card -->
             <div class="relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
                 @click="clearFilters()">
@@ -131,6 +131,16 @@
                                         class="absolute -top-1 -right-1 w-3 h-3 bg-rose-500 border-2 border-white rounded-full"></span>
                                 </button>
 
+                                <div class="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5 shadow-sm">
+                                    <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
+                                    <select x-model="pagination.per_page" @change="fetchCategories()" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                        <option value="15">15 Per Page</option>
+                                        <option value="25">25 Per Page</option>
+                                        <option value="50">50 Per Page</option>
+                                        <option value="100">100 Per Page</option>
+                                    </select>
+                                </div>
+
                                 <button @click="fetchCategories()"
                                     class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm group"
                                     title="Refresh Sync">
@@ -166,6 +176,12 @@
 
                     {{-- View Content --}}
                     <div class="relative min-h-[400px]">
+                        <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin shadow-inner"></div>
+                                <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
+                            </div>
+                        </div>
                         {{-- Table View --}}
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
@@ -589,18 +605,13 @@
                     </div>
 
                     {{-- Clearance & Actions (Sticky Bottom) --}}
-                    <div class="p-5 pt-0 flex flex-col gap-2.5 shrink-0">
-                        <button @click="clearFilters()"
-                            class="w-full px-4 py-2.5 bg-gradient-to-r from-rose-600 to-rose-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:from-rose-700 hover:to-rose-600 hover:-translate-y-0.5 transition-all text-left flex items-center justify-between group shadow-md shadow-rose-500/20">
-                            <span>Purge All Filters</span>
-                            <i
-                                class="fas fa-eraser group-hover:rotate-12 transition-transform opacity-90 group-hover:opacity-100"></i>
+                    <div class="p-6 pt-0 flex flex-col gap-2 shrink-0">
+                        <button @click="clearFilters()" class="rose-reset-btn w-full py-5 text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95">
+                            <i class="fas fa-broom"></i> Reset Filters
                         </button>
-                        <button @click="showSidebar = false"
-                            class="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:-translate-y-0.5 transition-all text-left flex items-center justify-between group shadow-md shadow-indigo-500/20">
-                            <span>Hide Filters</span>
-                            <i
-                                class="fas fa-eye-slash group-hover:scale-110 transition-transform opacity-90 group-hover:opacity-100"></i>
+                        <button @click="showSidebar = false" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all flex items-center justify-between px-6">
+                            <span>Hide Panel</span>
+                            <i class="fas fa-eye-slash"></i>
                         </button>
                     </div>
                 </div>
@@ -747,7 +758,7 @@
 
                 <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg z-10 overflow-hidden relative border border-slate-100"
                     x-transition.scale>
-                    <div class="bg-gradient-to-br from-sky-500 to-sky-400 p-8 text-white relative">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-400 p-8 text-white relative">
                         <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
                         <div class="flex items-center justify-between relative z-10">
                             <div class="flex items-center gap-4">

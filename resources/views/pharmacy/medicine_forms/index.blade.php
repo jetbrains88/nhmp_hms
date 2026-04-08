@@ -26,7 +26,7 @@
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
         <!-- Total Forms Card -->
         <div class="relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
@@ -82,6 +82,16 @@
                         
                         <div class="h-8 w-px bg-indigo-100 mx-1"></div>
 
+                        <div class="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5 shadow-sm">
+                            <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
+                            <select x-model="pagination.per_page" @change="searchForms()" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                <option value="15">15 Per Page</option>
+                                <option value="30">30 Per Page</option>
+                                <option value="50">50 Per Page</option>
+                                <option value="100">100 Per Page</option>
+                            </select>
+                        </div>
+
                         <button @click="showSidebar = !showSidebar"
                             class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm relative group"
                             :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
@@ -119,9 +129,15 @@
 
             {{-- View Content --}}
             <div class="relative min-h-[400px]">
+                <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin shadow-inner"></div>
+                        <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
+                    </div>
+                </div>
                 {{-- Table View --}}
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
+                    <table class="w-full text-left border-collapse" :class="density === 'condensed' ? 'condensed-table' : 'spacious-table'">
                         <thead class="bg-white border-b border-indigo-100">
                             <tr>
                                 <th class="px-4 py-4 w-12 text-center">
@@ -181,14 +197,14 @@
                             </template>
 
                             <template x-for="item in forms" :key="item.id">
-                                <tr class="hover:bg-blue-50/40 transition-colors group" :class="density === 'condensed' ? 'bg-white' : ''">
-                                    <td class="px-5 border-b border-slate-50 transition-all" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                <tr class="hover:bg-blue-50/40 transition-colors group">
+                                    <td class="px-5 border-b border-slate-50 transition-all text-center">
                                         <div class="flex items-center justify-center">
                                             <input type="checkbox" :value="item.id" x-model="selectedIds"
                                                 class="w-5 h-5 rounded-lg border-indigo-200 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer">
                                         </div>
                                     </td>
-                                    <td class="px-5 border-b border-slate-50 transition-all" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                    <td class="px-5 border-b border-slate-50 transition-all">
                                         <div class="flex items-center gap-3">
                                             <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform bg-indigo-600 text-white shrink-0">
                                                 <i class="fas fa-pills text-sm"></i>
@@ -198,7 +214,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-5 border-b border-slate-50 transition-all text-center" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                    <td class="px-5 border-b border-slate-50 transition-all text-center">
                                         <div class="flex flex-col items-center gap-1">
                                             <button @click="toggleStatus(item)" 
                                                 class="relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none"
@@ -211,9 +227,9 @@
                                                 x-text="item.is_active ? 'Active' : 'Inactive'"></div>
                                         </div>
                                     </td>
-                                    <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap" :class="density === 'condensed' ? 'py-2' : 'py-5'">
+                                    <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap">
                                         <div class="flex items-center justify-center gap-1.5">
-                                            <button @click="openViewModal(item)" class="h-8 w-8 flex items-center justify-center bg-sky-50 text-sky-600 rounded-lg hover:bg-sky-500 hover:text-white transition-all shadow-sm border border-sky-100" title="View Detail">
+                                            <button @click="openViewModal(item)" class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100" title="View Detail">
                                                 <i class="fas fa-eye text-[10px]"></i>
                                             </button>
                                             <button @click="openEditModal(item)" class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100" title="Modify Node">
@@ -308,29 +324,28 @@
              x-transition:leave-end="opacity-0 translate-x-12">
             
             {{-- Unified Filter Card --}}
-            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col min-h-0">
+            <div class="bg-white rounded-[2.5rem] p-8 text-slate-800 shadow-2xl relative overflow-hidden border border-slate-100 flex flex-col h-full">
+                <div class="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
                 
-                {{-- Master Header --}}
-                <div class="p-5 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white flex items-center justify-between shrink-0">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-6 mb-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
-                            <i class="fas fa-filter text-sm"></i>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100 shadow-sm transition-transform hover:rotate-6 duration-300">
+                            <i class="fas fa-filter text-blue-600"></i>
                         </div>
                         <div>
-                            <h2 class="font-black text-slate-800 text-base tracking-tight">Form Filters</h2>
-                            <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mt-0.5">Refine Catalog Data</p>
+                            <h3 class="font-black uppercase tracking-[0.2em] text-xs text-slate-800">Form Filters</h3>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Refine Catalog Data</p>
                         </div>
                     </div>
-                    <button @click="showSidebar = false" class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm" title="Hide Filters">
-                        <i class="fas fa-angle-right"></i>
+                    <button @click="showSidebar = false" class="text-slate-300 hover:text-rose-500 transition-colors">
+                        <i class="fas fa-times text-xs"></i>
                     </button>
                 </div>
 
-                {{-- Scrollable Content --}}
-                <div class="overflow-y-auto scrollbar-hide flex-1 space-y-5 p-5" style="scrollbar-width: none;">
+                <div class="relative space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                     
                     {{-- Active Intelligence --}}
-                    <div x-show="hasActiveFilters()" class="space-y-2 pt-1">
+                    <div x-show="hasActiveFilters()" class="space-y-2 pt-1 mb-6">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Intelligence:</span>
                         <div class="flex flex-wrap items-center gap-2">
                             <template x-if="searchQuery">
@@ -342,33 +357,97 @@
                             </template>
                         </div>
                     </div>
-                    <div x-show="hasActiveFilters()" class="border-b border-dashed border-slate-200"></div>
 
                     {{-- Search Module --}}
                     <div class="space-y-3">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            <i class="fas fa-search text-indigo-500"></i> Localize Point
+                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                            <i class="fas fa-search text-blue-500"></i> Localize Point
                         </label>
                         <div class="relative group">
                             <input type="text" x-model.debounce.500ms="searchQuery" @input="searchForms()"
                                 placeholder="Search Form Name..."
-                                class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border-2 border-slate-100 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-bold text-slate-600 text-sm shadow-inner group-hover:border-slate-200">
-                            <i class="fas fa-pills absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                                class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-xs text-slate-800 placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 transition-all outline-none font-bold">
+                            <i class="fas fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-400 transition-colors"></i>
+                        </div>
+                    </div>
+
+                    {{-- Filter Options List (Scrollable) --}}
+                    <div class="space-y-6 mt-4">
+                        {{-- Status Filter - Bento Toggle Style --}}
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-shield-virus text-emerald-500"></i> Status State
+                            </label>
+                            <div class="grid grid-cols-1 gap-2">
+                                <button @click="filters.status = ''; searchForms()"
+                                    :class="filters.status === '' ?
+                                        'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                    class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                    <span>Global Data</span>
+                                    <i class="fas fa-globe-americas transition-opacity" :class="filters.status === '' ? 'opacity-100' : 'opacity-40'"></i>
+                                </button>
+                                <button @click="filters.status = 'active'; searchForms()"
+                                    :class="filters.status === 'active' ?
+                                        'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                    class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                    <span>Authorized Only</span>
+                                    <i class="fas fa-check-circle transition-opacity" :class="filters.status === 'active' ? 'opacity-100' : 'opacity-40'"></i>
+                                </button>
+                                <button @click="filters.status = 'inactive'; searchForms()"
+                                    :class="filters.status === 'inactive' ?
+                                        'bg-gradient-to-r from-rose-600 to-rose-400 text-white shadow-lg shadow-rose-200' :
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                    class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                    <span>Locked Vaults</span>
+                                    <i class="fas fa-lock transition-opacity" :class="filters.status === 'inactive' ? 'opacity-100' : 'opacity-40'"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Page Density Filter --}}
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-compress-alt text-indigo-500"></i> Page Density
+                            </label>
+                            <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
+                                <button @click="density = 'condensed'"
+                                    :class="density === 'condensed' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Condensed
+                                </button>
+                                <button @click="density = 'spacious'"
+                                    :class="density === 'spacious' ? 'bg-white text-indigo-600 shadow-sm font-black' : 'text-slate-500 hover:text-slate-700'"
+                                    class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                    Spacious
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Records Per Page --}}
+                        <div class="space-y-3 pb-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-list-ol text-indigo-500"></i> Records Per Page
+                            </label>
+                            <div class="grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
+                                <template x-for="limit in [10, 25, 50, 100]" :key="limit">
+                                    <button @click="pagination.per_page = limit; searchForms()" 
+                                        :class="pagination.per_page == limit ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all" x-text="limit">
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Clearance & Actions (Sticky Bottom) --}}
-                <div class="p-5 pt-0 flex flex-col gap-2.5 shrink-0">
-                    <button @click="clearFilters()" 
-                        class="w-full px-4 py-2.5 bg-rose-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-700 hover:-translate-y-0.5 transition-all text-left flex items-center justify-between group">
-                        <span>Purge All Filters</span>
-                        <i class="fas fa-eraser group-hover:rotate-12 transition-transform opacity-90 group-hover:opacity-100"></i>
+                <div class="pt-4 mt-auto">
+                    <button @click="clearFilters()" class="rose-reset-btn w-full py-5 text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95">
+                        <i class="fas fa-broom"></i> Reset Filters
                     </button>
-                    <button @click="showSidebar = false" 
-                        class="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:-translate-y-0.5 transition-all text-left flex items-center justify-between group shadow-md shadow-indigo-500/20">
-                        <span>Hide Filters</span>
-                        <i class="fas fa-eye-slash group-hover:scale-110 transition-transform opacity-90 group-hover:opacity-100"></i>
+                    <button @click="showSidebar = false" class="w-full py-4 mt-2 bg-indigo-600 text-white rounded-3xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-700 transition-all flex items-center justify-between px-6 shadow-md shadow-indigo-600/20">
+                        <span>Hide Filters</span><i class="fas fa-eye-slash"></i>
                     </button>
                 </div>
             </div>
@@ -450,7 +529,7 @@
             <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="closeViewModal"></div>
             
             <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg z-10 overflow-hidden relative border border-slate-100" x-transition.scale>
-                <div class="bg-gradient-to-br from-sky-500 to-sky-400 p-8 text-white relative">
+                <div class="bg-gradient-to-br from-blue-500 to-blue-400 p-8 text-white relative">
                     <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
                     <div class="flex items-center justify-between relative z-10">
                         <div class="flex items-center gap-4">
@@ -509,6 +588,7 @@
             
             form: { id: null, name: '' },
             density: 'spacious',
+            filters: { status: '' },
             selectedIds: [],
             dataToDelete: null,
             dataToView: null,
@@ -531,7 +611,7 @@
             },
 
             hasActiveFilters() {
-                return this.searchQuery !== '';
+                return this.searchQuery !== '' || this.filters.status !== '';
             },
 
             getSortIcon(field) {
@@ -555,6 +635,7 @@
                 });
 
                 if (this.searchQuery) params.append('search', this.searchQuery);
+                if (this.filters.status !== '') params.append('status', this.filters.status);
 
                 try {
                     const response = await fetch(`/pharmacy/medicine-forms/data?${params.toString()}`);
@@ -621,6 +702,7 @@
 
             clearFilters() {
                 this.searchQuery = '';
+                this.filters.status = '';
                 this.sortField = 'name';
                 this.sortDirection = 'asc';
                 this.pagination.current_page = 1;

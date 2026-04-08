@@ -5,581 +5,260 @@
 @section('breadcrumb', 'Pharmacy / History')
 
 @section('content')
-<div x-data="historyApp({{ json_encode($stats) }})" x-init="init()" x-cloak class="space-y-6">
+<div x-data="historyApp({{ json_encode($stats) }})" x-init="init()" x-cloak class="space-y-8 relative">
 
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Same colors as User Management
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
 
         {{-- Total Dispensed Card (Blue - matches Total Users) --}}
-        <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/30 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-             @click="clearFilters()" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-            <div class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-300 shadow-lg shadow-blue-900/40 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-history text-2xl drop-shadow-md text-blue-700"></i>
+        <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/10 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="clearFilters()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 shadow-lg shadow-blue-900/20 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-history text-xl text-white drop-shadow-md"></i>
             </div>
-            <div class="p-4 text-right pt-6">
-                <p class="block antialiased font-sans text-sm font-bold tracking-wider text-blue-600 uppercase">
-                    Total Dispensed
-                </p>
-                <h4 class="block antialiased text-3xl font-bold text-blue-800 drop-shadow-md font-mono" x-text="stats.total_dispensed ?? 0"></h4>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-blue-500 uppercase opacity-70">Total Dispensed</p>
+                <h4 class="text-3xl font-black text-blue-700 drop-shadow-sm font-mono" x-text="stats.total_dispensed ?? 0"></h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-blue-300 pt-2">
+            <div class="mx-4 mb-4 border-t border-blue-100 pt-2">
                 <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-blue-600" :class="{ 'animate-pulse': stats.total_dispensed > 0 }"></span>
-                    <span class="text-xs text-blue-700 font-medium">All-time dispensations</span>
-                </div>
-                <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                    <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                        <span class="font-semibold">Click to view all records</span>
-                        <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
-                    </div>
+                    <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                    <span class="text-[9px] text-blue-700 font-black uppercase tracking-tight">All-time dispensations</span>
                 </div>
             </div>
         </div>
 
         {{-- Today's Dispensed Card (Green - matches Active Users) --}}
-        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/30 border border-emerald-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-             @click="setTodayFilter()" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-            <div class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-300 shadow-lg shadow-emerald-900/40 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-calendar-day text-2xl drop-shadow-md text-emerald-700"></i>
+        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+             @click="setTodayFilter()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-lg shadow-emerald-900/20 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-calendar-day text-xl text-white drop-shadow-md"></i>
             </div>
-            <div class="p-4 text-right pt-6">
-                <p class="block antialiased font-sans text-sm font-bold tracking-wider text-teal-600 uppercase">
-                    Today's Dispensed
-                </p>
-                <h4 class="block antialiased text-3xl font-bold text-teal-800 drop-shadow-md font-mono" x-text="stats.today_dispensed ?? 0"></h4>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-emerald-500 uppercase opacity-70">Today's Dispensed</p>
+                <h4 class="text-3xl font-black text-emerald-700 drop-shadow-sm font-mono" x-text="stats.today_dispensed ?? 0"></h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-teal-300 pt-2">
+            <div class="mx-4 mb-4 border-t border-emerald-100 pt-2">
                 <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-teal-600" :class="{ 'animate-pulse': stats.today_dispensed > 0 }"></span>
-                    <span class="text-xs text-teal-700 font-medium">Click to filter today's records</span>
-                </div>
-                <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                    <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                        <span class="font-semibold">Click to view today's records</span>
-                        <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
-                    </div>
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-600" :class="{ 'animate-pulse': stats.today_dispensed > 0 }"></span>
+                    <span class="text-[9px] text-emerald-700 font-black uppercase tracking-tight">Click to filter today's records</span>
                 </div>
             </div>
         </div>
 
         {{-- Total Units Card (Purple - matches Administrators) --}}
-        <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/30 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group">
-            <div class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-300 shadow-lg shadow-purple-900/40 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-pills text-2xl drop-shadow-md text-purple-700"></i>
+        <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/10 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-400 shadow-lg shadow-purple-900/20 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-pills text-xl text-white drop-shadow-md"></i>
             </div>
-            <div class="p-4 text-right pt-6">
-                <p class="block antialiased font-sans text-sm font-bold tracking-wider text-purple-600 uppercase">
-                    Total Units
-                </p>
-                <h4 class="block antialiased text-3xl font-bold text-purple-800 drop-shadow-md font-mono" x-text="stats.total_quantity ?? 0"></h4>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-purple-500 uppercase opacity-70">Total Units</p>
+                <h4 class="text-3xl font-black text-purple-700 drop-shadow-sm font-mono" x-text="stats.total_quantity ?? 0"></h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-purple-300 pt-2">
+            <div class="mx-4 mb-4 border-t border-purple-100 pt-2">
                 <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-purple-600" :class="{ 'animate-pulse': stats.total_quantity > 0 }"></span>
-                    <span class="text-xs text-purple-700 font-medium">Total units dispensed</span>
-                </div>
-                <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                    <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                        <span class="font-semibold">Total medication units dispensed</span>
-                        <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
-                    </div>
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-600"></span>
+                    <span class="text-[9px] text-purple-700 font-black uppercase tracking-tight">Total units dispensed</span>
                 </div>
             </div>
         </div>
 
         {{-- Unique Patients Card (Rose - matches Inactive Users) --}}
-        <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl shadow-lg shadow-rose-500/30 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group">
-            <div class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-500 to-orange-300 shadow-lg shadow-rose-900/40 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-users text-2xl drop-shadow-md text-rose-700"></i>
+        <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-orange-400 shadow-lg shadow-rose-900/20 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-users text-xl text-white drop-shadow-md"></i>
             </div>
-            <div class="p-4 text-right pt-6">
-                <p class="block antialiased font-sans text-sm font-bold tracking-wider text-rose-600 uppercase">
-                    Unique Patients
-                </p>
-                <h4 class="block antialiased text-3xl font-bold text-rose-800 drop-shadow-md font-mono" x-text="stats.unique_patients ?? 0"></h4>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-rose-500 uppercase opacity-70">Unique Patients</p>
+                <h4 class="text-3xl font-black text-rose-700 drop-shadow-sm font-mono" x-text="stats.unique_patients ?? 0"></h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-rose-300 pt-2">
+            <div class="mx-4 mb-4 border-t border-rose-100 pt-2">
                 <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-rose-600" :class="{ 'animate-pulse': stats.unique_patients > 0 }"></span>
-                    <span class="text-xs text-rose-700 font-medium">Patients served</span>
-                </div>
-                <div class="absolute bottom-full left-4 mb-2 hidden group-hover:block z-10">
-                    <div class="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
-                        <span class="font-semibold">Unique patients served</span>
-                        <div class="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
-                    </div>
+                    <span class="h-1.5 w-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+                    <span class="text-[9px] text-rose-700 font-black uppercase tracking-tight">Patients served</span>
                 </div>
             </div>
         </div>
     </div>
+
+    {{-- Floating Filter Toggle (shown when sidebar is hidden) --}}
+    <button @click="showSidebar = true"
+        x-show="!showSidebar"
+        x-transition:enter="transition ease-out duration-500 delay-100"
+        x-transition:enter-start="translate-x-full opacity-0"
+        x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="translate-x-0 opacity-100"
+        x-transition:leave-end="translate-x-full opacity-0"
+        class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(99,102,241,0.2)] hover:shadow-[-10px_0_40px_-5px_rgba(99,102,241,0.3)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
+        title="Open Filters">
+        <div class="relative">
+            <div class="absolute inset-0 bg-indigo-500/10 blur-xl rounded-full group-hover:bg-indigo-500/20 transition-colors duration-300"></div>
+            <i class="fas fa-sliders-h relative z-10 group-hover:rotate-90 transition-transform duration-500 text-sm"></i>
+        </div>
+        <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Filters</span>
+    </button>
 
     {{-- ═══════════════════════════════════════════════
-         MAIN TABLE PANEL
+         MAIN CONTROL PANEL
     ═══════════════════════════════════════════════ --}}
-    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div class="mt-8 grid lg:grid-cols-12 gap-6 items-start">
 
-        {{-- Panel Header --}}
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight flex items-center gap-3">
-                        <i class="fas fa-capsules text-blue-600"></i>
-                        Dispense History
-                        <span class="text-lg font-normal text-gray-600">
-                            (<span x-text="pagination.total"></span> records)
+        {{-- Left Column - Table Container --}}
+        <div class="space-y-6 transition-all duration-300" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
+            <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex flex-col">
+
+                {{-- Panel Header with Light Gradient --}}
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 border-b border-indigo-100/50">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center border border-indigo-100 shadow-sm transition-transform hover:scale-105 duration-300">
+                                <i class="fas fa-history text-2xl text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight flex items-center gap-3">
+                                    Dispense History
+                                    <span class="text-lg font-normal text-gray-600">(<span x-text="pagination.total"></span> records)</span>
+                                </h2>
+                                <p class="text-gray-600 text-sm font-medium mt-1">Review and track all pharmaceutical dispensations</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4 items-center">
+                             <div class="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5 shadow-sm">
+                                <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
+                                <select x-model="pagination.per_page" @change="fetchData(1)" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                    <option value="15">15 Per Page</option>
+                                    <option value="30">30 Per Page</option>
+                                    <option value="50">50 Per Page</option>
+                                    <option value="100">100 Per Page</option>
+                                </select>
+                            </div>
+                            <button @click="showSidebar = !showSidebar"
+                                class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+                                :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
+                                <i class="fas" :class="showSidebar ? 'fa-eye-slash' : 'fa-filter'"></i>
+                            </button>
+                            <button @click="fetchData(1)" 
+                                class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+                                title="Refresh">
+                                <i class="fas fa-sync-alt" :class="loading ? 'animate-spin' : ''"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Active Filters Summary --}}
+                <div x-show="hasActiveFilters()" x-cloak
+                    class="px-6 py-4 bg-indigo-50/30 border-b border-indigo-100/50 flex flex-wrap items-center gap-2">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-2 flex items-center gap-1">
+                        <i class="fas fa-filter text-indigo-500"></i> Active:
+                    </span>
+                    
+                    <template x-if="filters.search">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-indigo-100 text-indigo-700 rounded-xl text-[10px] font-black uppercase tracking-tight shadow-sm transition-all hover:bg-indigo-50">
+                            <i class="fas fa-search text-[8px] opacity-50"></i>
+                            <span x-text="filters.search"></span>
+                            <button @click="filters.search = ''; fetchData(1)" class="ml-1 hover:text-rose-600 transition-colors"><i class="fas fa-times-circle text-[10px]"></i></button>
                         </span>
-                    </h2>
-                    <p class="text-sm text-navy-600 mt-1">Track every medication dispensation with precision</p>
-                </div>
-
-                <div class="flex flex-wrap gap-3 items-center">
-                    {{-- Records per page --}}
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-gray-700">Show:</span>
-                        <select x-model="pagination.per_page" @change="fetchData(1)"
-                            class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
-
-                    {{-- Quick Actions --}}
-                    <div class="flex gap-2">
-                        <button @click="fetchData(pagination.current_page)" :disabled="loading"
-                            class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed">
-                            <i class="fas fa-sync-alt" :class="{ 'animate-spin': loading }"></i>
-                            Refresh
-                        </button>
-                        <button @click="showAdvancedFilters = !showAdvancedFilters"
-                            :class="showAdvancedFilters ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'"
-                            class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-medium">
-                            <i class="fas fa-filter"></i>
-                            Filters
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {{-- ── Advanced Filters (collapsible) ── --}}
-<div x-show="showAdvancedFilters" x-transition
-     class="mt-6 p-6 bg-white rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-lg">
-
-    {{-- First Row - Search & Basic Filters --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {{-- Search (wider) --}}
-        <div class="md:col-span-2 relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-search text-gray-400"></i>
-            </div>
-            <input type="text" x-model="filters.search"
-                   @input.debounce.500ms="fetchData(1)"
-                   placeholder="Search by patient name, EMRN, medicine name, generic name, batch number..."
-                   class="pl-10 w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-        </div>
-
-        {{-- Date From --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-calendar-start text-amber-500 mr-1"></i>Date From
-            </label>
-            <input type="date" x-model="filters.date_from" @change="fetchData(1)"
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-        </div>
-
-        {{-- Date To --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-calendar-end text-amber-500 mr-1"></i>Date To
-            </label>
-            <input type="date" x-model="filters.date_to" @change="fetchData(1)"
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-        </div>
-    </div>
-
-    {{-- Second Row - Medicine Filters --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-        {{-- Medicine Category Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-tags text-purple-500 mr-1"></i>Medicine Category
-            </label>
-            <select x-model="filters.medicine_category_id" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Categories</option>
-                @foreach($medicineCategories ?? [] as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Medicine Filter (depends on category) --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-pills text-blue-500 mr-1"></i>Medicine
-            </label>
-            <select x-model="filters.medicine_id" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Medicines</option>
-                <template x-if="filteredMedicines && filteredMedicines.length > 0">
-                    <template x-for="medicine in filteredMedicines" :key="medicine.id">
-                        <option :value="medicine.id" x-text="medicine.name + (medicine.generic_name ? ' (' + medicine.generic_name + ')' : '')"></option>
                     </template>
-                </template>
-            </select>
-        </div>
 
-        {{-- Medicine Type/Form Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-capsules text-green-500 mr-1"></i>Medicine Form
-            </label>
-            <select x-model="filters.medicine_form_id" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Forms</option>
-                @foreach($medicineForms ?? [] as $form)
-                    <option value="{{ $form->id }}">{{ $form->name }}</option>
-                @endforeach
-            </select>
-        </div>
+                    <template x-if="filters.date_from || filters.date_to">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-indigo-100 text-indigo-700 rounded-xl text-[10px] font-black uppercase tracking-tight shadow-sm transition-all hover:bg-indigo-50">
+                            <i class="fas fa-calendar-alt text-[8px] opacity-50"></i>
+                            <span x-text="getDateRangeText()"></span>
+                            <button @click="filters.date_from = ''; filters.date_to = ''; fetchData(1)" class="ml-1 hover:text-rose-600 transition-colors"><i class="fas fa-times-circle text-[10px]"></i></button>
+                        </span>
+                    </template>
 
-        {{-- Batch Number Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-cubes text-orange-500 mr-1"></i>Batch Number
-            </label>
-            <input type="text" x-model="filters.batch_number"
-                   @input.debounce.500ms="fetchData(1)"
-                   placeholder="Enter batch number..."
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-        </div>
-    </div>
+                    <template x-if="filters.medicine_category_id">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-indigo-100 text-indigo-700 rounded-xl text-[10px] font-black uppercase tracking-tight shadow-sm transition-all hover:bg-indigo-50">
+                            <i class="fas fa-tag text-[8px] opacity-50"></i>
+                            <span x-text="getCategoryName(filters.medicine_category_id)"></span>
+                            <button @click="filters.medicine_category_id = ''; fetchData(1)" class="ml-1 hover:text-rose-600 transition-colors"><i class="fas fa-times-circle text-[10px]"></i></button>
+                        </span>
+                    </template>
 
-    {{-- Third Row - Additional Filters --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-        {{-- Manufacturer Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-industry text-cyan-500 mr-1"></i>Manufacturer
-            </label>
-            <input type="text" x-model="filters.manufacturer"
-                   @input.debounce.500ms="fetchData(1)"
-                   placeholder="Filter by manufacturer..."
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-        </div>
+                    <button @click="clearFilters()" class="text-[9px] font-black text-rose-500 uppercase tracking-widest hover:text-rose-700 transition-colors ml-auto border-b border-rose-200 border-dashed pb-0.5">Clear All</button>
+                </div>
 
-        {{-- Prescription Status Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-clipboard-check text-indigo-500 mr-1"></i>Prescription Status
-            </label>
-            <select x-model="filters.prescription_status" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="partially_dispensed">Partially Dispensed</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
-        </div>
+            {{-- table border separator --}}
 
-        {{-- Dispensed By (Pharmacist) Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-user-md text-pink-500 mr-1"></i>Dispensed By
-            </label>
-            <select x-model="filters.dispensed_by" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Pharmacists</option>
-                @foreach($pharmacists ?? [] as $pharmacist)
-                    <option value="{{ $pharmacist->id }}">{{ $pharmacist->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Quantity Range Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-chart-bar text-rose-500 mr-1"></i>Quantity Range
-            </label>
-            <div class="flex items-center gap-2">
-                <input type="number" x-model="filters.min_quantity"
-                       @input.debounce.500ms="fetchData(1)"
-                       placeholder="Min"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm">
-                <span class="text-gray-500">-</span>
-                <input type="number" x-model="filters.max_quantity"
-                       @input.debounce.500ms="fetchData(1)"
-                       placeholder="Max"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm">
-            </div>
-        </div>
-    </div>
-
-    {{-- Fourth Row - Expiry & Stock Filters --}}
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-        {{-- Expiry Date Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-hourglass-half text-yellow-500 mr-1"></i>Expiry Status
-            </label>
-            <select x-model="filters.expiry_status" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Batches</option>
-                <option value="expired">Expired</option>
-                <option value="expiring_soon">Expiring Soon (30 days)</option>
-                <option value="valid">Valid</option>
-            </select>
-        </div>
-
-        {{-- Stock Status Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-boxes text-emerald-500 mr-1"></i>Stock Status
-            </label>
-            <select x-model="filters.stock_status" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="">All Stock</option>
-                <option value="in_stock">In Stock</option>
-                <option value="low_stock">Low Stock</option>
-                <option value="out_of_stock">Out of Stock</option>
-            </select>
-        </div>
-
-        {{-- Price Range Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-rupee-sign text-amber-500 mr-1"></i>Price Range
-            </label>
-            <div class="flex items-center gap-2">
-                <input type="number" x-model="filters.min_price"
-                       @input.debounce.500ms="fetchData(1)"
-                       placeholder="Min"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm">
-                <span class="text-gray-500">-</span>
-                <input type="number" x-model="filters.max_price"
-                       @input.debounce.500ms="fetchData(1)"
-                       placeholder="Max"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-sm">
-            </div>
-        </div>
-
-        {{-- Sort By Filter --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-sort-amount-down text-gray-500 mr-1"></i>Sort By
-            </label>
-            <select x-model="sort.field" @change="fetchData(1)"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white">
-                <option value="dispensed_at">Dispensed Date</option>
-                <option value="medicine_name">Medicine Name</option>
-                <option value="quantity_dispensed">Quantity</option>
-                <option value="patient_name">Patient Name</option>
-                <option value="batch_number">Batch Number</option>
-                <option value="expiry_date">Expiry Date</option>
-            </select>
-        </div>
-    </div>
-
-    {{-- Fifth Row - Filter Actions --}}
-    <div class="flex items-center justify-between gap-4 mt-6">
-        <div class="flex items-center gap-3">
-            {{-- Quick Filter Chips --}}
-            <span class="text-sm font-medium text-gray-600">Quick Filters:</span>
-            <button @click="applyQuickFilter('today')" 
-                    class="px-3 py-1.5 bg-cyan-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors">
-                <i class="fas fa-sun mr-1"></i>Today
-            </button>
-            <button @click="applyQuickFilter('week')" 
-                    class="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium hover:bg-green-200 transition-colors">
-                <i class="fas fa-calendar-week mr-1"></i>This Week
-            </button>
-            <button @click="applyQuickFilter('month')" 
-                    class="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium hover:bg-purple-200 transition-colors">
-                <i class="fas fa-calendar-alt mr-1"></i>This Month
-            </button>
-            <button @click="applyQuickFilter('expiring')" 
-                    class="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium hover:bg-amber-200 transition-colors">
-                <i class="fas fa-exclamation-triangle mr-1"></i>Expiring Soon
-            </button>
-        </div>
-
-        {{-- Clear All Button --}}
-        <button @click="clearFilters()"
-                class="flex items-center justify-center text-white py-2.5 px-6
-                       bg-gradient-to-r from-rose-500 to-rose-600
-                       rounded-lg font-medium hover:from-rose-600 hover:to-rose-700
-                       transition-all gap-2 shadow-md hover:shadow-lg">
-            <i class="fas fa-filter-circle-xmark"></i>
-            Clear All Filters
-        </button>
-    </div>
-
-    {{-- Active Filters Summary --}}
-    <div x-show="hasActiveFilters()"
-         class="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-purple-200">
-        <span class="text-xs font-medium text-gray-500 mr-2">
-            <i class="fas fa-filter mr-1"></i>Active filters:
-        </span>
-
-        {{-- Search Pill --}}
-        <template x-if="filters.search">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                <i class="fas fa-search"></i>
-                <span x-text="filters.search"></span>
-                <button @click="filters.search=''; fetchData(1)" class="ml-1 hover:text-blue-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Date Range Pill --}}
-        <template x-if="filters.date_from || filters.date_to">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
-                <i class="fas fa-calendar-alt"></i>
-                <span x-text="getDateRangeText()"></span>
-                <button @click="filters.date_from=''; filters.date_to=''; fetchData(1)" class="ml-1 hover:text-amber-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Category Pill --}}
-        <template x-if="filters.medicine_category_id">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-                <i class="fas fa-tags"></i>
-                <span x-text="getCategoryName(filters.medicine_category_id)"></span>
-                <button @click="filters.medicine_category_id=''; fetchData(1)" class="ml-1 hover:text-purple-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Medicine Pill --}}
-        <template x-if="filters.medicine_id">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                <i class="fas fa-pills"></i>
-                <span x-text="getMedicineName(filters.medicine_id)"></span>
-                <button @click="filters.medicine_id=''; fetchData(1)" class="ml-1 hover:text-blue-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Form Pill --}}
-        <template x-if="filters.medicine_form_id">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                <i class="fas fa-capsules"></i>
-                <span x-text="getFormName(filters.medicine_form_id)"></span>
-                <button @click="filters.medicine_form_id=''; fetchData(1)" class="ml-1 hover:text-green-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Batch Pill --}}
-        <template x-if="filters.batch_number">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
-                <i class="fas fa-cubes"></i>
-                Batch: <span x-text="filters.batch_number"></span>
-                <button @click="filters.batch_number=''; fetchData(1)" class="ml-1 hover:text-orange-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Status Pill --}}
-        <template x-if="filters.prescription_status">
-            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
-                <i class="fas fa-clipboard-check"></i>
-                <span x-text="filters.prescription_status.replace('_', ' ').toUpperCase()"></span>
-                <button @click="filters.prescription_status=''; fetchData(1)" class="ml-1 hover:text-indigo-900">
-                    <i class="fas fa-times-circle"></i>
-                </button>
-            </span>
-        </template>
-
-        {{-- Count and Clear All --}}
-        <span x-show="getActiveFilterCount() > 0" 
-              class="text-xs text-gray-500 ml-2">
-            ( <span x-text="getActiveFilterCount()"></span> filters )
-        </span>
-        
-        <button @click="clearFilters()" 
-                class="text-xs text-rose-600 hover:text-rose-800 underline ml-auto">
-            Clear All
-        </button>
-    </div>
-</div>
-        </div>
-
-        {{-- ── Table ── --}}
         <div class="overflow-x-auto relative min-h-[300px]">
 
             {{-- Loading overlay --}}
             <div x-show="loading"
-                 class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center">
+                 class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
                 <div class="flex flex-col items-center gap-3">
-                    <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-                    <p class="text-sm text-blue-600 font-semibold">Loading records...</p>
-                    <p class="text-xs text-gray-400">Please wait while we fetch the data</p>
+                    <div class="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin shadow-inner"></div>
+                    <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
                 </div>
             </div>
 
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100">
+            <table class="min-w-full divide-y divide-gray-200" :class="density === 'condensed' ? 'condensed-table' : 'spacious-table'">
+                <thead class="bg-white border-b border-indigo-50">
                     <tr>
-                        <th scope="col" class="px-5 py-4 text-left">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-hashtag text-blue-500"></i>
-                                <button @click="sortBy('id')" class="flex items-center gap-1 hover:text-indigo-600">
-                                    ID
-                                    <i class="fas fa-sort text-gray-400" :class="{ 'text-indigo-600': sort.field === 'id' }"></i>
+                        <th class="px-5 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-hashtag text-[10px]"></i>
+                                </div>
+                                <button @click="sortBy('id')" class="flex items-center gap-1 hover:text-indigo-700 transition-colors">
+                                    ID <i class="fas text-[10px] opacity-30" :class="sort.field === 'id' ? (sort.direction === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
                                 </button>
                             </div>
                         </th>
-                        <th scope="col" class="px-5 py-4 text-left">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-user text-green-500"></i>
+                        <th class="px-5 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-user text-[10px]"></i>
+                                </div>
                                 Patient Information
                             </div>
                         </th>
-                        <th scope="col" class="px-5 py-4 text-left">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-pills text-purple-500"></i>
-                                <button @click="sortBy('medicine_name')" class="flex items-center gap-1 hover:text-indigo-600">
-                                    Medicine
-                                    <i class="fas fa-sort text-gray-400" :class="{ 'text-indigo-600': sort.field === 'medicine_name' }"></i>
+                        <th class="px-5 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-pills text-[10px]"></i>
+                                </div>
+                                <button @click="sortBy('medicine_name')" class="flex items-center gap-1 hover:text-indigo-700 transition-colors">
+                                    Medicine <i class="fas text-[10px] opacity-30" :class="sort.field === 'medicine_name' ? (sort.direction === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
                                 </button>
                             </div>
                         </th>
-                        <th scope="col" class="px-5 py-4 text-left">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-cubes text-orange-500"></i>
-                                Batch / Quantity
+                        <th class="px-5 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-cubes text-[10px]"></i>
+                                </div>
+                                Batch / Qty
                             </div>
                         </th>
-                        <th scope="col" class="px-5 py-4 text-left">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-user-md text-cyan-500"></i>
+                        <th class="px-5 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-user-md text-[10px]"></i>
+                                </div>
                                 Pharmacist
                             </div>
                         </th>
-                        <th scope="col" class="px-5 py-4 text-left">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-clock text-amber-500"></i>
-                                <button @click="sortBy('dispensed_at')" class="flex items-center gap-1 hover:text-indigo-600">
-                                    Dispensed At
-                                    <i class="fas fa-sort text-gray-400" :class="{ 'text-indigo-600': sort.field === 'dispensed_at' }"></i>
+                        <th class="px-5 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-clock text-[10px]"></i>
+                                </div>
+                                <button @click="sortBy('dispensed_at')" class="flex items-center gap-1 hover:text-indigo-700 transition-colors">
+                                    Dispensed At <i class="fas text-[10px] opacity-30" :class="sort.field === 'dispensed_at' ? (sort.direction === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'"></i>
                                 </button>
                             </div>
                         </th>
-                        <th scope="col" class="px-5 py-4 text-center">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <i class="fas fa-cogs text-orange-500"></i>
+                        <th class="px-5 py-4 text-center border-b border-slate-50">
+                            <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                    <i class="fas fa-bolt-lightning text-[10px]"></i>
+                                </div>
                                 Actions
                             </div>
                         </th>
@@ -681,7 +360,7 @@
                             {{-- Actions Column --}}
                             <td class="px-5 py-4 text-center">
                                 <div class="flex justify-center items-center">
-                                    <button @click="openDetails(item)" class="h-8 w-8 flex items-center justify-center bg-sky-50 text-sky-600 rounded-lg hover:bg-sky-500 hover:text-white transition-all shadow-sm border border-sky-100" title="View Dispensation Details">
+                                    <button @click="openDetails(item)" class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100" title="View Dispensation Details">
                                         <i class="fas fa-eye text-[10px]"></i>
                                     </button>
                                 </div>
@@ -719,58 +398,209 @@
             </table>
         </div>
 
-        {{-- ── Pagination footer ── --}}
-        <div x-show="!loading && data.data && data.data.length > 0" 
-             class="bg-white px-6 py-4 border-t border-gray-200">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        {{-- Pagination Footer --}}
+        <div x-show="!loading && data.data && data.data.length > 0" class="p-6 bg-slate-50 border-t border-slate-100 rounded-b-3xl">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                    Displaying <span class="text-slate-900" x-text="pagination.from ?? 0"></span> - <span class="text-slate-900" x-text="pagination.to ?? 0"></span>
+                    <span class="mx-2 overflow-hidden bg-slate-200 w-8 h-[2px] inline-block align-middle"></span>
+                    Total: <span class="text-indigo-600" x-text="pagination.total"></span> Records
+                </div>
+                <div class="flex items-center gap-2">
+                    <button @click="fetchData(1)" :disabled="pagination.current_page === 1" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-left text-[10px]"></i></button>
+                    <button @click="fetchData(pagination.current_page - 1)" :disabled="pagination.current_page === 1" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-chevron-left text-[10px]"></i> <span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Prev</span></button>
+                    <div class="flex items-center gap-1 px-1">
+                        <template x-for="page in visiblePages" :key="page">
+                            <button @click="page !== '...' && fetchData(page)"
+                                :class="page === pagination.current_page ? 'bg-indigo-600 text-white shadow-lg border-indigo-600 scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-600'"
+                                x-text="page" class="w-10 h-10 rounded-xl border text-[10px] font-black transition-all flex items-center justify-center"></button>
+                        </template>
+                    </div>
+                    <button @click="fetchData(pagination.current_page + 1)" :disabled="pagination.current_page === pagination.last_page" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Next</span> <i class="fas fa-chevron-right text-[10px]"></i></button>
+                    <button @click="fetchData(pagination.last_page)" :disabled="pagination.current_page === pagination.last_page" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-right text-[10px]"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>{{-- /panel --}}
+</div>{{-- /left-col --}}
+
+        {{-- Right Column - Sticky Sidebar --}}
+        <div x-show="showSidebar" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-x-12"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2 group/sidebar">
+            
+            <div class="bg-white rounded-[2.5rem] p-8 text-slate-800 shadow-2xl relative overflow-hidden border border-slate-100 flex flex-col h-full">
+                <div class="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
                 
-                {{-- Pagination Info --}}
-                <div class="text-sm text-gray-700">
-                    Showing <span class="font-bold text-gray-900" x-text="pagination.from ?? 0"></span>
-                    to <span class="font-bold text-gray-900" x-text="pagination.to ?? 0"></span>
-                    of <span class="font-bold text-indigo-600" x-text="pagination.total"></span> results
+                <div class="flex items-center justify-between border-b border-slate-100 pb-6 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100 shadow-sm transition-transform hover:rotate-6 duration-300">
+                            <i class="fas fa-filter text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-black uppercase tracking-[0.2em] text-xs text-slate-800">History Filters</h3>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Refine Data</p>
+                        </div>
+                    </div>
+                    <button @click="showSidebar = false" class="text-slate-300 hover:text-rose-500 transition-colors">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
                 </div>
 
-                {{-- Pagination Controls --}}
-                <nav class="flex items-center space-x-2" x-show="pagination.last_page > 1">
-                    {{-- First Page --}}
-                    <button @click="fetchData(1)" :disabled="pagination.current_page === 1"
-                        class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                        First
-                    </button>
+                <div class="relative space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
 
-                    {{-- Previous Page --}}
-                    <button @click="fetchData(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
-                        class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                        Previous
-                    </button>
+                    {{-- Search --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                            <i class="fas fa-search text-indigo-500"></i> Search Records
+                        </label>
+                        <div class="relative group">
+                            <input type="text" x-model.debounce.500ms="filters.search" @input="fetchData(1)" placeholder="Patient, medicine..." 
+                                   class="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-xs text-slate-800 placeholder-slate-300 focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 transition-all outline-none font-bold">
+                            <i class="fas fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-400 transition-colors"></i>
+                        </div>
+                    </div>
 
-                    {{-- Page Numbers --}}
-                    <template x-for="page in visiblePages" :key="page">
-                        <button @click="page !== '...' && fetchData(page)"
-                            :class="page === pagination.current_page ?
-                                'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-600' :
-                                (page === '...' ? 'cursor-default border-gray-300 text-gray-400' : 'border-gray-300 text-gray-700 hover:bg-gray-50')"
-                            :disabled="page === '...'"
-                            class="px-3 py-1.5 rounded-lg border min-w-[40px] text-sm font-medium">
-                            <span x-text="page"></span>
-                        </button>
-                    </template>
+                    {{-- Default Filters --}}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                                <i class="fas fa-calendar-alt text-indigo-500"></i> Date From
+                            </label>
+                            <input type="date" x-model="filters.date_from" @change="fetchData(1)" class="w-full px-4 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs outline-none text-slate-600 text-center">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                                <i class="fas fa-calendar-check text-indigo-500"></i> Date To
+                            </label>
+                            <input type="date" x-model="filters.date_to" @change="fetchData(1)" class="w-full px-4 py-4 bg-slate-50 border border-slate-100 rounded-xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs outline-none text-slate-600 text-center">
+                        </div>
+                    </div>
 
-                    {{-- Next Page --}}
-                    <button @click="fetchData(pagination.current_page + 1)"
-                        :disabled="pagination.current_page === pagination.last_page"
-                        class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                        Next
-                    </button>
+                    {{-- Category Select --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                            <i class="fas fa-tags text-indigo-500"></i> Category
+                        </label>
+                        <div class="relative group">
+                            <select x-model="filters.medicine_category_id" @change="fetchData(1)" class="w-full px-4 py-4 pr-10 bg-slate-50 border border-slate-100 rounded-2xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs outline-none text-slate-800 cursor-pointer appearance-none shadow-sm">
+                                <option value="">All Categories</option>
+                                @foreach($medicineCategories ?? [] as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                        </div>
+                    </div>
 
-                    {{-- Last Page --}}
-                    <button @click="fetchData(pagination.last_page)"
-                        :disabled="pagination.current_page === pagination.last_page"
-                        class="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm">
-                        Last
+                    {{-- Medicine Select --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                            <i class="fas fa-pills text-indigo-500"></i> Medicine
+                        </label>
+                        <div class="relative group">
+                            <select x-model="filters.medicine_id" @change="fetchData(1)" class="w-full px-4 py-4 pr-10 bg-slate-50 border border-slate-100 rounded-2xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs outline-none text-slate-800 cursor-pointer appearance-none shadow-sm">
+                                <option value="">All Medicines</option>
+                                <template x-for="medicine in filteredMedicines" :key="medicine.id">
+                                    <option :value="medicine.id" x-text="medicine.name"></option>
+                                </template>
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    {{-- Pharmacist Select --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 flex items-center gap-2">
+                            <i class="fas fa-user-doctor text-indigo-500"></i> Dispensed By
+                        </label>
+                        <div class="relative group">
+                            <select x-model="filters.dispensed_by" @change="fetchData(1)" class="w-full px-4 py-4 pr-10 bg-slate-50 border border-slate-100 rounded-2xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs outline-none text-slate-800 cursor-pointer appearance-none shadow-sm">
+                                <option value="">All Pharmacists</option>
+                                @foreach($pharmacists ?? [] as $pharmacist)
+                                    <option value="{{ $pharmacist->id }}">{{ $pharmacist->name }}</option>
+                                @endforeach
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    {{-- Quick Filters (Restored Bento Section) --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 ml-1">
+                            <i class="fas fa-bolt text-amber-500"></i> Quick Intelligence
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button @click="applyQuickFilter('today')" 
+                                :class="filters.date_from && filters.date_from === new Date().toISOString().split('T')[0] ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 border-blue-600' : 'bg-blue-50 border-blue-100 text-blue-600 hover:bg-blue-100'"
+                                class="flex items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-full border transition-all shadow-sm active:scale-95">
+                                <i class="fas fa-certificate"></i> Today
+                            </button>
+                            <button @click="applyQuickFilter('week')" 
+                                :class="filters.quick_type === 'week' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200 border-emerald-600' : 'bg-emerald-50 border-emerald-100 text-emerald-600 hover:bg-emerald-100'"
+                                class="flex items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-full border transition-all shadow-sm active:scale-95">
+                                <i class="fas fa-calendar-day"></i> This Week
+                            </button>
+                            <button @click="applyQuickFilter('month')" 
+                                :class="filters.quick_type === 'month' ? 'bg-purple-600 text-white shadow-lg shadow-purple-200 border-purple-600' : 'bg-purple-50 border-purple-100 text-purple-600 hover:bg-purple-100'"
+                                class="flex items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-full border transition-all shadow-sm active:scale-95">
+                                <i class="fas fa-calendar-alt"></i> This Month
+                            </button>
+                            <button @click="applyQuickFilter('expiring')" 
+                                :class="filters.expiry_status === 'expiring_soon' ? 'bg-amber-600 text-white shadow-lg shadow-amber-200 border-amber-600' : 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100'"
+                                class="flex items-center justify-center gap-2 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-full border transition-all shadow-sm active:scale-95">
+                                <i class="fas fa-exclamation-triangle"></i> Expiring Soon
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Page Density Filter --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-compress-alt text-indigo-500"></i> Page Density
+                        </label>
+                        <div class="grid grid-cols-2 gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200/50">
+                            <button type="button" @click="density = 'condensed'"
+                                :class="density === 'condensed' ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Condensed
+                            </button>
+                            <button type="button" @click="density = 'spacious'"
+                                :class="density === 'spacious' ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Spacious
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Records Per Page --}}
+                    <div class="space-y-3 pb-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-list-ol text-indigo-500"></i> Records Per Page
+                        </label>
+                        <div class="grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
+                            <template x-for="limit in [10, 25, 50, 100]" :key="limit">
+                                <button @click="pagination.per_page = limit; fetchData(1)" 
+                                    :class="pagination.per_page == limit ? 'bg-white text-indigo-600 shadow-sm border-0' : 'text-slate-400 hover:text-indigo-600 border-0'"
+                                    class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all" x-text="limit">
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="p-6 pt-0 mt-auto flex flex-col gap-2">
+                    <button @click="clearFilters()" class="rose-reset-btn w-full py-5 text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95">
+                        <i class="fas fa-broom"></i> Reset Filters
                     </button>
-                </nav>
+                    <button @click="showSidebar = false" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all flex items-center justify-between px-6">
+                        <span>Hide Panel</span>
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -920,9 +750,11 @@ function historyApp(initialStats = {}) {
     return {
         // ─── State ──────────────────────────────────────────
         loading: false,
+        showSidebar: false,
         showAdvancedFilters: false,
         showDetailModal: false,
         selectedItem: null,
+        density: 'spacious',
 
         // Filtered medicines based on selected category
         filteredMedicines: [],
@@ -967,7 +799,8 @@ function historyApp(initialStats = {}) {
             expiry_status: '',
             stock_status: '',
             min_price: '',
-            max_price: ''
+            max_price: '',
+            quick_type: ''
         },
 
         sort: { field: 'dispensed_at', direction: 'desc' },
@@ -1087,6 +920,7 @@ function historyApp(initialStats = {}) {
                 min_price: '',
                 max_price: ''
             };
+            this.filters.quick_type = '';
             this.sort.field = 'dispensed_at';
             this.sort.direction = 'desc';
             this.fetchData(1);
@@ -1126,6 +960,7 @@ function historyApp(initialStats = {}) {
                     this.filters.expiry_status = 'expiring_soon';
                     break;
             }
+            this.filters.quick_type = type;
             this.fetchData(1);
         },
 

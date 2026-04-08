@@ -242,6 +242,29 @@
             font-weight: 600;
         }
 
+        /* --- Density System --- */
+        .condensed-table td, .condensed-table th {
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.5rem !important;
+            font-size: 0.7rem !important;
+        }
+        .spacious-table td, .spacious-table th {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            font-size: 0.75rem !important;
+        }
+
+        /* --- Global Reset Button Style --- */
+        .rose-reset-btn {
+            background-color: #e11d48 !important; /* rose-600 */
+            color: white !important;
+            border: 1px solid #e11d48 !important;
+            box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.2), 0 4px 6px -4px rgba(225, 29, 72, 0.2) !important;
+        }
+        .rose-reset-btn:hover {
+            background-color: #be123c !important; /* rose-700 */
+        }
+
         /* --- Theme System --- */
         :root,
         [data-theme="vibrant"] {
@@ -343,13 +366,32 @@
 
     @stack('styles')
     <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.1); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(79, 70, 229, 0.3); }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(79, 70, 229, 0.3);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 
@@ -635,7 +677,8 @@
 
                                 {{-- ── Setup / Configuration ── --}}
                                 <div class="pt-2 pb-1">
-                                    <p class="px-3 text-[9px] font-semibold uppercase tracking-widest text-slate-400">Setup</p>
+                                    <p class="px-3 text-[9px] font-semibold uppercase tracking-widest text-slate-400">Setup
+                                    </p>
                                 </div>
 
                                 <a href="{{ route('doctor.setup.illness-tags.index') }}"
@@ -675,10 +718,10 @@
 
                             <div x-show="isMenuOpen" x-collapse class="pl-4 space-y-1 mt-1">
                                 <!-- <a href="{{ Route::has('reception.dashboard') ? route('reception.dashboard') : url('/reception') }}"
-                                                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.dashboard') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">
-                                                                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
-                                                                    <span class="ml-2">Dashboard</span>
-                                                                </a> -->
+                                                                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50 {{ request()->routeIs('reception.dashboard') ? 'text-pink-600 bg-pink-50' : 'text-slate-600' }}">
+                                                                                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
+                                                                                    <span class="ml-2">Dashboard</span>
+                                                                                </a> -->
                                 <a href="{{ Route::has('reception.patients.create') ? route('reception.patients.create') : url('/reception/patients/create') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-pink-50">
                                     <i class="fas fa-user-injured w-6 text-center"></i>
@@ -735,10 +778,15 @@
                             </button>
 
                             <div x-show="isMenuOpen" x-collapse class="pl-4 space-y-1 mt-1">
-                                <a href="{{ route('pharmacy.dashboard') }}"
-                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.dashboard') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
-                                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
-                                    <span class="ml-2">Dashboard</span>
+                                <a href="{{ route('pharmacy.medicines.index') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.medicines.*') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
+                                    <i class="fas fa-capsules w-6 text-center"></i>
+                                    <span class="ml-2">Medicines</span>
+                                </a>
+                                <a href="{{ route('pharmacy.inventory') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.inventory') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
+                                    <i class="fas fa-boxes w-6 text-center"></i>
+                                    <span class="ml-2">Inventory</span>
                                 </a>
                                 <a href="{{ route('pharmacy.prescriptions.index') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.prescriptions.*') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
@@ -757,15 +805,10 @@
                                             class="ml-auto bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full">{{ $pendingCount }}</span>
                                     @endif
                                 </a>
-                                <a href="{{ route('pharmacy.medicines.index') }}"
-                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.medicines.*') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
-                                    <i class="fas fa-capsules w-6 text-center"></i>
-                                    <span class="ml-2">Medicines</span>
-                                </a>
-                                <a href="{{ route('pharmacy.inventory') }}"
-                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.inventory') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
-                                    <i class="fas fa-boxes w-6 text-center"></i>
-                                    <span class="ml-2">Inventory</span>
+                                <a href="{{ route('pharmacy.dispense.history') }}"
+                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.dispense.history') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
+                                    <i class="fas fa-history w-6 text-center"></i>
+                                    <span class="ml-2">History</span>
                                 </a>
                                 <a href="{{ Route::has('pharmacy.alerts.index') ? route('pharmacy.alerts.index') : '#' }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.alerts.*') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
@@ -783,11 +826,6 @@
                                         <span
                                             class="ml-auto bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full">{{ $alertCount }}</span>
                                     @endif
-                                </a>
-                                <a href="{{ route('pharmacy.dispense.history') }}"
-                                    class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.dispense.history') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">
-                                    <i class="fas fa-history w-6 text-center"></i>
-                                    <span class="ml-2">History</span>
                                 </a>
                                 <a href="{{ route('pharmacy.reports') }}"
                                     class="flex items-center px-3 py-2 text-sm rounded-xl hover:bg-amber-50 {{ request()->routeIs('pharmacy.reports') ? 'text-amber-600 bg-amber-50' : 'text-slate-600' }}">

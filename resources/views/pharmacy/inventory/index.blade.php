@@ -5,327 +5,205 @@
 @section('breadcrumb', 'Pharmacy / Inventory')
 
 @section('content')
-    <div x-data="inventoryManager()" x-init="init()" class="space-y-6">
+    <div x-data="inventoryManager()" x-init="init()" class="space-y-8 relative">
 
         <!-- Light Themed Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 gap-y-10 mt-8 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 gap-y-10 mt-4">
 
-            <!-- Total Batches Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/30 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click="setFilter('stock_status', 'All')" :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-300 shadow-lg shadow-blue-900/40 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-boxes text-2xl drop-shadow-md text-blue-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl shadow-lg shadow-blue-500/10 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                @click="setFilter('stock_status', 'All')">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-blue-400 shadow-lg shadow-blue-900/20 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-boxes text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-blue-600 uppercase">
-                        Total Batches
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-blue-800 drop-shadow-md font-mono"
-                        x-text="stats.total ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="text-[10px] font-black tracking-widest text-blue-500 uppercase opacity-70">Total Batches</p>
+                    <h4 class="text-3xl font-black text-blue-700 drop-shadow-sm font-mono" x-text="stats.total ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-blue-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-blue-100 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-blue-600"
-                            :class="{ 'animate-pulse': stats.total > 0 }"></span>
-                        <span class="text-xs text-blue-700 font-medium">Active Stock Batches</span>
+                        <span class="h-1.5 w-1.5 rounded-full bg-blue-600" :class="{ 'animate-pulse': stats.total > 0 }"></span>
+                        <span class="text-[9px] text-blue-700 font-black uppercase tracking-tight">Active Stock Batches</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Low Stock Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click="setFilter('stock_status', 'low')"
-                :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-300 shadow-lg shadow-amber-900/40 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-exclamation-triangle text-2xl drop-shadow-md text-amber-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50/50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                @click="setFilter('stock_status', 'low')">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 shadow-lg shadow-amber-900/20 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-exclamation-triangle text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-amber-600 uppercase">
-                        Low Stock
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-amber-800 drop-shadow-md font-mono"
-                        x-text="stats.low_stock ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="text-[10px] font-black tracking-widest text-amber-600 uppercase opacity-70">Low Stock</p>
+                    <h4 class="text-3xl font-black text-amber-700 drop-shadow-sm font-mono" x-text="stats.low_stock ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-amber-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-amber-100 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-amber-600"
-                            :class="{ 'animate-pulse': stats.low_stock > 0 }"></span>
-                        <span class="text-xs text-amber-700 font-medium">Needs Reorder</span>
+                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500" :class="{ 'animate-pulse': stats.low_stock > 0 }"></span>
+                        <span class="text-[9px] text-amber-700 font-black uppercase tracking-tight">Needs Reordering</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Near Expiry Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/30 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click="setFilter('stock_status', 'near_expiry')"
-                :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-300 shadow-lg shadow-purple-900/40 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-clock text-2xl drop-shadow-md text-purple-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50/50 rounded-2xl shadow-lg shadow-purple-500/10 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                @click="setFilter('stock_status', 'near_expiry')">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-400 shadow-lg shadow-purple-900/20 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-hourglass-half text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-purple-600 uppercase">
-                        Near Expiry
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-purple-800 drop-shadow-md font-mono"
-                        x-text="stats.near_expiry ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="text-[10px] font-black tracking-widest text-purple-600 uppercase opacity-70">Near Expiry</p>
+                    <h4 class="text-3xl font-black text-purple-700 drop-shadow-sm font-mono" x-text="stats.near_expiry ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-purple-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-purple-100 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-purple-600"
-                            :class="{ 'animate-pulse': stats.near_expiry > 0 }"></span>
-                        <span class="text-xs text-purple-700 font-medium">Expiring within 30 days</span>
+                        <span class="h-1.5 w-1.5 rounded-full bg-purple-500" :class="{ 'animate-pulse': stats.near_expiry > 0 }"></span>
+                        <span class="text-[9px] text-purple-700 font-black uppercase tracking-tight">Requires Attention</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Out of Stock Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl shadow-lg shadow-rose-500/30 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click="setFilter('stock_status', 'out')"
-                :class="loading ? 'opacity-70 grayscale cursor-not-allowed' : ''">
-
-                <div
-                    class="absolute -top-6 left-4 h-16 w-16 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-500 to-orange-300 shadow-lg shadow-rose-900/40 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas fa-times-circle text-2xl drop-shadow-md text-rose-700"></i>
+            <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-red-50/50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
+                @click="setFilter('stock_status', 'out')">
+                <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-red-400 shadow-lg shadow-rose-900/20 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-times-circle text-xl text-white drop-shadow-md"></i>
                 </div>
-
-                <div class="p-4 text-right pt-6">
-                    <p class="block antialiased font-sans text-sm font-bold tracking-wider text-rose-600 uppercase">
-                        Out of Stock
-                    </p>
-                    <h4 class="block antialiased text-3xl font-bold text-rose-800 drop-shadow-md font-mono"
-                        x-text="stats.out_of_stock ?? 0">
-                    </h4>
+                <div class="p-4 text-right pt-4">
+                    <p class="text-[10px] font-black tracking-widest text-rose-600 uppercase opacity-70">Out of Stock</p>
+                    <h4 class="text-3xl font-black text-rose-700 drop-shadow-sm font-mono" x-text="stats.out_of_stock ?? 0"></h4>
                 </div>
-                <div class="mx-4 mb-4 border-t border-rose-300 pt-2">
+                <div class="mx-4 mb-4 border-t border-rose-100 pt-2">
                     <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-rose-600"
-                            :class="{ 'animate-pulse': stats.out_of_stock > 0 }"></span>
-                        <span class="text-xs text-rose-700 font-medium">Empty Batches</span>
+                        <span class="h-1.5 w-1.5 rounded-full bg-rose-500" :class="{ 'animate-pulse': stats.out_of_stock > 0 }"></span>
+                        <span class="text-[9px] text-rose-700 font-black uppercase tracking-tight">Depleted Inventory</span>
                     </div>
                 </div>
             </div>
         </div>
+        {{-- Floating Filter Toggle --}}
+        <button @click="showSidebar = true"
+            x-show="!showSidebar"
+            class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(99,102,241,0.2)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
+            title="Open Filters">
+            <i class="fas fa-sliders-h text-sm group-hover:rotate-90 transition-transform duration-500"></i>
+            <span style="writing-mode: vertical-rl;" class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Filters</span>
+        </button>
 
-        <!-- Enhanced Inventory List -->
-        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <!-- Header with Filters -->
-            <div class="mb-0 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight flex items-center gap-3">
-                            <i class="fas fa-warehouse text-blue-600"></i>
-                            Batch Management
-                            <span class="text-lg font-normal text-gray-600">
-                                (<span x-text="pagination.total"></span> records)
-                            </span>
-                        </h2>
-                        <p class="text-sm text-navy-600 mt-1">
-                            Monitor medicine batches, expiry dates, and stock levels
-                        </p>
-                    </div>
+        {{-- 12-Col Grid Layout --}}
+        <div class="mt-8 grid lg:grid-cols-12 gap-6 items-start">
 
-                    <div class="flex flex-wrap gap-3 items-center">
-                        <!-- Records per page -->
-                        <div class="flex items-center gap-2">
-                            <span class="text-sm text-gray-700">Show:</span>
-                            <select x-model="filters.length" @change="fetchInventory()"
-                                class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>
-                        </div>
+            {{-- Left Column - Table --}}
+            <div class="space-y-6 transition-all duration-300" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex flex-col">
 
-                        <!-- Quick Actions -->
-                        <div class="flex gap-2">
-                            <button @click="clearFilters()"
-                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-colors text-sm font-medium">
-                                <i class="fas fa-sync-alt"></i>
-                                Refresh
-                            </button>
-                            <button @click="showAdvancedFilters = !showAdvancedFilters"
-                                :class="showAdvancedFilters ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' :
-                                    'bg-gradient-to-r from-orange-500 to-orange-600 text-white'"
-                                class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm font-medium">
-                                <i class="fas fa-filter"></i>
-                                Filters
-                            </button>
-                            <!-- Add Stock Button -->
-                            <a href="{{ route('pharmacy.inventory.create') }}"
-                                class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg transition-colors text-sm font-medium shadow-md hover:shadow-lg">
-                                <i class="fas fa-plus-circle"></i>
-                                Add Stock
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Advanced Filters (Collapsible) -->
-                <div x-show="showAdvancedFilters" x-transition
-                    class="mt-6 bg-white p-6 rounded-lg bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 shadow-lg">
-
-                    <!-- First Row - Search, Status, Category -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Search Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
+                    {{-- Panel Header --}}
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 border-b border-indigo-100/50">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center border border-indigo-100 shadow-sm">
+                                    <i class="fas fa-warehouse text-2xl text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+                                        Inventory Management
+                                        <span class="text-lg font-normal text-gray-500 ml-2">(<span x-text="pagination.total"></span> records)</span>
+                                    </h2>
+                                    <p class="text-gray-500 text-sm font-medium mt-1">Monitor medicine batches, expiry dates and stock levels.</p>
+                                </div>
                             </div>
-                            <input type="text" x-model="filters.search" @input.debounce.500ms="fetchInventory()"
-                                placeholder="Search by name, brand, batch..."
-                                class="pl-10 w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white font-medium text-slate-700">
-                        </div>
-
-                        <!-- Status Filter -->
-                        <div>
-                            <select x-model="filters.stock_status" @change="fetchInventory()"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white font-bold text-slate-600">
-                                <option value="All">All Stock Status</option>
-                                <option value="low">Low Stock</option>
-                                <option value="out">Out of Stock</option>
-                                <option value="near_expiry">Near Expiry</option>
-                            </select>
-                        </div>
-
-                        <!-- Category Filter -->
-                        <div>
-                            <select x-model="filters.category" @change="fetchInventory()"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white font-bold text-slate-600">
-                                <option value="All">All Categories</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Second Row - Sort By, Clear Button -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <!-- Sort By -->
-                        <div>
-                            <select x-model="filters.sort_by" @change="fetchInventory()"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white font-bold text-slate-600">
-                                <option value="expiry_date">Expiry Date (Earliest)</option>
-                                <option value="name">Medicine Name (A-Z)</option>
-                                <option value="stock">Stock (Low to High)</option>
-                                <option value="stock_desc">Stock (High to Low)</option>
-                            </select>
-                        </div>
-
-                        <div></div>
-
-                        <!-- Clear All Filters Button -->
-                        <div class="flex items-end">
-                            <button @click="clearFilters()"
-                                class="w-full flex items-center justify-center text-white py-2.5
-                       text-center bg-gradient-to-r from-rose-500 to-rose-600
-                       rounded-lg font-medium hover:from-rose-600 hover:to-rose-700
-                       disabled:opacity-50 disabled:cursor-not-allowed transition-all
-                       gap-2 shadow-md hover:shadow-lg h-[46px]">
-                                <i class="fas fa-filter-circle-xmark"></i>
-                                Clear All Filters
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Active Filters Summary -->
-                    <div x-show="filters.search || filters.category !== 'All' || filters.stock_status !== 'All'"
-                        class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-purple-200">
-                        <span class="text-xs font-medium text-gray-500">Active filters:</span>
-
-                        <template x-if="filters.search">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
-                                <i class="fas fa-search"></i>
-                                <span x-text="filters.search"></span>
-                                <button @click="filters.search = ''; fetchInventory()" class="ml-1 hover:text-blue-900">
-                                    <i class="fas fa-times"></i>
+                            <div class="flex gap-3 items-center">
+                                <div class="flex items-center gap-2 bg-white border border-indigo-100 rounded-xl px-3 py-1.5 shadow-sm">
+                                    <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
+                                    <select x-model="filters.length" @change="fetchInventory()" class="bg-transparent text-indigo-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                        <option value="15">15 Per Page</option>
+                                        <option value="30">30 Per Page</option>
+                                        <option value="50">50 Per Page</option>
+                                        <option value="100">100 Per Page</option>
+                                    </select>
+                                </div>
+                                <a href="{{ route('pharmacy.inventory.create') }}"
+                                   class="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:scale-105 transition-all" title="Add Stock">
+                                    <i class="fas fa-plus"></i> Add Stock
+                                </a>
+                                <button @click="fetchInventory()" :disabled="loading"
+                                    class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm group" title="Refresh">
+                                    <i class="fas fa-sync-alt group-hover:rotate-180 transition-transform duration-700" :class="loading ? 'animate-spin' : ''"></i>
                                 </button>
-                            </span>
-                        </template>
-
-                        <template x-if="filters.stock_status !== 'All'">
-                            <span
-                                class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs">
-                                <i class="fas fa-tag"></i>
-                                <span x-text="getStockStatusLabel(filters.stock_status)"></span>
-                                <button @click="filters.stock_status = 'All'; fetchInventory()" class="ml-1 hover:text-green-900">
-                                    <i class="fas fa-times"></i>
+                                <button @click="showSidebar = !showSidebar"
+                                    class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm relative"
+                                    :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
+                                    <i class="fas" :class="showSidebar ? 'fa-eye-slash' : 'fa-filter'"></i>
+                                    <span x-show="hasActiveFilters()" class="absolute -top-1 -right-1 w-3 h-3 bg-indigo-500 border-2 border-white rounded-full"></span>
                                 </button>
-                            </span>
-                        </template>
-
-                        <button @click="clearFilters()" class="text-xs text-rose-600 hover:text-rose-800 underline ml-2">
-                            Clear all
-                        </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Batches Table -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                   <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100">
-                        <tr>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-pills text-blue-500"></i>
-                                    Medicine & Batch
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-tag text-purple-500"></i>
-                                    Category & Form
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-cubes text-emerald-500"></i>
-                                    Stock Level
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-calendar-alt text-orange-500"></i>
-                                    Expiration
-                                </div>
-                            </th>
-                            <th scope="col"
-                                class="px-5 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-cogs text-orange-500"></i>
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100" x-show="!loading && medicines && medicines.length > 0">
+                    {{-- Batches Table --}}
+                    <div class="overflow-x-auto relative min-h-[300px]">
+                        {{-- Loading overlay --}}
+                        <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin shadow-inner"></div>
+                                <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
+                            </div>
+                        </div>
+                        <table class="min-w-full divide-y divide-gray-200" :class="density === 'condensed' ? 'condensed-table' : 'spacious-table'">
+                            <thead class="bg-white border-b border-indigo-50">
+                                <tr>
+                                    <th class="px-5 py-4 border-b border-slate-50">
+                                        <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                                <i class="fas fa-pills text-[10px]"></i>
+                                            </div>
+                                            Medicine &amp; Batch
+                                        </div>
+                                    </th>
+                                    <th class="px-5 py-4 border-b border-slate-50">
+                                        <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                                <i class="fas fa-tag text-[10px]"></i>
+                                            </div>
+                                            Category &amp; Form
+                                        </div>
+                                    </th>
+                                    <th class="px-5 py-4 border-b border-slate-50">
+                                        <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                                <i class="fas fa-cubes text-[10px]"></i>
+                                            </div>
+                                            Stock Level
+                                        </div>
+                                    </th>
+                                    <th class="px-5 py-4 border-b border-slate-50">
+                                        <div class="flex items-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                                <i class="fas fa-calendar-alt text-[10px]"></i>
+                                            </div>
+                                            Expiration
+                                        </div>
+                                    </th>
+                                    <th class="px-5 py-4 text-center border-b border-slate-50">
+                                        <div class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                                <i class="fas fa-bolt-lightning text-[10px]"></i>
+                                            </div>
+                                            Actions
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                    <tbody class="bg-white divide-y divide-gray-100"
+                        x-show="!loading && medicines && medicines.length > 0">
                         <template x-for="batch in medicines" :key="batch.id">
                             <tr class="hover:bg-blue-50/30 transition-colors duration-200">
                                 <!-- Medicine Info -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex flex-col">
-                                        <div class="text-base font-black text-navy-800 leading-tight" x-text="batch.medicine_name"></div>
+                                        <div class="text-base font-black text-navy-800 leading-tight"
+                                            x-text="batch.medicine_name"></div>
                                         <div class="flex items-center gap-2 mt-1">
-                                            <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold" x-text="'#' + batch.batch_number"></span>
+                                            <span
+                                                class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold"
+                                                x-text="'#' + batch.batch_number"></span>
                                         </div>
                                     </div>
                                 </td>
@@ -333,8 +211,11 @@
                                 <!-- Category & Form -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex flex-col gap-1">
-                                        <span class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-md text-[10px] w-fit" x-text="batch.category_name"></span>
-                                        <span class="text-slate-500 font-bold text-[10px] uppercase tracking-wider px-1" x-text="batch.form"></span>
+                                        <span
+                                            class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-md text-[10px] w-fit"
+                                            x-text="batch.category_name"></span>
+                                        <span class="text-slate-500 font-bold text-[10px] uppercase tracking-wider px-1"
+                                            x-text="batch.form"></span>
                                     </div>
                                 </td>
 
@@ -342,12 +223,15 @@
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex flex-col min-w-[120px]">
                                         <div class="flex justify-between items-baseline mb-1">
-                                            <span class="text-xl font-black" :class="batch.stock <= batch.reorder_level ? 'text-rose-600' : 'text-emerald-600'" x-text="batch.stock"></span>
-                                            <span class="text-[10px] text-slate-400 font-bold uppercase ml-1">Remaining</span>
+                                            <span class="text-xl font-black"
+                                                :class="batch.stock <= batch.reorder_level ? 'text-rose-600' :
+                                                    'text-emerald-600'"
+                                                x-text="batch.stock"></span>
+                                            <span
+                                                class="text-[10px] text-slate-400 font-bold uppercase ml-1">Remaining</span>
                                         </div>
                                         <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                                            <div class="h-full transition-all duration-500"
-                                                :class="batch.stock_color"
+                                            <div class="h-full transition-all duration-500" :class="batch.stock_color"
                                                 :style="'width: ' + batch.stock_percentage + '%'"></div>
                                         </div>
                                     </div>
@@ -357,31 +241,38 @@
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex flex-col">
                                         <div class="flex items-center gap-2">
-                                            <span class="text-sm font-black text-slate-700" x-text="batch.expiry_date"></span>
+                                            <span class="text-sm font-black text-slate-700"
+                                                x-text="batch.expiry_date"></span>
                                             <template x-if="batch.is_about_to_expire">
-                                                <i class="fas fa-exclamation-triangle text-amber-500 animate-pulse" title="Near Expiry"></i>
+                                                <i class="fas fa-exclamation-triangle text-amber-500 animate-pulse"
+                                                    title="Near Expiry"></i>
                                             </template>
                                         </div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" 
-                                              :class="batch.is_about_to_expire ? 'text-amber-600' : 'text-slate-400'"
-                                              x-text="batch.is_about_to_expire ? 'Expiring Soon' : 'Valid Batch'"></span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest"
+                                            :class="batch.is_about_to_expire ? 'text-amber-600' : 'text-slate-400'"
+                                            x-text="batch.is_about_to_expire ? 'Expiring Soon' : 'Valid Batch'"></span>
                                     </div>
                                 </td>
 
 
 
                                 <!-- Actions -->
-                                <td class="px-5 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center gap-2">
-                                        <a :href="batch.view_url" class="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all" title="View History">
-                                            <i class="fas fa-history"></i>
+                                <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap">
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <a :href="batch.view_url"
+                                            class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100"
+                                            title="View History">
+                                            <i class="fas fa-history text-[10px]"></i>
                                         </a>
-                                        <button @click="showUpdateStockModal(batch.id, batch.medicine_name)" 
-                                                class="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all" title="Adjust Stock">
-                                            <i class="fas fa-sliders"></i>
+                                        <button @click="showUpdateStockModal(batch.id, batch.medicine_name)"
+                                            class="h-8 w-8 flex items-center justify-center bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-500 hover:text-white transition-all shadow-sm border border-amber-100"
+                                            title="Adjust Stock">
+                                            <i class="fas fa-sliders text-[10px]"></i>
                                         </button>
-                                        <a :href="batch.edit_url" class="p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all" title="Edit Batch">
-                                            <i class="fas fa-edit"></i>
+                                        <a :href="batch.edit_url"
+                                            class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100"
+                                            title="Edit Batch">
+                                            <i class="fas fa-edit text-[10px]"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -394,9 +285,13 @@
                         <tr>
                             <td colspan="5" class="px-6 py-20 text-center">
                                 <div class="flex flex-col items-center justify-center">
-                                    <div class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-4 shadow-inner"></div>
-                                    <p class="text-slate-600 font-black uppercase tracking-widest text-xs">Loading Inventory System...</p>
-                                    <p class="text-[10px] text-slate-400 mt-1 font-bold">PLEASE WAIT WHILE WE SYNCHRONIZE BATCH DATA</p>
+                                    <div
+                                        class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-4 shadow-inner">
+                                    </div>
+                                    <p class="text-slate-600 font-black uppercase tracking-widest text-xs">Loading
+                                        Inventory System...</p>
+                                    <p class="text-[10px] text-slate-400 mt-1 font-bold">PLEASE WAIT WHILE WE SYNCHRONIZE
+                                        BATCH DATA</p>
                                 </div>
                             </td>
                         </tr>
@@ -407,12 +302,14 @@
                         <tr>
                             <td colspan="5" class="px-6 py-32 text-center">
                                 <div class="flex flex-col items-center justify-center">
-                                    <div class="w-24 h-24 mb-6 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 shadow-inner">
+                                    <div
+                                        class="w-24 h-24 mb-6 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 shadow-inner">
                                         <i class="fas fa-box-open text-5xl"></i>
                                     </div>
                                     <h3 class="text-xl font-black text-slate-400">Inventory Empty</h3>
                                     <p class="text-slate-300 mt-2 font-medium max-w-sm mx-auto">
-                                        No active batches found matching your current filters. Start by adding new stock or adjust your search.
+                                        No active batches found matching your current filters. Start by adding new stock or
+                                        adjust your search.
                                     </p>
                                     <a href="{{ route('pharmacy.inventory.create') }}"
                                         class="mt-8 inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl font-bold hover:shadow-lg transition-all shadow-blue-200/50">
@@ -427,59 +324,183 @@
             </div>
 
             <!-- Pagination -->
-            <div x-show="!loading && medicines && medicines.length > 0" class="bg-white px-6 py-4 border-t border-gray-100">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <!-- Pagination Info -->
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                        Showing <span class="text-slate-700 font-black" x-text="pagination.from"></span> to
-                        <span class="text-slate-700 font-black" x-text="pagination.to"></span> of
-                        <span class="text-slate-700 font-black" x-text="pagination.total"></span> batches
+            <div x-show="!loading && medicines && medicines.length > 0" class="p-6 bg-slate-50 border-t border-slate-100 rounded-b-3xl">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                        Displaying <span class="text-slate-900" x-text="pagination.from ?? 0"></span> - <span class="text-slate-900" x-text="pagination.to ?? 0"></span>
+                        <span class="mx-2 overflow-hidden bg-slate-200 w-8 h-[2px] inline-block align-middle"></span>
+                        Total: <span class="text-indigo-600" x-text="pagination.total"></span> Records
                     </div>
+                    <div class="flex items-center gap-2">
+                        <button @click="changePage(1)" :disabled="pagination.current_page === 1" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-left text-[10px]"></i></button>
+                        <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-chevron-left text-[10px]"></i> <span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Prev</span></button>
+                        <div class="flex items-center gap-1 px-1">
+                            <template x-for="page in getPageRange()" :key="page">
+                                <button @click="page !== '...' && changePage(page)"
+                                    :class="page === pagination.current_page ? 'bg-indigo-600 text-white shadow-lg border-indigo-600 scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-600'"
+                                    x-text="page" class="w-10 h-10 rounded-xl border text-[10px] font-black transition-all flex items-center justify-center"></button>
+                            </template>
+                        </div>
+                        <button @click="changePage(pagination.current_page + 1)" :disabled="pagination.current_page === pagination.last_page" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Next</span> <i class="fas fa-chevron-right text-[10px]"></i></button>
+                        <button @click="changePage(pagination.last_page)" :disabled="pagination.current_page === pagination.last_page" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-right text-[10px]"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>{{-- /bg-white panel --}}
+    </div>{{-- /left-col --}}
 
-                    <!-- Pagination Controls -->
-                    <nav class="flex items-center space-x-2">
-                        <!-- First Page -->
-                        <button @click="changePage(1)" :disabled="pagination.current_page === 1"
-                            class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                            <i class="fas fa-angle-double-left"></i>
+    {{-- Right Column - Sticky Sidebar --}}
+    <div x-show="showSidebar" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-x-12"
+         x-transition:enter-end="opacity-100 translate-x-0"
+         class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto custom-scrollbar pr-2 group/sidebar">
+        
+        <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-50 bg-gradient-to-br from-slate-50 to-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-blue-600 shadow-sm bg-blue-50 border border-blue-100">
+                        <i class="fas fa-filter text-sm"></i>
+                    </div>
+                    <h2 class="font-black text-slate-800 text-base tracking-tight uppercase">Filters</h2>
+                </div>
+                <button @click="showSidebar = false" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="p-6 space-y-6">
+                {{-- Search Filter --}}
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                        <i class="fas fa-search text-blue-500"></i> Search Inventory
+                    </label>
+                    <div class="relative group">
+                        <input x-model.debounce.500ms="filters.search" @input="fetchInventory()" type="text" placeholder="Medicine, Batch No..." 
+                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl pl-10 pr-4 py-3 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-400 transition-all outline-none font-bold ring-0">
+                        <i class="fas fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
+                    </div>
+                </div>
+
+                {{-- Status Category --}}
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-shield-virus text-indigo-500"></i> Stock Status
+                    </label>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button @click="filters.stock_status = 'All'; fetchInventory()"
+                            :class="filters.stock_status === 'All' ?
+                                'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
+                                'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                            class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                            <span>Global Data</span>
+                            <i class="fas fa-globe-americas transition-opacity" :class="filters.stock_status === 'All' ? 'opacity-100' : 'opacity-40'"></i>
                         </button>
-
-                        <!-- Previous Page -->
-                        <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
-                            class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                            <i class="fas fa-chevron-left"></i>
+                        <button @click="filters.stock_status = 'low'; fetchInventory()"
+                            :class="filters.stock_status === 'low' ?
+                                'bg-amber-500 text-white shadow-lg shadow-amber-200' :
+                                'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                            class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                            <span>Low Stock</span>
+                            <i class="fas fa-exclamation-triangle transition-opacity" :class="filters.stock_status === 'low' ? 'opacity-100' : 'opacity-40'"></i>
                         </button>
+                        <button @click="filters.stock_status = 'out'; fetchInventory()"
+                            :class="filters.stock_status === 'out' ?
+                                'bg-rose-500 text-white shadow-lg shadow-rose-200' :
+                                'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                            class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                            <span>Out of Stock</span>
+                            <i class="fas fa-times-circle transition-opacity" :class="filters.stock_status === 'out' ? 'opacity-100' : 'opacity-40'"></i>
+                        </button>
+                        <button @click="filters.stock_status = 'near_expiry'; fetchInventory()"
+                            :class="filters.stock_status === 'near_expiry' ?
+                                'bg-purple-500 text-white shadow-lg shadow-purple-200' :
+                                'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                            class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                            <span>Expired / Near Expiry</span>
+                            <i class="fas fa-calendar-times transition-opacity" :class="filters.stock_status === 'near_expiry' ? 'opacity-100' : 'opacity-40'"></i>
+                        </button>
+                    </div>
+                </div>
 
-                        <!-- Page Numbers -->
-                        <template x-for="page in getPageRange()" :key="page">
-                            <button @click="page !== '...' && changePage(page)"
-                                :class="page === pagination.current_page ?
-                                    'bg-gradient-to-br from-indigo-600 to-purple-700 text-white border-none shadow-md' :
-                                    'border-slate-200 text-slate-600 hover:bg-slate-50'"
-                                :disabled="page === '...'"
-                                class="w-10 h-10 rounded-xl border text-[10px] font-black transition-all">
-                                <span x-text="page"></span>
+                {{-- Category Select --}}
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                        <i class="fas fa-layer-group text-blue-500"></i> Category Select
+                    </label>
+                    <div class="relative group">
+                        <i class="fas fa-tag absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
+                        <select x-model="filters.category" @change="fetchInventory()" class="w-full px-4 py-3 pl-10 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs ring-0 text-slate-600 cursor-pointer appearance-none">
+                            <option value="All">All Categories</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                {{-- Sort By Select --}}
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Assortment</label>
+                    <div class="relative group">
+                        <i class="fas fa-sort-amount-down absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500"></i>
+                        <select x-model="filters.sort_by" @change="fetchInventory()" class="w-full px-4 py-3 pl-10 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-400 focus:bg-white transition-all font-bold text-xs ring-0 text-slate-600 cursor-pointer appearance-none">
+                            <option value="expiry_date">Expiry Date (Earliest)</option>
+                            <option value="name">Medicine Name (A-Z)</option>
+                            <option value="stock">Stock (Low to High)</option>
+                            <option value="stock_desc">Stock (High to Low)</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                {{-- Page Density Filter --}}
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-compress-alt text-indigo-500"></i> Page Density
+                    </label>
+                    <div class="grid grid-cols-2 gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200/50">
+                        <button type="button" @click="density = 'condensed'"
+                            :class="density === 'condensed' ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'"
+                            class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                            Condensed
+                        </button>
+                        <button type="button" @click="density = 'spacious'"
+                            :class="density === 'spacious' ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'"
+                            class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                            Spacious
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Records Per Page --}}
+                <div class="space-y-3 pb-4">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <i class="fas fa-list-ol text-indigo-500"></i> Records Per Page
+                    </label>
+                    <div class="grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
+                        <template x-for="limit in [10, 25, 50, 100]" :key="limit">
+                            <button @click="filters.length = limit; fetchInventory()" 
+                                :class="filters.length == limit ? 'bg-white text-indigo-600 shadow-sm border-0' : 'text-slate-400 hover:text-indigo-600 border-0'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all" x-text="limit">
                             </button>
                         </template>
-
-                        <!-- Next Page -->
-                        <button @click="changePage(pagination.current_page + 1)"
-                            :disabled="pagination.current_page === pagination.last_page"
-                            class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-
-                        <!-- Last Page -->
-                        <button @click="changePage(pagination.last_page)"
-                            :disabled="pagination.current_page === pagination.last_page"
-                            class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-                            <i class="fas fa-angle-double-right"></i>
-                        </button>
-                    </nav>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="p-6 pt-0 mt-auto flex flex-col gap-2">
+                <button @click="clearFilters()" class="rose-reset-btn w-full py-5 text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95">
+                    <i class="fas fa-broom"></i> Reset Filters
+                </button>
+                <button @click="showSidebar = false" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all flex items-center justify-between px-6">
+                    <span>Hide Panel</span>
+                    <i class="fas fa-eye-slash"></i>
+                </button>
             </div>
         </div>
     </div>
+</div>{{-- /12-Col Grid Layout --}}
+</div>{{-- /space-y-8 --}}
 @endsection
 
 @push('scripts')
@@ -489,7 +510,7 @@
                 // State
                 medicines: [],
                 loading: false,
-                showAdvancedFilters: false,
+                showSidebar: false,
                 stats: {
                     total: 0,
                     low_stock: 0,
@@ -512,6 +533,7 @@
                     length: 10,
                     search: ''
                 },
+                density: 'spacious',
                 pagination: {
                     current_page: 1,
                     last_page: 1,
@@ -546,9 +568,18 @@
 
                 // Reset all filters
                 clearFilters() {
-                    this.filters = { ...this.defaultFilters };
+                    this.filters = {
+                        ...this.defaultFilters
+                    };
                     this.pagination.current_page = 1;
                     this.fetchInventory();
+                },
+
+                // Check for active filters
+                hasActiveFilters() {
+                    return this.filters.search !== '' ||
+                           this.filters.stock_status !== 'All' ||
+                           this.filters.category !== 'All';
                 },
 
                 // Change page
@@ -586,7 +617,8 @@
                                 last_page: result.pagination.last_page,
                                 total: result.pagination.total,
                                 from: (result.pagination.current_page - 1) * result.pagination.per_page + 1,
-                                to: Math.min(result.pagination.current_page * result.pagination.per_page, result.pagination.total)
+                                to: Math.min(result.pagination.current_page * result.pagination.per_page, result
+                                    .pagination.total)
                             };
 
                             // Update URL

@@ -28,7 +28,7 @@
     {{-- ═══════════════════════════════════════════════
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 gap-y-10 mt-4">
         <!-- Total Active Alerts Card -->
         <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-red-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="setFilter('active')">
@@ -148,6 +148,16 @@
                         </div>
 
                         <div class="flex flex-wrap gap-3 items-center">
+                            <div class="flex items-center gap-2 bg-white border border-rose-100 rounded-xl px-3 py-1.5 shadow-sm">
+                                <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
+                                <select x-model="pagination.per_page" @change="fetchAlerts(1)" class="bg-transparent text-rose-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                    <option value="15">15 Per Page</option>
+                                    <option value="30">30 Per Page</option>
+                                    <option value="50">50 Per Page</option>
+                                    <option value="100">100 Per Page</option>
+                                </select>
+                            </div>
+
                             <button @click="fetchAlerts()" 
                                 class="w-10 h-10 flex items-center justify-center bg-white border border-rose-100 text-rose-600 rounded-xl hover:bg-rose-50 transition-colors shadow-sm group">
                                 <i class="fas fa-sync-alt group-hover:rotate-180 transition-transform duration-700" :class="loading ? 'animate-spin opacity-50' : ''"></i>
@@ -182,8 +192,14 @@
 
                 {{-- View Content --}}
                 <div class="relative min-h-[400px]">
+                    <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-12 h-12 border-4 border-rose-100 border-t-rose-600 rounded-full animate-spin shadow-inner"></div>
+                            <p class="text-[10px] font-black text-rose-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
+                        </div>
+                    </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse" :class="density === 'condensed' ? 'condensed-table' : 'spacious-table'">
                             <thead class="bg-white border-b border-rose-100">
                                 <tr>
                                     <th class="px-5 py-4 w-12 text-center">
@@ -217,16 +233,7 @@
                                             Raised On
                                         </div>
                                     </th>
-                                    <th class="px-5 py-4 text-center border-b border-slate-50">
-                                        <div
-                                            class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                                            <div
-                                                class="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center text-rose-500 shadow-sm border border-rose-100">
-                                                <i class="fas fa-toggle-on text-[10px]"></i>
-                                            </div>
-                                            <span>Status</span>
-                                        </div>
-                                    </th>
+
                                     <th class="px-5 py-4 text-center whitespace-nowrap w-32 border-b border-slate-50">
                                         <div
                                             class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
@@ -242,7 +249,7 @@
                             <tbody class="divide-y divide-slate-100">
                                 <template x-if="loading">
                                     <tr>
-                                        <td colspan="6" class="p-8 text-center text-slate-500">
+                                        <td colspan="5" class="p-8 text-center text-slate-500">
                                             <i class="fas fa-circle-notch fa-spin text-3xl text-rose-400 mb-2"></i>
                                             <p class="text-sm font-medium">Syncing Data...</p>
                                         </td>
@@ -251,7 +258,7 @@
 
                                 <template x-if="!loading && (!data.data || data.data.length === 0)">
                                     <tr>
-                                        <td colspan="6" class="py-24 text-center">
+                                        <td colspan="5" class="py-24 text-center">
                                             <div class="w-32 h-32 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
                                                 <i class="fas fa-ghost text-4xl text-slate-300"></i>
                                             </div>
@@ -302,14 +309,7 @@
                                                 <span class="text-[9px] font-bold text-slate-400" x-text="formatTime(alert.created_at)"></span>
                                             </div>
                                         </td>
-                                        <td class="px-5 border-b border-slate-50 transition-all text-center" :class="density === 'condensed' ? 'py-2' : 'py-5'">
-                                            <div class="flex flex-col items-center gap-1">
-                                                <div class="relative inline-flex h-5 w-10 items-center rounded-full transition-colors" :class="alert.is_resolved ? 'bg-emerald-500' : 'bg-rose-500'">
-                                                    <span class="inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200" :class="alert.is_resolved ? 'translate-x-6' : 'translate-x-1'"></span>
-                                                </div>
-                                                <div class="text-[9px] font-black uppercase tracking-widest" :class="alert.is_resolved ? 'text-emerald-600' : 'text-rose-600'" x-text="alert.is_resolved ? 'Resolved' : 'Pending'"></div>
-                                            </div>
-                                        </td>
+
                                         <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap" :class="density === 'condensed' ? 'py-2' : 'py-5'">
                                             <div class="flex items-center justify-center gap-1.5">
                                                 <button x-show="!alert.is_resolved" @click="openResolveModal(alert)" class="h-8 px-3 flex items-center justify-center bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100 text-[10px] font-black uppercase tracking-widest gap-2">
@@ -374,7 +374,9 @@
                 <div class="p-6 space-y-6">
                     {{-- Search --}}
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Search Inventory</label>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-search text-rose-500"></i> Search Inventory
+                        </label>
                         <div class="relative group">
                             <input type="text" x-model.debounce.500ms="filters.search" @input="fetchAlerts(1)" placeholder="Medicine SKU..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-rose-400 transition-all font-bold text-xs ring-0">
                             <i class="fas fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-rose-500"></i>
@@ -382,38 +384,68 @@
                     </div>
 
                     {{-- Status --}}
-                    <div class="space-y-3">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Security Status</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button @click="filters.status = 'active'; fetchAlerts(1)" :class="filters.status === 'active' ? 'bg-rose-600 text-white shadow-xl translate-y-[2px]' : 'bg-slate-50 text-slate-500 hover:bg-white border border-transparent'" class="py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Active</button>
-                            <button @click="filters.status = 'resolved'; fetchAlerts(1)" :class="filters.status === 'resolved' ? 'bg-rose-600 text-white shadow-xl translate-y-[2px]' : 'bg-slate-50 text-slate-500 hover:bg-white border border-transparent'" class="py-3 px-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Resolved</button>
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-shield-virus text-rose-500"></i> Security Status
+                        </label>
+                        <div class="grid grid-cols-1 gap-2">
+                            <button @click="filters.status = 'active'; fetchAlerts(1)"
+                                :class="filters.status === 'active' ?
+                                    'bg-rose-600 text-white shadow-lg shadow-rose-200' :
+                                    'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                <span>Active</span>
+                                <i class="fas fa-exclamation-circle transition-opacity" :class="filters.status === 'active' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                            <button @click="filters.status = 'resolved'; fetchAlerts(1)"
+                                :class="filters.status === 'resolved' ?
+                                    'bg-emerald-600 text-white shadow-lg shadow-emerald-200' :
+                                    'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                <span>Resolved</span>
+                                <i class="fas fa-check-circle transition-opacity" :class="filters.status === 'resolved' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
                         </div>
                     </div>
 
-                    {{-- Page Density --}}
+                    {{-- Page Density Filter --}}
                     <div class="space-y-3">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Visual Density</label>
-                        <div class="flex items-center gap-1.5 p-1.5 bg-slate-100 rounded-2xl">
-                            <button @click="density = 'condensed'" :class="density === 'condensed' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-400'" class="flex-1 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Condensed</button>
-                            <button @click="density = 'spacious'" :class="density === 'spacious' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-400'" class="flex-1 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Spacious</button>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-compress-alt text-rose-500"></i> Page Density
+                        </label>
+                        <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
+                            <button @click="density = 'condensed'"
+                                :class="density === 'condensed' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Condensed
+                            </button>
+                            <button @click="density = 'spacious'"
+                                :class="density === 'spacious' ? 'bg-white text-rose-600 shadow-sm font-black' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Spacious
+                            </button>
                         </div>
                     </div>
 
                     {{-- Records Per Page --}}
-                    <div class="space-y-3">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Output Limit</label>
-                        <div class="grid grid-cols-4 gap-2">
+                    <div class="space-y-3 pb-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-list-ol text-rose-500"></i> Records Per Page
+                        </label>
+                        <div class="grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/50">
                             <template x-for="limit in [10, 25, 50, 100]" :key="limit">
-                                <button @click="pagination.per_page = limit; fetchAlerts(1)" :class="pagination.per_page == limit ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-white text-slate-400 border-slate-100'" class="py-2.5 rounded-xl text-[10px] font-black border transition-all" x-text="limit"></button>
+                                <button @click="pagination.per_page = limit; fetchAlerts(1)" 
+                                    :class="pagination.per_page == limit ? 'bg-white text-rose-600 shadow-sm border-0' : 'text-slate-400 hover:text-rose-600 border-0'"
+                                    class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all" x-text="limit">
+                                </button>
                             </template>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-6 pt-0 mt-auto flex flex-col gap-2">
-                    <button @click="clearFilters()" class="w-full py-4 bg-rose-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-700 shadow-xl transition-all flex items-center justify-between px-6">
-                        <span>Purge Filters</span>
-                        <i class="fas fa-broom"></i>
+                    <button @click="clearFilters()" class="rose-reset-btn w-full py-5 text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95">
+                        <i class="fas fa-broom"></i> Reset Filters
                     </button>
                     <button @click="showSidebar = false" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all flex items-center justify-between px-6">
                         <span>Hide Panel</span>

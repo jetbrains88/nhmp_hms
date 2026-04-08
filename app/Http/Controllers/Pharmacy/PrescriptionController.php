@@ -260,10 +260,17 @@ class PrescriptionController extends Controller
         $sortField     = $request->get('sort', 'dispensed_at');
         $sortDirection = $request->get('direction', 'desc');
 
-        if (in_array($sortField, ['dispensed_at', 'quantity_dispensed'])) {
-            $query->orderBy($sortField, $sortDirection);
+        if ($sortField === 'medicine_name') {
+            $query->leftJoin('prescriptions', 'prescription_dispensations.prescription_id', '=', 'prescriptions.id')
+                  ->leftJoin('medicines as m1', 'prescriptions.medicine_id', '=', 'm1.id')
+                  ->leftJoin('medicines as m2', 'prescription_dispensations.alternative_medicine_id', '=', 'm2.id')
+                  ->select('prescription_dispensations.*')
+                  ->addSelect(\DB::raw('COALESCE(m2.name, m1.name) as actual_medicine_name'))
+                  ->orderBy('actual_medicine_name', $sortDirection);
+        } elseif (in_array($sortField, ['id', 'dispensed_at', 'quantity_dispensed'])) {
+            $query->orderBy('prescription_dispensations.' . $sortField, $sortDirection);
         } else {
-            $query->orderBy('dispensed_at', 'desc');
+            $query->orderBy('prescription_dispensations.dispensed_at', 'desc');
         }
 
         $dispensations = $query->paginate($request->get('per_page', 10));

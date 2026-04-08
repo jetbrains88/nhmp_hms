@@ -97,6 +97,11 @@ class MedicineFormController extends Controller
             $query->where('name', 'LIKE', "%{$search}%");
         }
 
+        if ($request->filled('status')) {
+            $status = $request->status;
+            $query->where('is_active', $status === 'active' ? 1 : 0);
+        }
+
         $sort = $request->get('sort', 'name');
         $direction = $request->get('direction', 'asc');
         $query->orderBy($sort, $direction);

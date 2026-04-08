@@ -54,12 +54,12 @@
                 <i class="fas fa-pills text-xl text-white drop-shadow-md"></i>
             </div>
             <div class="p-4 text-right pt-4">
-                <p class="text-xs font-bold tracking-wider text-sky-500 uppercase">Partially Dispensed</p>
-                <h4 class="text-3xl font-bold text-sky-700 drop-shadow-sm font-mono" x-text="stats.partially_dispensed ?? '0'">0</h4>
+                <p class="text-xs font-bold tracking-wider text-blue-500 uppercase">Partially Dispensed</p>
+                <h4 class="text-3xl font-bold text-blue-700 drop-shadow-sm font-mono" x-text="stats.partially_dispensed ?? '0'">0</h4>
             </div>
-            <div class="mx-4 mb-4 border-t border-sky-200 pt-2 text-sky-700">
+            <div class="mx-4 mb-4 border-t border-blue-200 pt-2 text-blue-700">
                 <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-1.5 rounded-full bg-sky-600 animate-pulse"></span>
+                    <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                     <span class="text-[10px] font-bold uppercase tracking-tight">Requires more medicine</span>
                 </div>
             </div>
@@ -130,12 +130,12 @@
 
                         <div class="flex flex-wrap gap-4 items-center">
                             <div class="flex items-center gap-2 bg-white border border-emerald-100 rounded-xl px-3 py-1.5 shadow-sm">
-                                <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase">Rows</span>
+                                <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
                                 <select x-model="perPage" @change="currentPage = 1; window.scrollTo({ top: 0, behavior: 'smooth' })" class="bg-transparent text-emerald-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
+                                    <option value="15">15 Per Page</option>
+                                    <option value="30">30 Per Page</option>
+                                    <option value="50">50 Per Page</option>
+                                    <option value="100">100 Per Page</option>
                                 </select>
                             </div>
                             
@@ -155,9 +155,15 @@
                 </div>
 
                 {{-- View Content - Grouped Lists --}}
-                <div class="relative min-h-[400px] p-6 bg-gray-50/50">
+                <div class="relative min-h-[400px] p-0 bg-gray-50/50">
+                    <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin shadow-inner"></div>
+                            <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
+                        </div>
+                    </div>
                     
-                    {{-- Loading State --}}
+                    {{-- Status/Filter Indicators --}}
                     <template x-if="loading">
                         <div class="flex flex-col items-center justify-center py-20 text-gray-400">
                             <i class="fas fa-spinner fa-spin text-3xl mb-4 text-emerald-500"></i>
@@ -307,51 +313,101 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 translate-x-0"
              x-transition:leave-end="opacity-0 translate-x-8"
-             class="lg:col-span-3 lg:sticky lg:top-8 lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto scrollbar-hide pb-2" style="scrollbar-width: none;">
+             class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto pr-2 custom-scrollbar">
             
-            <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                        <i class="fas fa-filter"></i> Refine Views
-                    </h3>
-                    <button @click="showSidebar = false" class="text-slate-400 hover:text-rose-500 transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
+            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-slate-50 bg-gradient-to-br from-slate-50 to-white flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-blue-600 shadow-sm bg-blue-50 border border-blue-100">
+                            <i class="fas fa-filter text-sm"></i>
+                        </div>
+                        <h2 class="font-black text-slate-800 text-base tracking-tight uppercase">Filters</h2>
+                    </div>
+                    <button @click="showSidebar = false" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-times"></i></button>
                 </div>
 
-                <div class="space-y-5">
+                <div class="p-6 space-y-6">
                     {{-- Search Filter --}}
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Universal Patient Search</label>
-                        <div class="relative">
-                            <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <input x-model="filters.search" @input.debounce.500ms="fetchData()" type="text" placeholder="EMRN, Name..." 
-                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-emerald-500 rounded-xl text-sm font-medium transition-all focus:ring-4 focus:ring-emerald-500/10 placeholder:text-slate-400">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-search text-emerald-500"></i> Universal Patient Search
+                        </label>
+                        <div class="relative group">
+                            <input x-model.debounce.500ms="filters.search" @input="fetchData()" type="text" placeholder="EMRN, Name..." 
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-400 transition-all font-bold text-xs ring-0">
+                            <i class="fas fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
                         </div>
                     </div>
 
-                    {{-- Status Policy Filter --}}
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Task State</label>
-                        <div class="relative">
-                            <i class="fas fa-tasks absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <select x-model="filters.status" @change="fetchData()" 
-                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-emerald-500 rounded-xl text-sm font-bold text-slate-600 transition-all focus:ring-4 focus:ring-emerald-500/10 appearance-none">
-                                <option value="">Pending + Partial</option>
-                                <option value="pending">Pending Only</option>
-                                <option value="partially_dispensed">Partially Dispensed</option>
-                                <option value="completed">Completed Status</option>
-                            </select>
-                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
+                    {{-- Status Policy Filter - Bento Style --}}
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-tasks text-emerald-500"></i> Task State
+                        </label>
+                        <div class="grid grid-cols-1 gap-2">
+                            <button @click="filters.status = ''; fetchData()"
+                                :class="filters.status === '' ?
+                                    'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
+                                    'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                <span>Pending + Partial</span>
+                                <i class="fas fa-layer-group transition-opacity" :class="filters.status === '' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                            <button @click="filters.status = 'pending'; fetchData()"
+                                :class="filters.status === 'pending' ?
+                                    'bg-amber-500 text-white shadow-lg shadow-amber-200' :
+                                    'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                <span>Pending Only</span>
+                                <i class="fas fa-clock transition-opacity" :class="filters.status === 'pending' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                            <button @click="filters.status = 'partially_dispensed'; fetchData()"
+                                :class="filters.status === 'partially_dispensed' ?
+                                    'bg-blue-600 text-white shadow-lg shadow-blue-200' :
+                                    'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                <span>Partially Dispensed</span>
+                                <i class="fas fa-pie-chart transition-opacity" :class="filters.status === 'partially_dispensed' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
+                            <button @click="filters.status = 'completed'; fetchData()"
+                                :class="filters.status === 'completed' ?
+                                    'bg-emerald-600 text-white shadow-lg shadow-emerald-200' :
+                                    'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
+                                class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
+                                <span>Completed Status</span>
+                                <i class="fas fa-check-circle transition-opacity" :class="filters.status === 'completed' ? 'opacity-100' : 'opacity-40'"></i>
+                            </button>
                         </div>
                     </div>
-                    
-                    {{-- Clear Filters --}}
-                    <div class="pt-4 border-t border-slate-100 flex justify-end">
-                        <button @click="clearFilters()" class="text-[10px] font-black text-rose-500 uppercase tracking-widest border border-rose-200 bg-rose-50 hover:bg-rose-500 hover:text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-                            Reset View <i class="fas fa-ban"></i>
-                        </button>
+
+                    {{-- Page Density Filter --}}
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-compress-alt text-emerald-500"></i> Page Density
+                        </label>
+                        <div class="grid grid-cols-2 gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200/50">
+                            <button type="button" @click="density = 'condensed'"
+                                :class="density === 'condensed' ? 'bg-white text-emerald-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Condensed
+                            </button>
+                            <button type="button" @click="density = 'spacious'"
+                                :class="density === 'spacious' ? 'bg-white text-emerald-600 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700'"
+                                class="py-2 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all">
+                                Spacious
+                            </button>
+                        </div>
                     </div>
+                </div>
+
+                <div class="p-6 pt-0 mt-auto flex flex-col gap-2">
+                    <button @click="clearFilters()" class="rose-reset-btn w-full py-5 text-white rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-300 flex items-center justify-center gap-3 active:scale-95">
+                        <i class="fas fa-broom"></i> Reset Filters
+                    </button>
+                    <button @click="showSidebar = false" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all flex items-center justify-between px-6">
+                        <span>Hide Panel</span>
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -610,6 +666,8 @@ function pharmacyPrescriptions() {
         filters: JSON.parse(localStorage.getItem(STORAGE_KEY) || JSON.stringify({
             search: '', status: '',
         })),
+
+        density: 'spacious',
 
 
         perPage: 15,
