@@ -1042,12 +1042,12 @@ function historyApp(initialStats = {}) {
 
         // ─── Toast Notification ──────────────────────────────
         showToast(message, type = 'info') {
-            if (window.showNotification) {
-                window.showNotification(message, type);
-            } else if (window.toastr) {
-                window.toastr[type](message);
+            if (type === 'success' && window.showSuccess) {
+                window.showSuccess(message);
+            } else if (type === 'error' && window.showError) {
+                window.showError(message);
             } else {
-                alert(message);
+                console.log(`[${type}] ${message}`);
             }
         },
 

@@ -27,7 +27,7 @@
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 mt-4">
-        <!-- Total Forms Card -->
+        {{-- Total Forms Card (Blue) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-lg shadow-indigo-500/10 border border-indigo-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
              @click="clearFilters()">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-400 shadow-lg shadow-indigo-900/20 border border-indigo-300 group-hover:scale-110 transition-transform duration-300">
@@ -41,6 +41,59 @@
                 <div class="flex items-center gap-2">
                     <span class="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
                     <span class="text-[9px] text-indigo-700 font-black uppercase tracking-tight">System Registry</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Active Forms Card (Emerald) --}}
+        <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
+             @click="filters.status = 'active'; searchForms()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 shadow-lg shadow-emerald-900/20 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-check-circle text-xl text-white drop-shadow-md"></i>
+            </div>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-emerald-500 uppercase opacity-70">Active Forms</p>
+                <h4 class="text-3xl font-black text-emerald-700 drop-shadow-sm font-mono" x-text="stats.active_count ?? 0">0</h4>
+            </div>
+            <div class="mx-4 mb-4 border-t border-emerald-100 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-600" :class="{ 'animate-pulse': stats.active_count > 0 }"></span>
+                    <span class="text-[9px] text-emerald-700 font-black uppercase tracking-tight">Authorized for distribution</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Inactive Forms Card (Rose) --}}
+        <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-red-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
+             @click="filters.status = 'inactive'; searchForms()">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-red-400 shadow-lg shadow-rose-900/20 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-lock text-xl text-white drop-shadow-md"></i>
+            </div>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-rose-500 uppercase opacity-70">Inactive Forms</p>
+                <h4 class="text-3xl font-black text-rose-700 drop-shadow-sm font-mono" x-text="stats.inactive_count ?? 0">0</h4>
+            </div>
+            <div class="mx-4 mb-4 border-t border-rose-100 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-rose-600" :class="{ 'animate-pulse': stats.inactive_count > 0 }"></span>
+                    <span class="text-[9px] text-rose-700 font-black uppercase tracking-tight">Locked items in vault</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Recently Added Card (Amber) --}}
+        <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
+            <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 shadow-lg shadow-amber-900/20 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-clock text-xl text-white drop-shadow-md"></i>
+            </div>
+            <div class="p-4 text-right pt-4">
+                <p class="text-[10px] font-black tracking-widest text-amber-500 uppercase opacity-70">New This Week</p>
+                <h4 class="text-3xl font-black text-amber-700 drop-shadow-sm font-mono" x-text="stats.recent_count ?? 0">0</h4>
+            </div>
+            <div class="mx-4 mb-4 border-t border-amber-100 pt-2">
+                <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-1.5 rounded-full bg-amber-600"></span>
+                    <span class="text-[9px] text-amber-700 font-black uppercase tracking-tight">Recently registered forms</span>
                 </div>
             </div>
         </div>
@@ -215,17 +268,23 @@
                                         </div>
                                     </td>
                                     <td class="px-5 border-b border-slate-50 transition-all text-center">
-                                        <div class="flex flex-col items-center gap-1">
-                                            <button @click="toggleStatus(item)" 
-                                                class="relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none"
-                                                :class="item.is_active ? 'bg-emerald-500' : 'bg-rose-500'">
-                                                <span class="inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm"
-                                                    :class="item.is_active ? 'translate-x-6' : 'translate-x-1'"></span>
-                                            </button>
-                                            <div class="text-[9px] font-black uppercase tracking-widest"
-                                                :class="item.is_active ? 'text-emerald-600' : 'text-rose-600'"
-                                                x-text="item.is_active ? 'Active' : 'Inactive'"></div>
-                                        </div>
+                                        <button @click="toggleStatus(item)" 
+                                            x-data="{ hover: false }" 
+                                            @mouseenter="hover = true" 
+                                            @mouseleave="hover = false"
+                                            class="h-9 px-3 min-w-[100px] inline-flex items-center justify-center gap-2 rounded-xl transition-all shadow-sm border focus:outline-none group"
+                                            :class="item.is_active ? 
+                                                (hover ? 'bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100') : 
+                                                (hover ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100')"
+                                            :title="item.is_active ? 'Deactivate Node' : 'Activate Node'">
+                                            <div class="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                                                :class="item.is_active ? 
+                                                    (hover ? 'bg-rose-500 animate-bounce' : 'bg-emerald-500 animate-pulse') : 
+                                                    (hover ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500')">
+                                            </div>
+                                            <span class="text-[9px] font-black uppercase tracking-widest transition-all duration-300"
+                                                x-text="item.is_active ? (hover ? 'Deactivate' : 'Active') : (hover ? 'Activate' : 'Hidden')"></span>
+                                        </button>
                                     </td>
                                     <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap">
                                         <div class="flex items-center justify-center gap-1.5">
@@ -382,7 +441,7 @@
                                 <button @click="filters.status = ''; searchForms()"
                                     :class="filters.status === '' ?
                                         'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
-                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
                                     class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
                                     <span>Global Data</span>
                                     <i class="fas fa-globe-americas transition-opacity" :class="filters.status === '' ? 'opacity-100' : 'opacity-40'"></i>
@@ -390,7 +449,7 @@
                                 <button @click="filters.status = 'active'; searchForms()"
                                     :class="filters.status === 'active' ?
                                         'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
-                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
                                     class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
                                     <span>Authorized Only</span>
                                     <i class="fas fa-check-circle transition-opacity" :class="filters.status === 'active' ? 'opacity-100' : 'opacity-40'"></i>
@@ -398,7 +457,7 @@
                                 <button @click="filters.status = 'inactive'; searchForms()"
                                     :class="filters.status === 'inactive' ?
                                         'bg-gradient-to-r from-rose-600 to-rose-400 text-white shadow-lg shadow-rose-200' :
-                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
                                     class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
                                     <span>Locked Vaults</span>
                                     <i class="fas fa-lock transition-opacity" :class="filters.status === 'inactive' ? 'opacity-100' : 'opacity-40'"></i>
@@ -505,7 +564,7 @@
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
             <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="showConfirmModal = false"></div>
             
-            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-8 text-center border border-slate-100">
+            <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block px-4 pt-5 pb-4 overflow-hidden align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-8 text-center border border-slate-100">
                 <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6" :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-indigo-100 text-indigo-600'">
                     <i class="fas text-3xl" :class="confirmConfig.icon"></i>
                 </div>
@@ -651,7 +710,7 @@
                         to: data.to
                     };
                 } catch (error) {
-                    window.Notification.error('Failed to load forms catalog');
+                    window.showError('Failed to load forms catalog');
                 } finally {
                     this.loading = false;
                 }
@@ -779,7 +838,7 @@
 
             async saveForm() {
                 if (!this.form.name) {
-                    window.Notification.warning('Form name is required');
+                    window.showWarning('Form name is required');
                     return;
                 }
 
@@ -801,19 +860,19 @@
                     const data = await response.json();
 
                     if (response.ok) {
-                        window.Notification.success(data.message);
+                        window.showSuccess(data.message);
                         this.closeAddModal();
                         await this.fetchForms();
                         await this.fetchStats();
                     } else {
                         if (data.errors) {
-                            window.Notification.error(Object.values(data.errors)[0][0]);
+                            window.showError(Object.values(data.errors)[0][0]);
                         } else {
-                            window.Notification.error(data.message || 'Failed to save Form');
+                            window.showError(data.message || 'Failed to save Form');
                         }
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    window.showError('A network error occurred');
                 } finally {
                     this.saving = false;
                 }
@@ -833,7 +892,7 @@
                     });
 
                     if (response.ok) {
-                        window.Notification.success('Form purged successfully');
+                        window.showSuccess('Form purged successfully');
                         this.showConfirmModal = false;
                         this.dataToDelete = null;
                         
@@ -843,10 +902,10 @@
                         await this.fetchForms();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error('Failed to purge Form');
+                        window.showError('Failed to purge Form');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    window.showError('A network error occurred');
                 } finally {
                     this.confirming = false;
                 }
@@ -869,11 +928,16 @@
                     if (!response.ok) throw new Error('Status update failed');
                     
                     const data = await response.json();
-                    window.Notification.success(data.message || 'Status updated successfully');
+                    if (window.showSuccess) {
+                        showSuccess(data.message || 'Status updated successfully', 'Status Updated');
+                    }
                     await this.fetchStats(); 
                 } catch (error) {
                     item.is_active = originalStatus; // revert
-                    window.Notification.error('Failed to update status');
+                    console.error('Toggle status error:', error);
+                    if (window.showError) {
+                        showError('Failed to update status', 'Update Failed');
+                    }
                 }
             },
 
@@ -890,15 +954,15 @@
                     });
 
                     if (response.ok) {
-                        window.Notification.success(`Successfully purged ${this.selectedIds.length} forms`);
+                        window.showSuccess(`Successfully purged ${this.selectedIds.length} forms`);
                         this.selectedIds = [];
                         await this.fetchForms();
                         await this.fetchStats();
                     } else {
-                        window.Notification.error('Failed to perform mass purge');
+                        window.showError('Failed to perform mass purge');
                     }
                 } catch (error) {
-                    window.Notification.error('A network error occurred');
+                    window.showError('A network error occurred');
                 }
             }
         };

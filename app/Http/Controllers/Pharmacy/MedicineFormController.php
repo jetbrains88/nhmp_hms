@@ -83,7 +83,10 @@ class MedicineFormController extends Controller
     public function stats()
     {
         $stats = [
-            'total' => MedicineForm::count()
+            'total' => MedicineForm::count(),
+            'active_count' => MedicineForm::where('is_active', 1)->count(),
+            'inactive_count' => MedicineForm::where('is_active', 0)->count(),
+            'recent_count' => MedicineForm::where('created_at', '>=', now()->subDay())->count(),
         ];
         return response()->json($stats);
     }

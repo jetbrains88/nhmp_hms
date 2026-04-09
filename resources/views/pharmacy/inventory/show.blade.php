@@ -65,72 +65,36 @@
             </div>
 
             <!-- Stock Status Bar -->
-            <div class="p-6 border-b border-gray-100">
-                <div class="flex items-center justify-between mb-2">
+            <div class="p-8 border-b border-slate-50">
+                <div class="flex items-center justify-between mb-4">
                     <div>
-                        <span class="font-medium text-gray-700">Stock Status:</span>
-                        <span class="ml-2 px-3 py-1 rounded-full text-sm font-medium
-                        {{ $medicine->stock_status == 'out_of_stock' ? 'bg-rose-100 text-rose-800' :
-                           ($medicine->stock_status == 'low_stock' ? 'bg-orange-100 text-orange-800' : 'bg-emerald-100 text-emerald-800') }}">
-                        {{ ucfirst(str_replace('_', ' ', $medicine->stock_status)) }}
-                    </span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inventory Status</span>
+                        <div class="mt-1 flex items-center gap-2">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider
+                            {{ $medicine->stock_status == 'out_of_stock' ? 'bg-rose-100 text-rose-700' :
+                               ($medicine->stock_status == 'low_stock' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700') }}">
+                                {{ ucfirst(str_replace('_', ' ', $medicine->stock_status)) }}
+                            </span>
+                        </div>
                     </div>
-                    <div class="text-sm text-gray-600">
-                        Reorder Level: <span class="font-bold">{{ $medicine->reorder_level }}</span>
+                    <div class="text-right">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reorder Threshold</span>
+                        <div class="text-lg font-black text-slate-700 mt-1">{{ $medicine->reorder_level }} <span class="text-xs">Units</span></div>
                     </div>
                 </div>
-                <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     @php
                         $percentage = $medicine->reorder_level > 0
-                            ? min(100, ($medicine->stock / $medicine->reorder_level) * 100)
-                            : 0;
-                        $color = $medicine->stock == 0 ? 'bg-rose-500' :
-                                ($medicine->stock <= $medicine->reorder_level ? 'bg-orange-500' : 'bg-emerald-500');
+                            ? min(100, ($medicine->stock / ($medicine->reorder_level * 2 || 10)) * 100)
+                            : 100;
+                        $color = $medicine->stock == 0 ? 'from-rose-500 to-rose-600' :
+                                ($medicine->stock <= $medicine->reorder_level ? 'from-amber-400 to-amber-600' : 'from-emerald-400 to-emerald-600');
                     @endphp
-                    <div class="h-full {{ $color }}" style="width: {{ $percentage }}%"></div>
+                    <div class="h-full bg-gradient-to-r {{ $color }} transition-all duration-700" style="width: {{ $percentage }}%"></div>
                 </div>
             </div>
 
             <!-- Details Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Generic Name</div>
-                    <div class="font-medium text-gray-900">{{ $medicine->generic_name ?? 'N/A' }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Brand</div>
-                    <div class="font-medium text-gray-900">{{ $medicine->brand ?? 'N/A' }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Strength & Form</div>
-                    <div class="font-medium text-gray-900">{{ $medicine->strength }} {{ $medicine->form }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Unit</div>
-                    <div class="font-medium text-gray-900">{{ $medicine->unit }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Cost Price</div>
-                    <div class="font-medium text-gray-900">{{ number_format($medicine->cost_price, 2) }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Selling Price</div>
-                    <div class="font-medium text-gray-900">{{ number_format($medicine->selling_price, 2) }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Tax Rate</div>
-                    <div class="font-medium text-gray-900">{{ $medicine->tax_rate ?? 0 }}%</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-sm text-gray-500">Minimum Order Qty</div>
-                    <div class="font-medium text-gray-900">{{ $medicine->minimum_order_quantity ?? 'N/A' }}</div>
-                </div>
-                @if($medicine->supplier)
-                    <div class="space-y-1">
-                        <div class="text-sm text-gray-500">Supplier</div>
-                        <div class="font-medium text-gray-900">{{ $medicine->supplier->name }}</div>
-                        <div class="text-xs text-gray-500">{{ $medicine->supplier->contact_person }}
-                            • {{ $medicine->supplier->phone }}</div>
                     </div>
                 @endif
                 @if($medicine->expiry_date)
@@ -198,69 +162,70 @@
                 <div id="inventory-content" class="tab-content active">
                     <div class="overflow-x-auto">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
+                            <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100">
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Log entry Date
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Type
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Transaction Type
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                     Quantity
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Previous Stock
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Previous
                                 </th>
-                                <th class="px6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                     New Stock
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    User
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Responsible
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                     Notes
                                 </th>
                             </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
+                            <tbody class="divide-y divide-slate-50">
                             @forelse($inventoryLogs as $log)
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <tr class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-600">
                                         {{ $log->created_at->format('d M Y H:i') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full
-                                        {{ $log->type == 'add' ? 'bg-emerald-100 text-emerald-800' :
-                                           ($log->type == 'remove' ? 'bg-rose-100 text-rose-800' :
-                                           ($log->type == 'dispense' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800')) }}">
-                                        {{ ucfirst($log->type) }}
-                                    </span>
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <span class="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider rounded
+                                            {{ $log->type == 'add' ? 'bg-emerald-100 text-emerald-800' :
+                                               ($log->type == 'remove' ? 'bg-rose-100 text-rose-800' :
+                                               ($log->type == 'dispense' ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-600')) }}">
+                                            {{ ucfirst($log->type) }}
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="font-medium {{ $log->quantity > 0 ? 'text-emerald-600' : 'text-rose-600' }}">
-                                        {{ $log->quantity > 0 ? '+' : '' }}{{ $log->quantity }}
-                                    </span>
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <span class="text-sm font-black {{ $log->quantity > 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                                            {{ $log->quantity > 0 ? '+' : '' }}{{ $log->quantity }}
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-medium text-slate-400">
                                         {{ $log->previous_stock }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                                    <td class="px-6 py-5 whitespace-nowrap text-base font-black text-slate-800">
                                         {{ $log->new_stock }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-600">
                                         {{ $log->user->name ?? 'System' }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                                    <td class="px-6 py-5 text-sm text-slate-500 max-w-xs truncate italic">
                                         {{ $log->notes }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-6 py-8 text-center text-gray-500">
-                                        <i class="fas fa-history text-3xl text-gray-300 mb-4"></i>
-                                        <p>No inventory history available</p>
+                                    <td colspan="7" class="px-6 py-20 text-center text-slate-300">
+                                        <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                            <i class="fas fa-history text-2xl"></i>
+                                        </div>
+                                        <p class="font-black uppercase tracking-widest text-xs">No activity logs recorded</p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -278,58 +243,59 @@
                 <div id="dispense-content" class="tab-content hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
+                            <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100">
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Dispense Date
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Patient
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Patient Identity
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    MRN
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    EMRN
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Quantity
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Qty
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Doctor
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Prescriber
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Dispensed By
+                                <th class="px-6 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Dispenser
                                 </th>
                             </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
+                            <tbody class="divide-y divide-slate-50">
                             @forelse($dispenseHistory as $prescription)
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <tr class="hover:bg-slate-50/50 transition-colors">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-600">
                                         {{ $prescription->dispensed_at->format('d M Y H:i') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-black text-slate-800">
                                         {{ $prescription->diagnosis->visit->patient->name }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-5 whitespace-nowrap text-[10px] font-black text-indigo-500 uppercase font-mono">
                                         {{ $prescription->diagnosis->visit->patient->emrn }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">
-                                        {{ $prescription->dispensed_quantity }}
-                                    </span>
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-lg border border-emerald-100">
+                                            {{ $prescription->dispensed_quantity }}
+                                        </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-600">
                                         {{ $prescription->prescriber->name ?? 'Unknown' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-600">
                                         {{ $prescription->dispenser->name ?? 'Unknown' }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
-                                        <i class="fas fa-pills text-3xl text-gray-300 mb-4"></i>
-                                        <p>No dispense history available</p>
+                                    <td colspan="6" class="px-6 py-20 text-center text-slate-300">
+                                        <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                            <i class="fas fa-pills text-2xl"></i>
+                                        </div>
+                                        <p class="font-black uppercase tracking-widest text-xs">No dispense history found</p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -407,12 +373,12 @@
             button.addEventListener('click', function () {
                 // Update active tab
                 document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('active', 'border-blue-500', 'text-gray-700');
-                    btn.classList.add('text-gray-500');
+                    btn.classList.remove('active', 'bg-white', 'text-indigo-600', 'shadow-sm', 'border', 'border-slate-200');
+                    btn.classList.add('text-slate-400', 'hover:text-indigo-600');
                 });
 
-                this.classList.add('active', 'border-blue-500', 'text-gray-700');
-                this.classList.remove('text-gray-500');
+                this.classList.add('active', 'bg-white', 'text-indigo-600', 'shadow-sm', 'border', 'border-slate-200');
+                this.classList.remove('text-slate-400', 'hover:text-indigo-600');
 
                 // Show active content
                 const tabId = this.id.replace('-tab', '-content');

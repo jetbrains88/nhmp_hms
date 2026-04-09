@@ -129,9 +129,25 @@
                         </div>
 
                         <div class="flex flex-wrap gap-4 items-center">
+                            {{-- Standardized View Toggle --}}
+                            <div class="flex items-center gap-1 bg-white border border-emerald-100 rounded-xl p-1 shadow-sm h-11">
+                                <button @click="viewMode = 'table'"
+                                    :class="viewMode === 'table' ? 'bg-emerald-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'"
+                                    class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 text-sm font-bold group">
+                                    <i class="fas fa-list-ul" :class="viewMode === 'table' ? 'text-white' : 'text-gray-400 group-hover:text-emerald-600'"></i>
+                                    Table
+                                </button>
+                                <button @click="viewMode = 'grid'"
+                                    :class="viewMode === 'grid' ? 'bg-emerald-600 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'"
+                                    class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 text-sm font-bold group">
+                                    <i class="fas fa-th-large" :class="viewMode === 'grid' ? 'text-white' : 'text-gray-400 group-hover:text-emerald-600'"></i>
+                                    Grid
+                                </button>
+                            </div>
+
                             <div class="flex items-center gap-2 bg-white border border-emerald-100 rounded-xl px-3 py-1.5 shadow-sm">
                                 <span class="text-[9px] font-black text-slate-400 border-r border-slate-100 pr-2 uppercase font-mono">Row Density</span>
-                                <select x-model="perPage" @change="currentPage = 1; window.scrollTo({ top: 0, behavior: 'smooth' })" class="bg-transparent text-emerald-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
+                                <select x-model="perPage" @change="currentPage = 1; fetchData()" class="bg-transparent text-emerald-600 text-[10px] font-black uppercase cursor-pointer outline-none focus:ring-0 border-none p-0 pr-4">
                                     <option value="15">15 Per Page</option>
                                     <option value="30">30 Per Page</option>
                                     <option value="50">50 Per Page</option>
@@ -163,34 +179,24 @@
                         </div>
                     </div>
                     
-                    {{-- Status/Filter Indicators --}}
-                    <template x-if="loading">
-                        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
-                            <i class="fas fa-spinner fa-spin text-3xl mb-4 text-emerald-500"></i>
-                            <p class="text-sm font-bold uppercase tracking-widest">Loading Records...</p>
-                        </div>
-                    </template>
-                    
                     {{-- Empty State --}}
-                    <template x-if="!loading && patientGroups.length === 0">
-                        <div class="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
-                            <div class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-200 mx-auto mb-6">
-                                <i class="fas fa-prescription text-4xl"></i>
-                            </div>
-                            <h4 class="text-xl font-black text-slate-400">No prescriptions found</h4>
-                            <p class="text-slate-400 mt-2 font-medium">All prescriptions have been dispensed, or no match for your filters.</p>
+                    <div x-show="!loading && patientGroups.length === 0" class="py-20 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
+                        <div class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-200 mx-auto mb-6">
+                            <i class="fas fa-prescription text-4xl"></i>
                         </div>
-                    </template>
+                        <h4 class="text-xl font-black text-slate-400">No prescriptions found</h4>
+                        <p class="text-slate-400 mt-2 font-medium">All prescriptions have been dispensed, or no match for your filters.</p>
+                    </div>
 
-                    {{-- Patient Group Cards --}}
-                    <div x-show="!loading" class="space-y-6">
+                    {{-- Patient Group Cards (Grid View) --}}
+                    <div x-show="!loading && viewMode === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-6">
                         <template x-for="group in paginatedGroups" :key="group.patient.id">
                             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
 
                                 {{-- Patient Header --}}
                                 <div class="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-lg flex-shrink-0 shadow-inner"
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-white font-black text-lg flex-shrink-0 shadow-inner"
                                             x-text="group.patient.name?.charAt(0) ?? 'P'">
                                         </div>
                                         <div>
@@ -251,10 +257,6 @@
                                                                     <span class="font-bold text-slate-700" x-text="rx.days + (isNaN(rx.days) ? '' : ' day(s)')"></span>
                                                                 </span>
                                                                 <span x-show="rx.instructions" class="text-slate-400 italic">"<span x-text="rx.instructions"></span>"</span>
-                                                                <span class="text-slate-400">
-                                                                    <i class="fas fa-user-md mr-1 text-slate-300"></i>
-                                                                    <span class="font-semibold" x-text="rx.doctor_name"></span>
-                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -277,7 +279,7 @@
                                                     <div class="flex-shrink-0 flex flex-col gap-2 w-[140px]" x-show="rx.status !== 'completed' && rx.status !== 'cancelled'">
                                                         <button @click="openDispenseModal(rx, group.patient)"
                                                             class="w-full px-4 py-2.5 text-xs font-black text-white uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm"
-                                                            :class="rx.stock > 0 ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30' : 'bg-slate-300 cursor-not-allowed'"
+                                                            :class="rx.stock > 0 ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30' : 'bg-slate-300 cursor-not-allowed'"
                                                             :disabled="rx.stock <= 0">
                                                             <i class="fas fa-pills mb-px"></i>
                                                             <span x-text="rx.status === 'partially_dispensed' ? 'More' : 'Dispense'"></span>
@@ -301,6 +303,90 @@
                         </template>
                     </div>
 
+                    {{-- Table View (Flattened) --}}
+                    <div x-show="!loading && viewMode === 'table'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50 border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Patient / EMRN</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Medicine</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Required</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Missing</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <template x-for="group in paginatedGroups" :key="group.patient.id">
+                                        <template x-for="rx in group.prescriptions" :key="rx.id">
+                                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                                <td class="px-6 py-4">
+                                                    <div class="font-bold text-slate-800" x-text="group.patient.name"></div>
+                                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-tighter" x-text="'EMRN: ' + group.patient.emrn"></div>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="font-bold text-indigo-600" x-text="rx.medicine_name"></div>
+                                                    <div class="text-[9px] text-slate-400 uppercase tracking-widest" x-text="rx.generic_name ? '(' + rx.generic_name + ')' : ''"></div>
+                                                </td>
+                                                <td class="px-6 py-4 text-center font-mono font-bold text-slate-700" x-text="rx.quantity"></td>
+                                                <td class="px-6 py-4 text-center font-mono font-bold text-rose-600" x-text="rx.remaining_qty"></td>
+                                                <td class="px-6 py-4">
+                                                    <span class="text-[9px] px-2 py-1 rounded font-black uppercase tracking-widest"
+                                                        :class="{
+                                                            'bg-amber-100 text-amber-700': rx.status === 'pending',
+                                                            'bg-blue-100 text-blue-700': rx.status === 'partially_dispensed',
+                                                            'bg-emerald-100 text-emerald-700': rx.status === 'completed',
+                                                            'bg-slate-100 text-slate-600': rx.status === 'cancelled',
+                                                        }"
+                                                        x-text="rx.status">
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    <div class="flex items-center justify-end gap-2">
+                                                        <button @click="openDispenseModal(rx, group.patient)" 
+                                                            x-show="rx.status !== 'completed' && rx.status !== 'cancelled'"
+                                                            class="h-9 px-4 bg-indigo-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all disabled:opacity-50"
+                                                            :disabled="rx.stock <= 0">
+                                                            Dispense
+                                                        </button>
+                                                        <i x-show="rx.status === 'completed'" class="fas fa-check-circle text-emerald-500"></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Premium Pagination Footer --}}
+                <div x-show="!loading && patientGroups.length > 0" class="p-6 bg-slate-50 border-t border-slate-100 rounded-b-3xl">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                            Displaying <span class="text-slate-900" x-text="((currentPage - 1) * perPage) + 1"></span> - <span class="text-slate-900" x-text="Math.min(currentPage * perPage, patientGroups.length)"></span> 
+                            <span class="mx-2 overflow-hidden bg-slate-200 w-8 h-[2px] inline-block align-middle"></span> 
+                            Capacity: <span class="text-emerald-600" x-text="patientGroups.length"></span> Patients
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <button @click="changePage(1)" :disabled="currentPage === 1" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-emerald-600 hover:text-emerald-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-left text-[10px]"></i></button>
+                            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-emerald-600 hover:text-emerald-600 disabled:opacity-30 transition-all"><i class="fas fa-chevron-left text-[10px]"></i> <span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Prev</span></button>
+                            
+                            <div class="flex items-center gap-1 px-1">
+                                <template x-for="page in getPageRange()" :key="page">
+                                    <button @click="page !== '...' && changePage(page)" 
+                                        :class="page === currentPage ? 'bg-emerald-600 text-white shadow-lg border-emerald-600 scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-600'"
+                                        x-text="page" class="w-10 h-10 rounded-xl border text-[10px] font-black transition-all flex items-center justify-center"></button>
+                                </template>
+                            </div>
+
+                            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-emerald-600 hover:text-emerald-600 disabled:opacity-30 transition-all"><span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Next</span> <i class="fas fa-chevron-right text-[10px]"></i></button>
+                            <button @click="changePage(totalPages)" :disabled="currentPage === totalPages" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-emerald-600 hover:text-emerald-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-right text-[10px]"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -488,7 +574,7 @@
                     <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[10px]"></i>
                 </div>
                 <p x-show="alternatives.length === 0" class="text-[10px] text-slate-400 mt-1 font-medium"><i class="fas fa-info-circle mr-1"></i> No exact generic replacements detected in warehouse.</p>
-                <p x-show="form.alternative_medicine_id" class="text-[10px] font-black text-amber-600 mt-1.5 flex items-center gap-1 bg-amber-50 px-2 py-1 rounded inline-flex border border-amber-100 uppercase tracking-widest">
+                <p x-show="form.alternative_medicine_id" class="text-[10px] font-black text-amber-600 mt-1.5 inline-flex items-center gap-1 bg-amber-50 px-2 py-1 rounded border border-amber-100 uppercase tracking-widest">
                     <i class="fas fa-exclamation-triangle"></i> Substitution Alert will fire.
                 </p>
             </div>
@@ -656,6 +742,7 @@ function pharmacyPrescriptions() {
     return {
         showSidebar: false,
         loading: false,
+        viewMode: 'grid',
         patientGroups: [],
         stats: {
             pending: 0,
@@ -840,14 +927,25 @@ function dispenseModal() {
 
                 if (data.success || r.ok) {
                     this.close();
+                    if (window.showSuccess) {
+                        window.showSuccess(data.message || 'Medication dispensed successfully');
+                    }
                     window.dispatchEvent(new CustomEvent('dispense-success'));
                     // The main component listens for 'dispense-success' and calls fetchData()
                 } else {
-                    this.error = data.message ?? 'Dispense failed. Please try again.';
+                    const errorMsg = data.message ?? 'Dispense failed. Please try again.';
+                    this.error = errorMsg;
+                    if (window.showError) {
+                        window.showError(errorMsg);
+                    }
                 }
             } catch (err) {
                 this.submitting = false;
-                this.error = 'A network error occurred. Please try again.';
+                const errorMsg = 'A network error occurred. Please try again.';
+                this.error = errorMsg;
+                if (window.showError) {
+                    window.showError(errorMsg);
+                }
             }
         },
     };

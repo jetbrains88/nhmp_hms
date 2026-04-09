@@ -30,7 +30,7 @@
         {{-- ═══════════════════════════════════════════════
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
             <!-- Total Medicines Card -->
             <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
                 @click="clearFilters()">
@@ -107,26 +107,6 @@
                 </div>
             </div>
 
-            <!-- Categories Card -->
-            <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-2xl shadow-lg shadow-purple-500/20 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
-                @click="viewMode = viewMode === 'grid' ? 'table' : 'grid'">
-                <div
-                    class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-fuchsia-400 shadow-lg shadow-purple-900/30 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
-                    <i class="fas" :class="viewMode === 'grid' ? 'fa-list' : 'fa-th-large'"
-                        class="text-xl text-white drop-shadow-md"></i>
-                </div>
-                <div class="p-4 text-right pt-4">
-                    <p class="text-xs font-bold tracking-wider text-fuchsia-500 uppercase">View Mode</p>
-                    <h4 class="text-xl mt-2 font-black text-fuchsia-700 drop-shadow-sm uppercase"
-                        x-text="viewMode === 'grid' ? 'To Table' : 'To Grid'"></h4>
-                </div>
-                <div class="mx-4 mb-4 border-t border-purple-200 pt-2 text-fuchsia-700">
-                    <div class="flex items-center gap-2">
-                        <span class="h-1.5 w-1.5 rounded-full bg-fuchsia-600 animate-pulse"></span>
-                        <span class="text-[10px] font-bold uppercase tracking-tight">Toggle Listing</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         {{-- ═══════════════════════════════════════════════
@@ -175,21 +155,16 @@
                                     </select>
                                 </div>
 
-                                <div
-                                    class="flex items-center gap-1 bg-white border border-indigo-100 rounded-xl p-1 shadow-sm">
+                                <div class="flex items-center gap-1 bg-white border border-indigo-100 rounded-xl p-1 shadow-sm">
                                     <button @click="viewMode = 'table'"
-                                        :class="viewMode === 'table' ? 'bg-indigo-600 text-white shadow-md' :
-                                            'text-slate-400 hover:text-indigo-600'"
-                                        class="w-9 h-9 flex items-center justify-center rounded-lg transition-all"
-                                        title="Table View">
-                                        <i class="fas fa-list-ul text-xs"></i>
+                                        :class="viewMode === 'table' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Table View">
+                                        <i class="fas fa-list-ul"></i>
                                     </button>
                                     <button @click="viewMode = 'grid'"
-                                        :class="viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' :
-                                            'text-slate-400 hover:text-indigo-600'"
-                                        class="w-9 h-9 flex items-center justify-center rounded-lg transition-all"
-                                        title="Grid View">
-                                        <i class="fas fa-th-large text-xs"></i>
+                                        :class="viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Grid View">
+                                        <i class="fas fa-th-large"></i>
                                     </button>
                                 </div>
 
@@ -360,21 +335,26 @@
                                                 </div>
                                             </td>
                                             <td class="px-5 py-4 text-center">
-                                                <button @click="toggleStatus(medicine)"
-                                                    class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-300 focus:outline-none shadow-inner cursor-pointer"
-                                                    :class="medicine.is_active ? 'bg-emerald-500' : 'bg-slate-200'">
-                                                    <span
-                                                        class="inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-300"
-                                                        :class="medicine.is_active ? 'translate-x-[18px]' : 'translate-x-1'"></span>
+                                                <button @click="toggleStatus(medicine)" 
+                                                    x-data="{ hover: false }" 
+                                                    @mouseenter="hover = true" 
+                                                    @mouseleave="hover = false"
+                                                    class="h-9 px-3 min-w-[100px] inline-flex items-center justify-center gap-2 rounded-xl transition-all shadow-sm border focus:outline-none group"
+                                                    :class="medicine.is_active ? 
+                                                        (hover ? 'bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100') : 
+                                                        (hover ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100')"
+                                                    :title="medicine.is_active ? 'Deactivate Medicine' : 'Activate Medicine'">
+                                                    <div class="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                                                        :class="medicine.is_active ? 
+                                                            (hover ? 'bg-rose-500 animate-bounce' : 'bg-emerald-500 animate-pulse') : 
+                                                            (hover ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500')">
+                                                    </div>
+                                                    <span class="text-[9px] font-black uppercase tracking-widest transition-all duration-300"
+                                                        x-text="medicine.is_active ? (hover ? 'Deactivate' : 'Active') : (hover ? 'Activate' : 'Hidden')"></span>
                                                 </button>
-                                                <div class="text-[9px] font-black uppercase tracking-widest mt-1"
-                                                    :class="medicine.is_active ? 'text-emerald-500' : 'text-slate-400'"
-                                                    x-text="medicine.is_active ? 'Active' : 'Offline'">
-                                                </div>
                                             </td>
                                             <td class="px-5 py-4">
-                                                <div
-                                                    class="flex flex-wrap items-center justify-end gap-1.5 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div class="flex flex-wrap items-center justify-end gap-1.5 opacity-100 transition-opacity">
                                                     <a :href="medicine.view_url"
                                                         class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100"
                                                         title="View Details">
@@ -474,13 +454,22 @@
                                                     x-text="medicine.unit"></span>
                                             </div>
                                             <div class="flex flex-wrap gap-1.5 justify-end">
-                                                <button @click="toggleStatus(medicine)"
-                                                    class="h-8 px-2 flex items-center justify-center gap-1.5 rounded-lg transition-all shadow-sm border focus:outline-none"
-                                                    :class="medicine.is_active ?
-                                                        'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-500 hover:text-white' :
-                                                        'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-200 hover:text-slate-700'"
-                                                    :title="medicine.is_active ? 'Set Offline' : 'Set Active'">
-                                                    <i class="fas fa-power-off text-[10px]"></i>
+                                                <button @click="toggleStatus(medicine)" 
+                                                    x-data="{ hover: false }" 
+                                                    @mouseenter="hover = true" 
+                                                    @mouseleave="hover = false"
+                                                    class="h-9 px-3 min-w-[100px] inline-flex items-center justify-center gap-1.5 rounded-xl transition-all shadow-sm border focus:outline-none group"
+                                                    :class="medicine.is_active ? 
+                                                        (hover ? 'bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100') : 
+                                                        (hover ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100')"
+                                                    :title="medicine.is_active ? 'Deactivate Medicine' : 'Activate Medicine'">
+                                                    <div class="w-1 h-1 rounded-full transition-all duration-300"
+                                                        :class="medicine.is_active ? 
+                                                            (hover ? 'bg-rose-500 animate-bounce' : 'bg-emerald-500 animate-pulse') : 
+                                                            (hover ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500')">
+                                                    </div>
+                                                    <span class="text-[8px] font-black uppercase tracking-widest transition-all duration-300"
+                                                        x-text="medicine.is_active ? (hover ? 'Deactivate' : 'Active') : (hover ? 'Activate' : 'Hidden')"></span>
                                                 </button>
                                                 <a :href="medicine.view_url"
                                                     class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100"
@@ -497,54 +486,48 @@
 
                                         <!-- Stock Bar indicator -->
                                         <div class="absolute bottom-0 left-0 h-1 bg-gradient-to-r"
-                                            :class="medicine.is_low_stock ? 'from-rose-500 to-rose-600' :
-                                                'from-emerald-400 to-emerald-500'"
-                                            :style="`width: ${Math.min(100, (medicine.total_stock / (Math.max(1, medicine.reorder_level) * 2)) * 100)}%`">
-                                        </div>
+                                            :class="medicine.is_low_stock ? 'from-rose-500 to-rose-600' : 'from-emerald-400 to-emerald-600'"
+                                            :style="`width: ${Math.min(100, (medicine.total_stock / (medicine.reorder_level || 10)) * 50)}%`"
+                                        ></div>
                                     </div>
                                 </template>
-
                             </div>
                         </div>
 
-                        {{-- Pagination Panel --}}
-                        <div x-show="!loading && pagination.last_page > 1"
-                            class="border-t border-indigo-50/50 p-6 bg-gray-50 flex items-center justify-between mt-auto">
-                            <p class="text-xs text-gray-500 font-medium">
-                                Showing <span class="font-bold text-indigo-700"
-                                    x-text="((pagination.current_page - 1) * pagination.per_page) + 1"></span>
-                                to <span class="font-bold text-indigo-700"
-                                    x-text="Math.min(pagination.current_page * pagination.per_page, pagination.total)"></span>
-                                of <span class="font-bold text-gray-900" x-text="pagination.total"></span> entries
-                            </p>
-                            <div class="flex bg-white rounded-lg shadow-sm border border-gray-200 p-1">
-                                <button @click="changePage(pagination.current_page - 1)"
-                                    :disabled="pagination.current_page === 1"
-                                    class="px-3 py-1.5 text-xs font-bold rounded-md disabled:opacity-30 hover:bg-gray-50 transition-colors uppercase tracking-widest">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
+                        {{-- Premium Pagination Footer --}}
+                        <div x-show="!loading && medicines && medicines.length > 0" class="p-6 bg-slate-50 border-t border-slate-100 rounded-b-3xl">
+                            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    Displaying <span class="text-slate-900" x-text="pagination.from"></span> - <span class="text-slate-900" x-text="pagination.to"></span> 
+                                    <span class="mx-2 overflow-hidden bg-slate-200 w-8 h-[2px] inline-block align-middle"></span> 
+                                    Capacity: <span class="text-indigo-600" x-text="pagination.total"></span> Entries
+                                </div>
+                                
+                                <div class="flex items-center gap-2">
+                                    <button @click="changePage(1)" :disabled="pagination.current_page === 1" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-left text-[10px]"></i></button>
+                                    <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-chevron-left text-[10px]"></i> <span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Prev</span></button>
+                                    
+                                    <div class="flex items-center gap-1 px-1">
+                                        <template x-for="page in getPageRange()" :key="page">
+                                            <button @click="page !== '...' && changePage(page)" 
+                                                :class="page === pagination.current_page ? 'bg-indigo-600 text-white shadow-lg border-indigo-600 scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-600'"
+                                                x-text="page" class="w-10 h-10 rounded-xl border text-[10px] font-black transition-all flex items-center justify-center"></button>
+                                        </template>
+                                    </div>
 
-                                <template x-for="page in getPageRange()" :key="page">
-                                    <button @click="typeof page === 'number' ? changePage(page) : null"
-                                        :class="page === pagination.current_page ? 'bg-indigo-600 text-white shadow-md' :
-                                            'hover:bg-gray-50 text-gray-600'"
-                                        class="px-3.5 py-1.5 text-xs font-bold rounded-md transition-all font-mono"
-                                        x-text="page">
-                                    </button>
-                                </template>
-
-                                <button @click="changePage(pagination.current_page + 1)"
-                                    :disabled="pagination.current_page === pagination.last_page"
-                                    class="px-3 py-1.5 text-xs font-bold rounded-md disabled:opacity-30 hover:bg-gray-50 transition-colors uppercase tracking-widest">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
+                                    <button @click="changePage(pagination.current_page + 1)" :disabled="pagination.current_page === pagination.last_page" class="px-3 h-10 flex items-center gap-2 rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><span class="text-[8px] font-black uppercase tracking-widest hidden sm:inline">Next</span> <i class="fas fa-chevron-right text-[10px]"></i></button>
+                                    <button @click="changePage(pagination.last_page)" :disabled="pagination.current_page === pagination.last_page" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 shadow-sm hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 transition-all"><i class="fas fa-angles-right text-[10px]"></i></button>
+                                </div>
+                            </div>
+                        </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
+            </div>
 
-                {{-- Right Column - Sticky Sidebar Filters --}}
+            {{-- Right Column - Sticky Sidebar Filters --}}
                 <div x-show="showSidebar" x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 translate-x-8" x-transition:enter-end="opacity-100 translate-x-0"
                     x-transition:leave="transition ease-in duration-200"
@@ -853,16 +836,22 @@
                                             'content'),
                                         'Accept': 'application/json',
                                         'Content-Type': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest'
                                     }
                                 });
 
                                 const result = await response.json();
-                                if (!result.success) {
-                                    medicine.is_active = original; // revert on failure
+                                if (!result.success) throw new Error(result.message);
+
+                                if (window.showSuccess) {
+                                    showSuccess(`${medicine.name} is now ${medicine.is_active ? 'Active' : 'Hidden'}`, 'Status Updated');
                                 }
                             } catch (error) {
-                                medicine.is_active = original; // revert on error
+                                medicine.is_active = original; // revert on failure
                                 console.error('Toggle status error:', error);
+                                if (window.showError) {
+                                    showError(error.message || 'Failed to update status', 'Update Failed');
+                                }
                             }
                         }
                     };

@@ -161,10 +161,10 @@
                             </span>
                             <div class="flex items-center gap-2">
                                 <button @click="confirmBulkAction('deactivate')"
-                                    class="px-3 py-1.5 bg-amber-500 shadow-lg shadow-amber-500/20 hover:bg-amber-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all px-4 cursor-pointer">Deactivate
+                                    class="px-3 py-1.5 bg-amber-500 shadow-lg shadow-amber-500/20 hover:bg-amber-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer">Deactivate
                                     Selection</button>
                                 <button @click="confirmBulkAction('activate')"
-                                    class="px-3 py-1.5 bg-emerald-500 shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all px-4 cursor-pointer">Activate
+                                    class="px-3 py-1.5 bg-emerald-500 shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer">Activate
                                     Selection</button>
                             </div>
                         </div>
@@ -323,18 +323,23 @@
                                             </td>
                                             <td class="px-5 border-b border-slate-50 transition-all text-center"
                                                 :class="density === 'condensed' ? 'py-2' : 'py-5'">
-                                                <div class="flex flex-col items-center gap-1">
-                                                    <button @click="toggleStatus(category)"
-                                                        class="relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none"
-                                                        :class="category.is_active ? 'bg-emerald-500' : 'bg-rose-500'">
-                                                        <span
-                                                            class="inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm"
-                                                            :class="category.is_active ? 'translate-x-6' : 'translate-x-1'"></span>
-                                                    </button>
-                                                    <div class="text-[9px] font-black uppercase tracking-widest"
-                                                        :class="category.is_active ? 'text-emerald-600' : 'text-rose-600'"
-                                                        x-text="category.is_active ? 'Active' : 'Inactive'"></div>
-                                                </div>
+                                                <button @click="toggleStatus(category)" 
+                                                    x-data="{ hover: false }" 
+                                                    @mouseenter="hover = true" 
+                                                    @mouseleave="hover = false"
+                                                    class="h-9 px-3 min-w-[100px] inline-flex items-center justify-center gap-2 rounded-xl transition-all shadow-sm border focus:outline-none group"
+                                                    :class="category.is_active ? 
+                                                        (hover ? 'bg-rose-50 text-rose-600 border-rose-100 shadow-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100') : 
+                                                        (hover ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100')"
+                                                    :title="category.is_active ? 'Deactivate Category' : 'Activate Category'">
+                                                    <div class="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                                                        :class="category.is_active ? 
+                                                            (hover ? 'bg-rose-500 animate-bounce' : 'bg-emerald-500 animate-pulse') : 
+                                                            (hover ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500')">
+                                                    </div>
+                                                    <span class="text-[9px] font-black uppercase tracking-widest transition-all duration-300"
+                                                        x-text="category.is_active ? (hover ? 'Deactivate' : 'Active') : (hover ? 'Activate' : 'Hidden')"></span>
+                                                </button>
                                             </td>
                                             <td class="px-5 border-b border-slate-50 transition-all text-center whitespace-nowrap"
                                                 :class="density === 'condensed' ? 'py-2' : 'py-5'">
@@ -535,7 +540,7 @@
                                 <button @click="filterStatus = ''; searchCategories()"
                                     :class="filterStatus === '' ?
                                         'bg-indigo-600 text-white shadow-lg shadow-indigo-200' :
-                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
                                     class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
                                     <span>Global Data</span>
                                     <i class="fas fa-globe-americas transition-opacity"
@@ -544,7 +549,7 @@
                                 <button @click="filterStatus = 'active'; searchCategories()"
                                     :class="filterStatus === 'active' ?
                                         'bg-emerald-600 text-white shadow-lg shadow-emerald-200' :
-                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
                                     class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
                                     <span>Authorized Only</span>
                                     <i class="fas fa-check-circle transition-opacity"
@@ -553,7 +558,7 @@
                                 <button @click="filterStatus = 'inactive'; searchCategories()"
                                     :class="filterStatus === 'inactive' ?
                                         'bg-gradient-to-r from-rose-600 to-rose-400 text-white shadow-lg shadow-rose-200' :
-                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100 border-transparent'"
+                                        'bg-slate-50 text-slate-600 hover:bg-slate-100 border-2 border-slate-100'"
                                     class="px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-left flex items-center justify-between group">
                                     <span>Locked Vaults</span>
                                     <i class="fas fa-lock transition-opacity"
@@ -723,7 +728,7 @@
                 <div x-show="showConfirmModal" x-transition:enter="ease-out duration-300"
                     x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                    class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
+                    class="relative inline-block px-4 pt-5 pb-4 overflow-hidden align-bottom transition-all transform bg-white rounded-3xl shadow-2xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6 text-center border border-slate-100">
                     <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-6"
                         :class="confirmConfig.type === 'danger' ? 'bg-rose-100 text-rose-600' :
                             'bg-indigo-100 text-indigo-600'">
@@ -929,7 +934,7 @@
                             to: data.to
                         };
                     } catch (error) {
-                        window.Notification.error('Failed to load categories catalog');
+                        window.showError('Failed to load categories catalog');
                     } finally {
                         this.loading = false;
                     }
@@ -1047,6 +1052,7 @@
                 },
 
                 async toggleStatus(category) {
+                    const originalStatus = category.is_active;
                     try {
                         const response = await fetch(`/pharmacy/medicine-categories/${category.id}/toggle-status`, {
                             method: 'POST',
@@ -1060,19 +1066,26 @@
                         const data = await response.json();
                         if (response.ok) {
                             category.is_active = data.is_active;
-                            window.Notification.success(data.message);
+                            if (window.showSuccess) {
+                                showSuccess(data.message || 'Status updated successfully', 'Success');
+                            }
                             this.fetchStats();
                         } else {
-                            window.Notification.error(data.message || 'Failed to update status');
+                            if (window.showError) {
+                                showError(data.message || 'Failed to update status', 'Error');
+                            }
                         }
                     } catch (error) {
-                        window.Notification.error('A network error occurred');
+                        console.error('Toggle status error:', error);
+                        if (window.showError) {
+                            showError('A network error occurred', 'Error');
+                        }
                     }
                 },
 
                 async saveCategory() {
                     if (!this.form.name) {
-                        window.Notification.warning('Please fill in required fields');
+                        window.showWarning('Please fill in required fields');
                         return;
                     }
 
@@ -1095,19 +1108,19 @@
                         const data = await response.json();
 
                         if (response.ok) {
-                            window.Notification.success(data.message);
+                            window.showSuccess(data.message);
                             this.closeAddModal();
                             await this.fetchCategories();
                             await this.fetchStats();
                         } else {
                             if (data.errors) {
-                                window.Notification.error(Object.values(data.errors)[0][0]);
+                                window.showError(Object.values(data.errors)[0][0]);
                             } else {
-                                window.Notification.error(data.message || 'Failed to save Category');
+                                window.showError(data.message || 'Failed to save Category');
                             }
                         }
                     } catch (error) {
-                        window.Notification.error('A network error occurred');
+                        window.showError('A network error occurred');
                     } finally {
                         this.saving = false;
                     }
@@ -1185,15 +1198,15 @@
                         });
 
                         if (response.ok) {
-                            window.Notification.success(`Successfully updated ${this.selectedIds.length} categories`);
+                            window.showSuccess(`Successfully updated ${this.selectedIds.length} categories`);
                             this.selectedIds = [];
                             await this.fetchCategories();
                             await this.fetchStats();
                         } else {
-                            window.Notification.error('Failed to perform bulk status update');
+                            window.showError('Failed to perform bulk status update');
                         }
                     } catch (error) {
-                        window.Notification.error('A network error occurred');
+                        window.showError('A network error occurred');
                     }
                 },
 
@@ -1212,15 +1225,15 @@
                         });
 
                         if (response.ok) {
-                            window.Notification.success(`Successfully purged ${this.selectedIds.length} categories`);
+                            window.showSuccess(`Successfully purged ${this.selectedIds.length} categories`);
                             this.selectedIds = [];
                             await this.fetchCategories();
                             await this.fetchStats();
                         } else {
-                            window.Notification.error('Failed to perform mass purge');
+                            window.showError('Failed to perform mass purge');
                         }
                     } catch (error) {
-                        window.Notification.error('A network error occurred');
+                        window.showError('A network error occurred');
                     }
                 },
 
@@ -1236,17 +1249,17 @@
                         });
 
                         if (response.ok) {
-                            window.Notification.success('Category purged successfully');
+                            window.showSuccess('Category purged successfully');
                             if (this.categories.length === 1 && this.pagination.current_page > 1) {
                                 this.pagination.current_page--;
                             }
                             await this.fetchCategories();
                             await this.fetchStats();
                         } else {
-                            window.Notification.error('Failed to purge Category');
+                            window.showError('Failed to purge Category');
                         }
                     } catch (error) {
-                        window.Notification.error('A network error occurred');
+                        window.showError('A network error occurred');
                     } finally {
                         this.dataToDelete = null;
                     }

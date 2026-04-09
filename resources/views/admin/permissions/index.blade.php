@@ -142,6 +142,19 @@
                             </select>
                         </div>
 
+                        <div class="flex items-center gap-1 bg-white border border-indigo-100 rounded-xl p-1 shadow-sm">
+                            <button @click="viewMode = 'table'"
+                                :class="viewMode === 'table' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Table View">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button @click="viewMode = 'grid'"
+                                :class="viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Grid View">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                        </div>
+
                         <button @click="openAddModal()"
                             class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
                             <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
@@ -463,20 +476,6 @@
                 {{-- Scrollable Content --}}
                 <div class="overflow-y-auto scrollbar-hide flex-1 space-y-5 p-5" style="scrollbar-width: none;">
                     
-                    {{-- Dynamic View Controller & Active Intelligence --}}
-                    <div class="space-y-4">
-                        <div class="flex items-center bg-slate-100 p-1.5 rounded-xl shadow-inner border border-slate-200/50">
-                    <button @click="viewMode = 'table'" 
-                        :class="viewMode === 'table' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
-                        class="flex-1 px-4 py-2 text-center rounded-lg text-[10px] font-black transition-all flex items-center justify-center gap-2 uppercase tracking-widest">
-                        <i class="fas fa-table"></i> Table
-                    </button>
-                    <button @click="viewMode = 'grid'"
-                        :class="viewMode === 'grid' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'"
-                        class="flex-1 px-4 py-2 text-center rounded-lg text-[10px] font-black transition-all flex items-center justify-center gap-2 uppercase tracking-widest">
-                        <i class="fas fa-th-large"></i> Grid
-                    </button>
-                </div>
 
                     <div x-show="hasActiveFilters()" class="space-y-2 pt-4 border-t border-slate-100">
                         <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Active Intelligence:</span>

@@ -29,18 +29,155 @@ class InventoryController extends Controller
     public function index(Request $request)
     {
         $categories = MedicineCategory::orderBy('name')->get();
-        
+
+        $medicines = Medicine::with('category')
+            ->where(function ($q) {
+                $q->where('branch_id', auth()->user()->current_branch_id)
+                  ->orWhere('is_global', true);
+            })
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'generic_name', 'brand', 'category_id']);
+
         $initialFilters = json_encode([
-            'category' => $request->get('category', 'All'),
-            'stock_status' => $request->get('stock_status', 'All'),
-            'sort_by' => $request->get('sort_by', 'expiry_date'),
+            'category'       => $request->get('category', 'All'),
+            'stock_status'   => $request->get('stock_status', 'All'),
+            'sort_by'        => $request->get('sort_by', 'expiry_date'),
             'sort_direction' => $request->get('sort_direction', 'asc'),
-            'length' => (int) $request->get('length', 16),
-            'search' => $request->get('search', ''),
-            'page' => (int) $request->get('page', 1)
+            'length'         => (int) $request->get('length', 16),
+            'search'         => $request->get('search', ''),
+            'page'           => (int) $request->get('page', 1),
         ]);
-        
-        return view('pharmacy.inventory.index', compact('categories', 'initialFilters'));
+
+        return view('pharmacy.inventory.index', compact('categories', 'medicines', 'initialFilters'));
+    }
+
+
+    /**
+     * Show Bulk Upload Wizard via Excel/CSV
+     */
+    public function bulkUploadForm()
+    {
+        // Get medicines for mapping (keyed by name in the Blade view)
+        $medicines = Medicine::where(function ($q) {
+            $q->where('branch_id', auth()->user()->current_branch_id)
+              ->orWhere('is_global', true);
+        })->where('is_active', true)->orderBy('name')->get(['id', 'name', 'generic_name']);
+
+        return view('pharmacy.inventory.bulk_upload', compact('medicines'));
+    }
+
+    /**
+     * Handle bulk JSON save from Alpine.js frontend
+     */
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'batches' => 'required|array|min:1',
+            'batches.*.medicine_id' => 'required|exists:medicines,id',
+            'batches.*.batch_number' => 'required|string',
+            'batches.*.expiry_date' => 'required|date',
+            'batches.*.sale_price' => 'required|numeric|min:0',
+            'batches.*.stock' => 'required|integer|min:1',
+        ]);
+
+        try {
+            \DB::beginTransaction();
+
+            foreach ($request->batches as $batchData) {
+                // Check if identical batch exists
+                $existing = MedicineBatch::where('medicine_id', $batchData['medicine_id'])
+                    ->where('batch_number', $batchData['batch_number'])
+                    ->where('branch_id', auth()->user()->current_branch_id)
+                    ->first();
+
+                if ($existing) {
+                    // Update stock — increment and log via service
+                    $this->inventoryService->addStock(
+                        $existing,
+                        (int) $batchData['stock'],
+                        auth()->id(),
+                        'Added via Bulk CSV upload. Remarks: ' . ($batchData['remarks'] ?? 'None')
+                    );
+                } else {
+                    $batch = MedicineBatch::create([
+                        'medicine_id' => $batchData['medicine_id'],
+                        'branch_id'   => auth()->user()->current_branch_id,
+                        'batch_number' => $batchData['batch_number'],
+                        'manufacture_date' => $batchData['manufacture_date'] ?? null,
+                        'expiry_date' => $batchData['expiry_date'],
+                        'unit_price'  => $batchData['unit_price'] ?? 0,
+                        'sale_price'  => $batchData['sale_price'],
+                        'stock'       => 0, // addStock will set the actual quantity
+                        'status'      => 'active',
+                        'is_active'   => true,
+                    ]);
+
+                    $this->inventoryService->addStock(
+                        $batch,
+                        (int) $batchData['stock'],
+                        auth()->id(),
+                        'Initial Stock via Bulk CSV upload. Remarks: ' . ($batchData['remarks'] ?? 'None')
+                    );
+                }
+            }
+
+            \DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully imported ' . count($request->batches) . ' batches.'
+            ]);
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Bulk Import Failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Download a CSV template for bulk upload
+     */
+    public function downloadCsvTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="inventory_bulk_template.csv"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $handle = fopen('php://output', 'w');
+            // CSV Header Row
+            fputcsv($handle, [
+                'medicine_name',
+                'batch_number',
+                'expiry_date',
+                'stock',
+                'sale_price',
+                'unit_price',
+                'manufacture_date',
+                'remarks',
+            ]);
+            // Example Row
+            fputcsv($handle, [
+                'Paracetamol 500mg',
+                'BATCH-2025-001',
+                '2027-12-31',
+                '100',
+                '50.00',
+                '40.00',
+                '2025-01-01',
+                'Initial stock',
+            ]);
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**
@@ -104,11 +241,22 @@ class InventoryController extends Controller
     /**
      * Show batch details
      */
-    public function showBatch(MedicineBatch $batch)
+    /**
+     * Show batch details (supports AJAX/JSON)
+     */
+    public function showBatch(Request $request, MedicineBatch $batch)
     {
-        $batch->load(['medicine', 'inventoryLogs.user' => function ($q) {
+        $batch->load(['medicine.category', 'inventoryLogs.user' => function ($q) {
             $q->latest();
         }]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'batch'   => $batch,
+                'logs'    => $batch->inventoryLogs
+            ]);
+        }
         
         return view('pharmacy.inventory.batch', compact('batch'));
     }
@@ -154,20 +302,39 @@ class InventoryController extends Controller
     }
 
     /**
-     * Adjust stock
+     * Adjust stock (supports both AJAX/JSON and classic form)
      */
     public function adjust(AdjustStockRequest $request, MedicineBatch $batch)
     {
-        $log = $this->inventoryService->adjustStock(
-            $batch,
-            $request->new_quantity,
-            auth()->id(),
-            $request->reason
-        );
-        
-        return redirect()
-            ->route('pharmacy.inventory.batch', $batch)
-            ->with('success', "Stock adjusted to {$request->new_quantity} units");
+        try {
+            $log = $this->inventoryService->adjustStock(
+                $batch,
+                $request->new_quantity,
+                auth()->id(),
+                $request->reason
+            );
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Stock adjusted to {$request->new_quantity} units.",
+                    'new_stock' => $request->new_quantity,
+                ]);
+            }
+
+            return redirect()
+                ->route('pharmacy.inventory.batch', $batch)
+                ->with('success', "Stock adjusted to {$request->new_quantity} units");
+
+        } catch (\Exception $e) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Adjust failed: ' . $e->getMessage(),
+                ], 500);
+            }
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
 
@@ -213,7 +380,11 @@ class InventoryController extends Controller
                       ->where('remaining_quantity', '>', 0);
             }
         }
-        
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('medicine_batches.is_active', $request->status === 'active' ? 1 : 0);
+        }
+
         // Sorting
         $sortBy = $request->get('sort_by', 'expiry_date');
         $sortDirection = $request->get('sort_direction', 'asc');
@@ -277,6 +448,7 @@ class InventoryController extends Controller
                 'is_about_to_expire' => $batch->expiry_date ? $batch->expiry_date->diffInDays(now()) <= 30 : false,
                 'unit_price' => number_format($batch->unit_price, 2),
                 'sale_price' => number_format($batch->sale_price, 2),
+                'is_active' => (bool)$batch->is_active,
                 'view_url' => route('pharmacy.inventory.batch', $batch->id),
                 'edit_url' => route('pharmacy.inventory.adjust-form', $batch->id),
             ];
@@ -315,5 +487,49 @@ class InventoryController extends Controller
             ->sum('remaining_quantity');
             
         return response()->json(['stock' => (int)$stock]);
+    }
+
+    /**
+     * Toggle batch status
+     */
+    public function toggleStatus(MedicineBatch $batch)
+    {
+        $batch->update([
+            'is_active' => !$batch->is_active
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Batch status updated successfully',
+            'is_active' => $batch->is_active
+        ]);
+    }
+
+    /**
+     * Update batch details via AJAX
+     */
+    public function update(Request $request, MedicineBatch $batch)
+    {
+        $validated = $request->validate([
+            'batch_number' => 'required|string|max:100',
+            'expiry_date' => 'required|date',
+            'unit_price' => 'required|numeric|min:0',
+            'sale_price' => 'required|numeric|min:0|gte:unit_price',
+        ]);
+
+        try {
+            $batch->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Batch updated successfully.',
+                'batch' => $batch->fresh()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Update failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

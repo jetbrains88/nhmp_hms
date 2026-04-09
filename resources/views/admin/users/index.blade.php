@@ -136,6 +136,19 @@
                                         <option value="100">100</option>
                                     </select>
                                 </div>
+                                
+                                <div class="flex items-center gap-1 bg-white border border-indigo-100 rounded-xl p-1 shadow-sm">
+                                    <button @click="viewMode = 'table'"
+                                        :class="viewMode === 'table' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Table View">
+                                        <i class="fas fa-list-ul"></i>
+                                    </button>
+                                    <button @click="viewMode = 'grid'"
+                                        :class="viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                        class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Grid View">
+                                        <i class="fas fa-th-large"></i>
+                                    </button>
+                                </div>
 
                                 <button @click="openAddModal()"
                                     class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
@@ -202,8 +215,10 @@
 
                     <!-- View Content (Table Area) -->
                     <div class="relative min-h-[400px]">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                        <!-- Table View -->
+                        <div x-show="viewMode === 'table'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
                                 <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
                                     <tr>
                                         <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('name')">
@@ -367,6 +382,65 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <!-- Grid View -->
+                    <div x-show="viewMode === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <template x-for="user in users" :key="user.id">
+                                <div class="group relative bg-white border-2 border-slate-100 rounded-[2.5rem] p-6 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 overflow-hidden">
+                                    <!-- Status Indicator -->
+                                    <div class="absolute top-6 right-6 flex items-center gap-2">
+                                        <span class="flex h-2.5 w-2.5 rounded-full" :class="user.is_active ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'"></span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest" :class="user.is_active ? 'text-emerald-600' : 'text-rose-600'" x-text="user.is_active ? 'Active' : 'Inactive'"></span>
+                                    </div>
+
+                                    <!-- User ID -->
+                                    <div class="absolute top-6 left-6 text-[10px] font-black text-slate-300 uppercase tracking-widest" x-text="'ID: ' + user.id"></div>
+
+                                    <div class="flex flex-col items-center text-center mt-6">
+                                        <!-- Avatar -->
+                                        <div class="relative group/avatar cursor-pointer mb-5">
+                                            <div class="absolute inset-0 bg-indigo-500 blur-2xl opacity-0 group-hover/avatar:opacity-20 transition-opacity duration-500 rounded-full"></div>
+                                            <div class="relative h-24 w-24 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-indigo-500/20 group-hover:scale-105 group-hover:rotate-3 transition-all duration-500 border-4 border-white" x-text="getInitials(user.name)"></div>
+                                        </div>
+
+                                        <!-- Name & Meta -->
+                                        <h3 class="text-xl font-black text-slate-800 leading-tight mb-1 line-clamp-1" x-text="user.name"></h3>
+                                        <div class="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-4">
+                                            <i class="fas fa-envelope text-[8px]"></i>
+                                            <span x-text="user.email" class="truncate max-w-[180px]"></span>
+                                        </div>
+
+                                        <!-- Role Badges -->
+                                        <div class="flex flex-wrap justify-center gap-2 mb-8">
+                                            <template x-for="role in user.roles" :key="role.id">
+                                                <span class="px-3 py-1 bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm hover:border-indigo-300 transition-colors" x-text="role.display_name || role.name"></span>
+                                            </template>
+                                            <span x-show="!user.roles || user.roles.length === 0" class="text-[10px] font-black text-slate-300 uppercase italic">No roles assigned</span>
+                                        </div>
+
+                                        <!-- Actions Footer -->
+                                        <div class="w-full pt-6 border-t border-slate-50 flex items-center justify-center gap-2">
+                                            <a :href="`/admin/users/${user.uuid}`" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-indigo-600 hover:text-white transition-all duration-300 group/btn shadow-sm" title="View Profile">
+                                                <i class="fas fa-eye text-sm group-hover/btn:scale-110 transition-transform"></i>
+                                            </a>
+                                            <button @click="editUser(user)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all duration-300 group/btn shadow-sm" title="Edit System Settings">
+                                                <i class="fas fa-edit text-sm group-hover/btn:scale-110 transition-transform"></i>
+                                            </button>
+                                            <button @click="openPermissionsModal(user)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-emerald-600 hover:text-white transition-all duration-300 group/btn shadow-sm" title="Manage Permissions">
+                                                <i class="fas fa-shield-alt text-sm group-hover/btn:scale-110 transition-transform"></i>
+                                            </button>
+                                            <div class="w-[1px] h-6 bg-slate-100 mx-1"></div>
+                                            <button @click="confirmDelete(user)" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 text-rose-400 hover:bg-rose-600 hover:text-white transition-all duration-300 group/btn shadow-sm" title="Terminate Account">
+                                                <i class="fas fa-trash-alt text-sm group-hover/btn:scale-110 transition-transform"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
 
                         <!-- Loading State -->
                         <div x-show="loading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 transition-all rounded-b-3xl">
@@ -595,6 +669,7 @@
                 processingDeactivate: false,
 
                 // UI states
+                viewMode: 'table',
                 changePassword: false,
                 showSidebar: false,
                 filterStatus: '',

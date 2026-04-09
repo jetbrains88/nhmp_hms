@@ -451,15 +451,22 @@ Route::middleware(['auth', 'branch.context', 'role:pharmacy'])->prefix('pharmacy
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory');
     Route::get('/inventory/list', [InventoryController::class, 'inventoryList'])->name('inventory.list');
     Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+    Route::get('/inventory/bulk-upload', [InventoryController::class, 'bulkUploadForm'])->name('inventory.bulk-upload-form');
+    Route::post('/inventory/bulk-upload', [InventoryController::class, 'bulkUpload'])->name('inventory.bulk-upload');
+    Route::get('/inventory/bulk-upload/template', [InventoryController::class, 'downloadCsvTemplate'])->name('inventory.bulk-upload-template');
     Route::get('/inventory/{medicine}/stock', [InventoryController::class, 'medicineStock'])->name('inventory.stock');
     Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
     Route::get('/inventory/batch/{batch}', [InventoryController::class, 'showBatch'])->name('inventory.batch');
     Route::post('/inventory/batch/{batch}/add-stock', [InventoryController::class, 'addStock'])
         ->name('inventory.add-stock');
-    Route::get('/inventory/batch/{batch}/adjust', [InventoryController::class, 'adjustForm'])
-        ->name('inventory.adjust-form');
+    Route::patch('/inventory/batch/{batch}/toggle-status', [InventoryController::class, 'toggleStatus'])
+        ->name('inventory.batch.toggle-status');
     Route::post('/inventory/batch/{batch}/adjust', [InventoryController::class, 'adjust'])
         ->name('inventory.adjust');
+    Route::get('/inventory/batch/{batch}/adjust', [InventoryController::class, 'adjustForm'])
+        ->name('inventory.adjust-form');
+    Route::patch('/inventory/batch/{batch}', [InventoryController::class, 'update'])
+        ->name('inventory.batch.update');
     Route::get('/inventory/transfer/{batch}', [InventoryController::class, 'transferForm'])
         ->name('inventory.transfer-form');
     Route::post('/inventory/transfer', [InventoryController::class, 'transfer'])

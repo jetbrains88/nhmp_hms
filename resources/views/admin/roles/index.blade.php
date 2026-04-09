@@ -138,6 +138,19 @@
                             </select>
                         </div>
 
+                        <div class="flex items-center gap-1 bg-white border border-indigo-100 rounded-xl p-1 shadow-sm">
+                            <button @click="viewMode = 'table'"
+                                :class="viewMode === 'table' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Table View">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button @click="viewMode = 'grid'"
+                                :class="viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Grid View">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                        </div>
+
                         <a href="{{ route('admin.roles.create') }}"
                             class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
                             <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
@@ -158,10 +171,12 @@
                 </div>
             </div>
 
-                {{-- View Content --}}
+                <!-- View Content -->
                 <div class="relative min-h-[400px]">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+                    <!-- Table View -->
+                    <div x-show="viewMode === 'table'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
                             <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
                                 <tr>
                                     <th class="px-5 py-5 text-left " >
@@ -252,6 +267,66 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <!-- Grid View -->
+                <div x-show="viewMode === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <template x-for="role in roles" :key="role.id">
+                            <div class="group relative bg-white border-2 border-slate-100 rounded-[2.5rem] p-6 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 overflow-hidden">
+                                <!-- Status Indicator -->
+                                <div class="absolute top-6 right-6 flex items-center gap-2">
+                                    <span class="flex h-2.5 w-2.5 rounded-full" :class="role.is_active ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'"></span>
+                                    <span class="text-[9px] font-black uppercase tracking-widest" :class="role.is_active ? 'text-emerald-600' : 'text-rose-600'" x-text="role.is_active ? 'Active' : 'Inactive'"></span>
+                                </div>
+
+                                <!-- Role ID -->
+                                <div class="absolute top-6 left-6 text-[10px] font-black text-slate-300 uppercase tracking-widest" x-text="'ID: ' + role.id"></div>
+
+                                <div class="flex flex-col items-center text-center mt-6">
+                                    <!-- Icon -->
+                                    <div class="relative group/icon cursor-pointer mb-5">
+                                        <div class="absolute inset-0 bg-indigo-500 blur-2xl opacity-0 group-hover/icon:opacity-20 transition-opacity duration-500 rounded-full"></div>
+                                        <div class="relative h-20 w-20 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white text-2xl shadow-xl shadow-indigo-500/20 group-hover:scale-105 group-hover:rotate-3 transition-all duration-500 border-4 border-white">
+                                            <i class="fas" :class="getRoleIcon(role.name)"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Name & Meta -->
+                                    <h3 class="text-xl font-black text-slate-800 leading-tight mb-1" x-text="role.display_name"></h3>
+                                    <div class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-4" x-text="role.name"></div>
+
+                                    <!-- Permission Count -->
+                                    <div class="bg-slate-50 border border-slate-100 rounded-2xl px-4 py-2 mb-6">
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Security Level:</span>
+                                        <div class="flex items-center gap-2 justify-center mt-1">
+                                            <i class="fas fa-shield-alt text-indigo-500 text-xs"></i>
+                                            <span class="text-sm font-black text-slate-800" x-text="role.permissions.length + ' Nodes'"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Actions Footer -->
+                                    <div class="w-full pt-6 border-t border-slate-50 flex items-center justify-center gap-2">
+                                        <a :href="'{{ route('admin.roles.edit', 'role_id') }}'.replace('role_id', role.id)" class="px-5 py-2.5 bg-slate-50 text-slate-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex items-center gap-2 group/btn">
+                                            <i class="fas fa-edit group-hover/btn:scale-110 transition-transform"></i>
+                                            Modify
+                                        </a>
+                                        <template x-if="role.id > 5">
+                                            <button @click="confirmDelete(role)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-rose-400 hover:bg-rose-600 hover:text-white transition-all shadow-sm">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </template>
+                                        <template x-if="role.id <= 5">
+                                            <div class="px-3 h-10 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-slate-400 text-[8px] font-black uppercase tracking-tighter">
+                                                Protected
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
 
                     {{-- Loading State --}}
                     <div x-show="loading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 transition-all">
@@ -460,6 +535,7 @@
         return {
             roles: [],
             loading: false,
+            viewMode: 'table',
             sortField: 'id',
             sortDirection: 'desc',
             saving: false,

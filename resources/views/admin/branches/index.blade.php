@@ -125,6 +125,19 @@
                             </select>
                         </div>
 
+                        <div class="flex items-center gap-1 bg-white border border-indigo-100 rounded-xl p-1 shadow-sm">
+                            <button @click="viewMode = 'table'"
+                                :class="viewMode === 'table' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Table View">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button @click="viewMode = 'grid'"
+                                :class="viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-indigo-600'"
+                                class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Grid View">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                        </div>
+
                         <button @click="openAddModal()"
                             class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/40 transition-all active:scale-95 group">
                             <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
@@ -144,10 +157,12 @@
                 </div>
             </div>
 
-            {{-- View Content --}}
+            <!-- View Content -->
             <div class="relative min-h-[400px]">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
+                <!-- Table View -->
+                <div x-show="viewMode === 'table'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
                         <thead class="bg-gradient-to-r from-indigo-100 to-indigo-100 border-b-2 border-indigo-200/50">
                             <tr>
                                 <th class="px-5 py-5 text-left cursor-pointer group hover:bg-slate-50 transition-colors" @click="sortBy('branch_id')">
@@ -259,6 +274,76 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <!-- Grid View -->
+            <div x-show="viewMode === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <template x-for="branch in branches" :key="branch.id">
+                        <div class="group relative bg-white border-2 border-slate-100 rounded-[2.5rem] p-6 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 overflow-hidden">
+                            <!-- Status Indicator -->
+                            <div class="absolute top-6 right-6 flex items-center gap-3">
+                                <button @click="toggleBranchStatus(branch)"
+                                        class="relative inline-flex items-center h-5 w-10 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none"
+                                        :class="branch.is_active ? 'bg-emerald-500' : 'bg-slate-200'">
+                                    <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200"
+                                          :class="branch.is_active ? 'translate-x-5' : 'translate-x-0'"></span>
+                                </button>
+                                <span class="text-[9px] font-black uppercase tracking-widest" :class="branch.is_active ? 'text-emerald-600' : 'text-slate-400'" x-text="branch.is_active ? 'Online' : 'Offline'"></span>
+                            </div>
+
+                            <!-- Branch Type -->
+                            <div class="absolute top-6 left-6 flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded text-[9px] font-black uppercase tracking-widest" x-text="branch.type"></span>
+                                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest" x-text="'ID: ' + branch.id"></span>
+                            </div>
+
+                            <div class="flex flex-col items-center text-center mt-8">
+                                <!-- Icon/Logo -->
+                                <div class="relative group/icon cursor-pointer mb-5">
+                                    <div class="absolute inset-0 bg-indigo-500 blur-2xl opacity-0 group-hover/icon:opacity-20 transition-opacity duration-500 rounded-full"></div>
+                                    <div class="relative h-20 w-20 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white text-2xl shadow-xl shadow-indigo-500/20 group-hover:scale-105 group-hover:rotate-3 transition-all duration-500 border-4 border-white">
+                                        <i class="fas fa-hospital"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Name & Location -->
+                                <h3 class="text-xl font-black text-slate-800 leading-tight mb-1" x-text="branch.name"></h3>
+                                <div class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">
+                                    <i class="fas fa-map-marker-alt text-amber-500 text-[8px]"></i>
+                                    <span x-text="branch.location || 'Headquarters'"></span>
+                                </div>
+
+                                <!-- Staff Badge -->
+                                <div class="bg-indigo-50 border border-indigo-100 rounded-2xl px-6 py-2 mb-8 flex items-center gap-3">
+                                    <div class="flex -space-x-2">
+                                        <div class="w-6 h-6 rounded-full border-2 border-white bg-indigo-200"></div>
+                                        <div class="w-6 h-6 rounded-full border-2 border-white bg-indigo-300"></div>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none" x-text="(branch.users?.length || 0) + ' Personnel'"></div>
+                                        <div class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.1em]">Active Staff</div>
+                                    </div>
+                                </div>
+
+                                <!-- Actions Footer -->
+                                <div class="w-full pt-6 border-t border-slate-50 flex items-center justify-center gap-2">
+                                    <a :href="`/admin/branches/${branch.id}`" class="px-5 py-2.5 bg-slate-50 text-slate-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all shadow-sm flex items-center gap-2 group/btn">
+                                        <i class="fas fa-search-plus group-hover/btn:scale-110 transition-transform"></i>
+                                        Inspect
+                                    </a>
+                                    <button @click="editBranch(branch)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button @click="confirmArchive(branch)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-rose-400 hover:bg-rose-600 hover:text-white transition-all shadow-sm">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
 
                 {{-- Loading State --}}
                 <div x-show="loading" class="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 transition-all">
@@ -437,6 +522,7 @@ function branchManagement(availableOffices = []) {
         branches: [],
         stats: {},
         loading: false,
+        viewMode: 'table',
         sortField: 'id',
         sortDirection: 'desc',
         saving: false,

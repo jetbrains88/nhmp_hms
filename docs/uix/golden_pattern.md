@@ -65,9 +65,15 @@ This document defines the **"Golden Pattern"** for the Hospital Management Syste
 
 ### 🛠️ View Management
 
-- **Switchers**: Premium toggle for `List View` vs `Card/Grid View`.
+- **Dual View Toggle**: **Required** for every module that offers both "Table/List" and "Grid/Card" views.
+  - **Structure**: A small `p-1` container with `rounded-xl`, `bg-white`, and `border-indigo-100`.
+  - **Buttons**: Two `w-9 h-9` buttons with `rounded-lg` and `transition-all`.
+  - **Active State**: Use `bg-indigo-600 text-white shadow-md` for the active mode.
+  - **Inactive State**: Use `text-slate-400 hover:text-indigo-600`.
+- **Switchers**: Premium toggle for `List View` vs `Card/Grid View` (as defined above).
 - **Density**: Local `condensed` vs `spacious` toggle for tables.
-- **Status Toggles**: Standardized Alpine.js switches with vibrant color transitions (Emerald for ON, Slate for OFF).
+- **Status Toggles**: Standardized Alpine.js switches with vibrant color transitions (Emerald for ON, Rose for OFF). 
+  - **Predictive Interaction**: Must include `@mouseenter`/`@mouseleave` logic to show the target action (e.g., "Active" → hover → "Hide").
 
 ### ⏳ Loading & Feedback
 
@@ -77,9 +83,24 @@ This document defines the **"Golden Pattern"** for the Hospital Management Syste
 
 ---
 
-## 💎 5. Premium Details (The "Wow" Factor)
+---
 
-- **Icons**: Always wrapped in a container (e.g., `w-12 h-12 rounded-xl bg-blue-50 text-blue-600 shadow-inner`).
-- **Footer**: Balanced, justified, and containing system metadata (Branch, Version, Server Status).
-- **Placeholders**: Never use generic text; use `fas fa-search` or related imagery for empty states.
-- **Scrollbars**: Custom thin, rounded scrollbars (`w-1`, `rounded-full`) that vanish when not in use.
+## 💎 5. Premium Components (The Standard)
+
+### 📈 5.1 Stats Cards (Floating Icon Model)
+- **Container**: `relative flex flex-col bg-gradient-to-br from-[color]-50 to-[color]-100 rounded-2xl shadow-lg border border-[color]-200`.
+- **Icon**: `absolute -top-6 left-4 h-14 w-14 rounded-xl bg-gradient-to-tr from-[color]-600 to-[color]-400 shadow-lg shadow-[color]-900/20 border border-[color]-300`.
+- **Interactivity**: `hover:-translate-y-2 transition-all duration-300 group cursor-pointer`.
+- **Feedback**: A bottom-border indicator with a `h-1.5 w-1.5 rounded-full animate-pulse` dot.
+
+### 🔄 5.2 Status Toggles (Predictive)
+- **Logic**: Use `x-data="{ hover: false }"` to track interaction.
+- **Labels**: 
+    - `is_active && !hover`: "Active"
+    - `is_active && hover`: "Hide" or "Deactivate"
+    - `!is_active && !hover`: "Hidden" or "Inactive"
+    - `!is_active && hover`: "Show" or "Activate"
+
+---
+
+## 💎 6. Final Details (The "Wow" Factor)

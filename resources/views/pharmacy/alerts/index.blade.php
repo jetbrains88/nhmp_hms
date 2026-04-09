@@ -29,7 +29,7 @@
          STATS CARDS - Vibrant Premium Style
     ═══════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 gap-y-10 mt-4">
-        <!-- Total Active Alerts Card -->
+        {{-- Total Active Alerts Card (Rose) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-rose-50 to-red-50 rounded-2xl shadow-lg shadow-rose-500/10 border border-rose-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="setFilter('active')">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-rose-600 to-red-500 shadow-lg shadow-rose-900/20 border border-rose-300 group-hover:scale-110 transition-transform duration-300">
@@ -37,7 +37,7 @@
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-[10px] font-black tracking-widest text-rose-500 uppercase opacity-70">Total Active</p>
-                <h4 class="text-3xl font-black text-rose-700 drop-shadow-sm font-mono" x-text="stats.total_active ?? 0">0</h4>
+                <h4 class="text-3xl font-black text-rose-700 drop-shadow-sm font-mono" x-text="stats.total_active ?? 0"></h4>
             </div>
             <div class="mx-4 mb-4 border-t border-rose-100 pt-2">
                 <div class="flex items-center gap-2">
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <!-- Low Stock Card -->
+        {{-- Low Stock Card (Amber) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg shadow-amber-500/10 border border-amber-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="setAlertTypeFilter('low_stock')">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 shadow-lg shadow-amber-900/20 border border-amber-300 group-hover:scale-110 transition-transform duration-300">
@@ -55,7 +55,7 @@
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-[10px] font-black tracking-widest text-amber-500 uppercase opacity-70">Low Stock</p>
-                <h4 class="text-3xl font-black text-amber-700 drop-shadow-sm font-mono" x-text="stats.low_stock ?? 0">0</h4>
+                <h4 class="text-3xl font-black text-amber-700 drop-shadow-sm font-mono" x-text="stats.low_stock ?? 0"></h4>
             </div>
             <div class="mx-4 mb-4 border-t border-amber-100 pt-2">
                 <div class="flex items-center gap-2">
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <!-- Out of Stock Card -->
+        {{-- Out of Stock Card (Red) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl shadow-lg shadow-red-500/10 border border-red-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="setAlertTypeFilter('out_of_stock')">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 shadow-lg shadow-red-900/20 border border-red-300 group-hover:scale-110 transition-transform duration-300">
@@ -73,7 +73,7 @@
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-[10px] font-black tracking-widest text-red-500 uppercase opacity-70">Out Of Stock</p>
-                <h4 class="text-3xl font-black text-red-700 drop-shadow-sm font-mono" x-text="stats.out_of_stock ?? 0">0</h4>
+                <h4 class="text-3xl font-black text-red-700 drop-shadow-sm font-mono" x-text="stats.out_of_stock ?? 0"></h4>
             </div>
             <div class="mx-4 mb-4 border-t border-red-100 pt-2">
                 <div class="flex items-center gap-2">
@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <!-- Expiring Soon Card -->
+        {{-- Expiring Soon Card (Purple) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl shadow-lg shadow-purple-500/10 border border-purple-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="setAlertTypeFilter('expiring_soon')">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 shadow-lg shadow-purple-900/20 border border-purple-300 group-hover:scale-110 transition-transform duration-300">
@@ -91,7 +91,7 @@
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-[10px] font-black tracking-widest text-purple-500 uppercase opacity-70">Expiring Soon</p>
-                <h4 class="text-3xl font-black text-purple-700 drop-shadow-sm font-mono" x-text="stats.expiring_soon ?? 0">0</h4>
+                <h4 class="text-3xl font-black text-purple-700 drop-shadow-sm font-mono" x-text="stats.expiring_soon ?? 0"></h4>
             </div>
             <div class="mx-4 mb-4 border-t border-purple-100 pt-2">
                 <div class="flex items-center gap-2">
@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <!-- Resolved Card -->
+        {{-- Resolved Card (Emerald) --}}
         <div class="relative flex flex-col bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg shadow-emerald-500/10 border border-emerald-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
              @click="setFilter('resolved')">
             <div class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 shadow-lg shadow-emerald-900/20 border border-emerald-300 group-hover:scale-110 transition-transform duration-300">
@@ -109,7 +109,7 @@
             </div>
             <div class="p-4 text-right pt-4">
                 <p class="text-[10px] font-black tracking-widest text-emerald-500 uppercase opacity-70">Resolved</p>
-                <h4 class="text-3xl font-black text-emerald-700 drop-shadow-sm font-mono" x-text="stats.total_resolved ?? 0">0</h4>
+                <h4 class="text-3xl font-black text-emerald-700 drop-shadow-sm font-mono" x-text="stats.total_resolved ?? 0"></h4>
             </div>
             <div class="mx-4 mb-4 border-t border-emerald-100 pt-2">
                 <div class="flex items-center gap-2">
@@ -126,7 +126,7 @@
     <div class="mt-8 grid lg:grid-cols-12 gap-6 items-start">
 
         {{-- Left Column - Table Container --}}
-        <div class="space-y-6 transition-all duration-300" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
+        <div class="space-y-6 transition-all duration-500" :class="showSidebar ? 'lg:col-span-9' : 'lg:col-span-12'">
             <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-500 flex flex-col">
             
                 {{-- Panel Header --}}
@@ -156,6 +156,19 @@
                                     <option value="50">50 Per Page</option>
                                     <option value="100">100 Per Page</option>
                                 </select>
+                            </div>
+
+                            <div class="flex items-center gap-1 bg-white border border-rose-100 rounded-xl p-1 shadow-sm">
+                                <button @click="viewMode = 'table'"
+                                    :class="viewMode === 'table' ? 'bg-rose-600 text-white shadow-md' : 'text-slate-400 hover:text-rose-600'"
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Table View">
+                                    <i class="fas fa-list-ul"></i>
+                                </button>
+                                <button @click="viewMode = 'grid'"
+                                    :class="viewMode === 'grid' ? 'bg-rose-600 text-white shadow-md' : 'text-slate-400 hover:text-rose-600'"
+                                    class="w-9 h-9 flex items-center justify-center rounded-lg transition-all" title="Grid View">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
                             </div>
 
                             <button @click="fetchAlerts()" 
@@ -190,7 +203,7 @@
                     </button>
                 </div>
 
-                {{-- View Content --}}
+                <!-- View Content -->
                 <div class="relative min-h-[400px]">
                     <div x-show="loading" class="absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl">
                         <div class="flex flex-col items-center gap-3">
@@ -198,9 +211,12 @@
                             <p class="text-[10px] font-black text-rose-600 uppercase tracking-widest animate-pulse">Syncing Data...</p>
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse" :class="density === 'condensed' ? 'condensed-table' : 'spacious-table'">
-                            <thead class="bg-white border-b border-rose-100">
+
+                    <!-- Table View -->
+                    <div x-show="viewMode === 'table'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse" :class="density === 'condensed' ? 'condensed-table' : 'spacious-table'">
+                                <thead class="bg-white border-b border-rose-100">
                                 <tr>
                                     <th class="px-5 py-4 w-12 text-center">
                                         <input type="checkbox" @change="toggleSelectAll" :checked="selectedAlerts.length === data.data?.length && data.data?.length > 0"
@@ -327,7 +343,76 @@
                     </div>
                 </div>
 
-                {{-- Pagination Footer --}}
+                <!-- Grid View -->
+                <div x-show="viewMode === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="alert in data.data" :key="alert.id">
+                            <div class="group relative bg-white border-2 border-slate-100 rounded-[2.5rem] p-6 hover:border-rose-500 hover:shadow-2xl hover:shadow-rose-500/10 transition-all duration-500 overflow-hidden">
+                                <!-- Banner Side -->
+                                <div class="absolute top-0 right-0 bottom-0 w-1.5" :class="alert.alert_type === 'out_of_stock' ? 'bg-red-600' : (alert.alert_type === 'low_stock' ? 'bg-amber-500' : 'bg-purple-600')"></div>
+                                
+                                <!-- Select Checkbox -->
+                                <div class="absolute top-6 left-6">
+                                    <input type="checkbox" :value="alert.id" x-model="selectedAlerts" class="w-6 h-6 rounded-lg border-slate-200 text-rose-600 focus:ring-rose-500 cursor-pointer shadow-sm">
+                                </div>
+
+                                <!-- Date Header -->
+                                <div class="text-right mb-6">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest" x-text="formatDate(alert.created_at)"></span>
+                                    <div class="text-[9px] font-bold text-rose-400 mt-0.5" x-text="formatTime(alert.created_at)"></div>
+                                </div>
+
+                                <div class="flex flex-col items-center text-center">
+                                    <!-- Icon -->
+                                    <div class="relative group/avatar cursor-pointer mb-5">
+                                        <div class="absolute inset-0 bg-rose-500 blur-2xl opacity-0 group-hover/avatar:opacity-20 transition-opacity duration-500 rounded-full"></div>
+                                        <div class="relative h-20 w-20 rounded-[2rem] bg-gradient-to-br flex items-center justify-center text-white text-2xl shadow-xl shadow-rose-500/20 group-hover:scale-105 group-hover:rotate-3 transition-all duration-500 border-4 border-white"
+                                             :class="alert.alert_type === 'out_of_stock' ? 'from-red-600 to-rose-700' : (alert.alert_type === 'low_stock' ? 'from-amber-500 to-orange-600' : 'from-purple-600 to-indigo-700')">
+                                            <i class="fas" :class="alert.alert_type === 'low_stock' ? 'fa-boxes' : (alert.alert_type === 'out_of_stock' ? 'fa-times' : 'fa-calendar')"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Medicine Name -->
+                                    <h3 class="text-xl font-black text-slate-800 leading-tight mb-2 uppercase tracking-tight" x-text="alert.medicine?.name"></h3>
+                                    
+                                    <!-- Alert Type Badge -->
+                                    <div class="mb-6 flex flex-col items-center gap-1.5">
+                                        <span x-show="alert.alert_type === 'low_stock'" class="px-4 py-1.5 rounded-xl bg-amber-50 text-amber-700 text-[10px] font-black uppercase tracking-widest border border-amber-100">Low Stock Threshold</span>
+                                        <span x-show="alert.alert_type === 'out_of_stock'" class="px-4 py-1.5 rounded-xl bg-red-50 text-red-700 text-[10px] font-black uppercase tracking-widest border border-red-100 animate-pulse">Critical Depletion</span>
+                                        <span x-show="alert.alert_type === 'expiring_soon'" class="px-4 py-1.5 rounded-xl bg-purple-50 text-purple-700 text-[10px] font-black uppercase tracking-widest border border-purple-100">Expiration Threat</span>
+                                        
+                                        <!-- Detail Description -->
+                                        <div class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+                                            <template x-if="alert.alert_type === 'low_stock'">
+                                                <span>Unit Level: <span class="text-slate-800" x-text="alert.medicine?.stock ?? 0"></span></span>
+                                            </template>
+                                            <template x-if="alert.alert_type === 'out_of_stock'">
+                                                <span>Zero Balance Alert</span>
+                                            </template>
+                                            <template x-if="alert.alert_type === 'expiring_soon'">
+                                                <span x-text="getDaysUntilExpiry(alert.medicine?.expiry_date)"></span>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- Actions Footer -->
+                                    <div class="w-full pt-6 border-t border-slate-50 flex items-center justify-center gap-2">
+                                        <button x-show="!alert.is_resolved" @click="openResolveModal(alert)" class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all shadow-sm flex items-center gap-2 group/btn">
+                                            <i class="fas fa-check-circle group-hover/btn:scale-110 transition-transform"></i>
+                                            Resolve
+                                        </button>
+                                        <a :href="`/pharmacy/medicines/${alert.medicine_id}`" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-blue-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+                                            <i class="fas fa-eye text-xs"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Pagination Footer --}}
                 <div x-show="!loading && data.data?.length > 0" class="p-6 bg-slate-50 border-t border-slate-100 rounded-b-3xl">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
@@ -357,8 +442,14 @@
         </div>
 
         {{-- Right Column - Sticky Sidebar --}}
-        <div class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto pr-2" 
-             x-show="showSidebar" x-transition.opacity>
+        <div x-show="showSidebar" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-x-8" 
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-x-0" 
+             x-transition:leave-end="opacity-0 translate-x-8"
+             class="lg:col-span-3 sticky top-8 max-h-[calc(100vh-100px)] overflow-y-auto pr-2 custom-scrollbar">
             
             <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden flex flex-col">
                 <div class="p-6 border-b border-slate-50 bg-gradient-to-br from-slate-50 to-white flex items-center justify-between">
@@ -467,6 +558,7 @@ function stockAlerts() {
         // State
         showSidebar: false,
         loading: false,
+        viewMode: 'table',
         density: 'spacious',
         showResolveModal: false,
         showBulkResolveModal: false,
@@ -668,14 +760,10 @@ function stockAlerts() {
         },
 
         notify(message, type) {
-            if (window.Notification) {
-                if (type === 'success') window.Notification.success(message);
-                else if (type === 'error') window.Notification.error(message);
-                else window.Notification.info(message);
-            } else if (window.showNotification) {
-                window.showNotification(message, type);
+            if (type === 'success') {
+                window.showSuccess(message);
             } else {
-                alert(message);
+                window.showError(message);
             }
         }
     }
