@@ -42,9 +42,10 @@ class MedicineController extends Controller
         }
         
         $medicines = $query->paginate(15);
-        $categories = MedicineCategory::where('is_active', true)->get();
+        $categories = MedicineCategory::where('is_active', true)->orderBy('name')->get();
+        $forms = MedicineForm::orderBy('name')->get();
         
-        return view('pharmacy.medicines.index', compact('medicines', 'categories'));
+        return view('pharmacy.medicines.index', compact('medicines', 'categories', 'forms'));
     }
 
     /**
@@ -73,6 +74,14 @@ class MedicineController extends Controller
         
         $medicine = Medicine::create($data);
         
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Medicine added successfully',
+                'medicine' => $medicine
+            ]);
+        }
+        
         return redirect()
             ->route('pharmacy.medicines.show', $medicine)
             ->with('success', 'Medicine added successfully');
@@ -89,6 +98,15 @@ class MedicineController extends Controller
         }]);
         
         $totalStock = $medicine->batches->sum('remaining_quantity');
+        
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'medicine' => $medicine,
+                'totalStock' => $totalStock,
+                'batches' => $medicine->batches
+            ]);
+        }
         
         return view('pharmacy.medicines.show', compact('medicine', 'totalStock'));
     }
@@ -107,6 +125,14 @@ class MedicineController extends Controller
     public function update(StoreMedicineRequest $request, Medicine $medicine)
     {
         $medicine->update($request->validated());
+        
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Medicine updated successfully',
+                'medicine' => $medicine->fresh()
+            ]);
+        }
         
         return redirect()
             ->route('pharmacy.medicines.show', $medicine)
@@ -213,13 +239,19 @@ class MedicineController extends Controller
                 'generic_name' => $medicine->generic_name,
                 'brand' => $medicine->brand,
                 'manufacturer' => $medicine->manufacturer ?? 'N/A',
+                'category_id' => $medicine->category_id,
                 'category_name' => $medicine->category?->name ?? 'N/A',
+                'form_id' => $medicine->form_id,
                 'form_name' => $medicine->form?->name ?? 'N/A',
+                'strength_value' => $medicine->strength_value,
+                'strength_unit' => $medicine->strength_unit,
+                'description' => $medicine->description,
                 'total_stock' => (int)$totalStock,
                 'unit' => $medicine->unit,
                 'reorder_level' => (int)$medicine->reorder_level,
                 'requires_prescription' => (bool)$medicine->requires_prescription,
                 'is_active' => (bool)$medicine->is_active,
+                'is_global' => (bool)$medicine->is_global,
                 'view_url' => route('pharmacy.medicines.show', $medicine->id),
                 'edit_url' => route('pharmacy.medicines.edit', $medicine->id),
                 'delete_url' => route('pharmacy.medicines.destroy', $medicine->id),

@@ -13,7 +13,7 @@
             <div class="relative flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-lg shadow-blue-500/10 border border-blue-200 hover:-translate-y-2 transition-all duration-300 group cursor-pointer"
                 @click="setFilter('stock_status', 'All')">
                 <div
-                    class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-400 shadow-lg shadow-blue-900/20 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
+                    class="absolute -top-6 left-4 h-14 w-14 grid place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 shadow-lg shadow-blue-900/20 border border-blue-300 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-boxes text-xl text-white drop-shadow-md"></i>
                 </div>
                 <div class="p-4 text-right pt-4">
@@ -97,11 +97,13 @@
         </div>
         {{-- Floating Filter Toggle --}}
         <button @click="showSidebar = true" x-show="!showSidebar"
-            class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-white text-indigo-600 p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(99,102,241,0.2)] hover:pr-4 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-100 group cursor-pointer"
+            class="fixed top-1/2 right-0 -translate-y-1/2 z-40 bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-2.5 py-6 rounded-l-2xl shadow-[-10px_0_30px_-10px_rgba(99,102,241,0.3)] hover:pr-5 transition-all duration-300 flex flex-col items-center gap-4 border-y border-l border-indigo-400/30 group cursor-pointer"
             title="Open Filters">
-            <i class="fas fa-sliders-h text-sm group-hover:rotate-90 transition-transform duration-500"></i>
+            <i
+                class="fas fa-sliders-h text-sm group-hover:rotate-90 transition-transform duration-500 text-indigo-100 group-hover:text-white"></i>
             <span style="writing-mode: vertical-rl;"
-                class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-400">Filters</span>
+                class="text-[9px] font-black uppercase tracking-[0.3em] rotate-180 text-indigo-100/80 group-hover:text-white transition-colors">Inventory
+                Filters</span>
         </button>
 
         {{-- 12-Col Grid Layout --}}
@@ -117,7 +119,7 @@
                             <div class="flex items-center gap-4">
                                 <div
                                     class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center border border-indigo-100 shadow-sm">
-                                    <i class="fas fa-warehouse text-2xl text-indigo-600"></i>
+                                    <i class="fas fa-boxes-stacked text-2xl text-indigo-600"></i>
                                 </div>
                                 <div>
                                     <h2
@@ -280,6 +282,16 @@
                                                     class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                                     <div
                                                         class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
+                                                        <i class="fas fa-toggle-on text-[10px]"></i>
+                                                    </div>
+                                                    Status
+                                                </div>
+                                            </th>
+                                            <th class="px-5 py-4 text-center border-b border-slate-50">
+                                                <div
+                                                    class="flex items-center justify-center gap-2.5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                                    <div
+                                                        class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 shadow-sm border border-indigo-100">
                                                         <i class="fas fa-bolt-lightning text-[10px]"></i>
                                                     </div>
                                                     Actions
@@ -386,8 +398,7 @@
                                                             title="View History">
                                                             <i class="fas fa-history text-[10px]"></i>
                                                         </a>
-                                                        <button
-                                                            @click="modals.adjustStock = true; adjustStockForm.batch_id = batch.id; adjustStockForm.medicine_name = batch.medicine_name; adjustStockForm.current_stock = batch.stock; adjustStockForm.batch_number = batch.batch_number"
+                                                        <button @click="openAdjustStockModal(batch)"
                                                             class="h-8 w-8 flex items-center justify-center bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-500 hover:text-white transition-all shadow-sm border border-amber-100"
                                                             title="Adjust Stock">
                                                             <i class="fas fa-sliders text-[10px]"></i>
@@ -406,7 +417,7 @@
                                     <!-- Loading State -->
                                     <tbody x-show="loading">
                                         <tr>
-                                            <td colspan="5" class="px-6 py-20 text-center">
+                                            <td colspan="6" class="px-6 py-20 text-center">
                                                 <div class="flex flex-col items-center justify-center">
                                                     <div
                                                         class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-4 shadow-inner">
@@ -425,7 +436,7 @@
                                     <!-- Empty State -->
                                     <tbody x-show="!loading && (!medicines || medicines.length === 0)">
                                         <tr>
-                                            <td colspan="5" class="px-6 py-32 text-center">
+                                            <td colspan="6" class="px-6 py-32 text-center">
                                                 <div class="flex flex-col items-center justify-center">
                                                     <div
                                                         class="w-24 h-24 mb-6 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 shadow-inner">
@@ -527,7 +538,7 @@
                                                     class="fas fa-history group-hover/btn:scale-110 transition-transform"></i>
                                                 Logs
                                             </a>
-                                            <button @click="showUpdateStockModal(batch.id, batch.medicine_name)"
+                                            <button @click="openAdjustStockModal(batch)"
                                                 class="h-10 w-10 flex items-center justify-center rounded-xl bg-slate-50 text-amber-500 hover:bg-amber-500 hover:text-white transition-all shadow-sm">
                                                 <i class="fas fa-sliders"></i>
                                             </button>
@@ -603,7 +614,7 @@
                             class="w-9 h-9 rounded-xl flex items-center justify-center text-blue-600 shadow-sm bg-blue-50 border border-blue-100">
                             <i class="fas fa-filter text-sm"></i>
                         </div>
-                        <h2 class="font-black text-slate-800 text-base tracking-tight uppercase">Filters</h2>
+                        <h2 class="font-black text-slate-800 text-base tracking-tight uppercase">Inventory Filters</h2>
                     </div>
                     <button @click="showSidebar = false" class="text-slate-400 hover:text-blue-600 transition-colors"><i
                             class="fas fa-times"></i></button>
@@ -841,37 +852,30 @@
         </div>
     </div>{{-- /12-Col Grid Layout --}}
     {{-- Edit Batch Details Modal --}}
-    <div x-show="modals.editBatch" 
-         class="fixed inset-0 z-[60] overflow-y-auto" 
-         x-cloak>
+    <div x-show="modals.editBatch" class="fixed inset-0 z-[60] overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div x-show="modals.editBatch" 
-                 x-transition:enter="ease-out duration-300"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="ease-in duration-200"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 transition-opacity bg-slate-900/75 backdrop-blur-sm" 
-                 @click="modals.editBatch = false"></div>
+            <div x-show="modals.editBatch" x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" class="fixed inset-0 transition-opacity bg-slate-900/75 "
+                @click="modals.editBatch = false"></div>
 
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-            <div x-show="modals.editBatch"
-                 x-transition:enter="ease-out duration-300"
-                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave="ease-in duration-200"
-                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                 class="inline-block w-full max-w-lg overflow-hidden text-left align-bottom transition-all transform bg-white rounded-2xl shadow-2xl sm:my-8 sm:align-middle sm:p-0">
-                
+            <div x-show="modals.editBatch" x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                class="inline-block w-full max-w-lg overflow-hidden text-left align-bottom transition-all transform bg-white rounded-2xl shadow-2xl sm:my-8 sm:align-middle sm:p-0">
+
                 <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-bold text-slate-900">Edit Batch Details</h3>
                         <p class="text-xs text-slate-500 mt-0.5" x-text="editBatchForm.medicine_name"></p>
                     </div>
-                    <button @click="modals.editBatch = false" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <button @click="modals.editBatch = false"
+                        class="text-slate-400 hover:text-slate-600 transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -892,20 +896,46 @@
                             </div>
 
                             <div class="col-span-2 sm:col-span-1">
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Unit Price (Purchase)</label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Unit Price
+                                    (Purchase)</label>
                                 <div class="relative">
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Rs.</span>
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Rs.</span>
                                     <input type="number" step="0.01" x-model="editBatchForm.unit_price" required
                                         class="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
                                 </div>
                             </div>
 
                             <div class="col-span-2 sm:col-span-1">
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Sale Price (Retail)</label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Sale Price
+                                    (Retail)</label>
                                 <div class="relative">
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Rs.</span>
+                                    <span
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Rs.</span>
                                     <input type="number" step="0.01" x-model="editBatchForm.sale_price" required
                                         class="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 pt-2">
+                            <label
+                                class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Inventory
+                                Visibility</label>
+                            <div class="flex items-center p-3 bg-slate-50 rounded-2xl border border-slate-100 gap-4 group cursor-pointer"
+                                @click="editBatchForm.is_active = !editBatchForm.is_active">
+                                <div class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" x-model="editBatchForm.is_active" class="sr-only">
+                                    <div class="w-11 h-6 bg-slate-200 rounded-full transition-all duration-300"
+                                        :class="editBatchForm.is_active ? 'bg-emerald-500' : 'bg-rose-400'"></div>
+                                    <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 transform shadow-sm"
+                                        :class="editBatchForm.is_active ? 'translate-x-5' : 'translate-x-0'"></div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-black text-slate-700"
+                                        x-text="editBatchForm.is_active ? 'Batch is Active' : 'Batch is Hidden'"></span>
+                                    <span class="text-[10px] text-slate-400 font-medium"
+                                        x-text="editBatchForm.is_active ? 'Visible to all departments and dispensing' : 'Excluded from lists and billing searches'"></span>
                                 </div>
                             </div>
                         </div>
@@ -913,7 +943,8 @@
                         <div class="p-4 bg-amber-50 rounded-xl border border-amber-100 flex items-start space-x-3 mt-4">
                             <i class="fas fa-info-circle text-amber-500 mt-0.5"></i>
                             <div class="text-xs text-amber-800 leading-relaxed">
-                                <strong>Important:</strong> Changes to batch numbers or expiry dates will be reflected in all related patient 
+                                <strong>Important:</strong> Changes to batch numbers or expiry dates will be reflected in
+                                all related patient
                                 prescriptions and dispensations for this specific batch.
                             </div>
                         </div>
@@ -921,12 +952,12 @@
 
                     <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end space-x-3">
                         <button type="button" @click="modals.editBatch = false"
-                                class="px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 rounded-xl transition-all">
+                            class="px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 rounded-xl transition-all">
                             Cancel
                         </button>
-                        <button type="submit" 
-                                class="px-6 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center"
-                                :disabled="isSubmitting">
+                        <button type="submit"
+                            class="px-6 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center"
+                            :disabled="isSubmitting">
                             <template x-if="isSubmitting">
                                 <i class="fas fa-circle-notch fa-spin mr-2"></i>
                             </template>
@@ -939,71 +970,82 @@
     </div>
 
     {{-- Adjust Stock Modal --}}
-    <div x-show="modals.adjustStock" 
-         style="display: none"
-         class="fixed inset-0 z-[100] overflow-y-auto" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
+    <div x-show="modals.adjustStock" style="display: none" class="fixed inset-0 z-[100] overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-30" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-30" x-transition:leave-end="opacity-0">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="modals.adjustStock = false"></div>
+            <div class="fixed inset-0 transition-opacity bg-slate-900/60 " @click="modals.adjustStock = false"></div>
 
-            <div class="relative align-bottom bg-white rounded-[2rem] text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full border border-slate-100 flex flex-col">
+            <div
+                class="relative align-bottom bg-white rounded-[2rem] text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full border border-slate-100 flex flex-col">
                 {{-- Header --}}
-                <div class="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-5 rounded-t-[2rem] flex items-center justify-between shrink-0">
+                <div
+                    class="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-5 rounded-t-[2rem] flex items-center justify-between shrink-0">
                     <h3 class="text-lg font-black text-white flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                             <i class="fas fa-sliders text-amber-100"></i>
                         </div>
                         Adjust Stock Level
                     </h3>
-                    <button @click="modals.adjustStock = false" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 text-white/70 hover:text-white transition-all">
+                    <button @click="modals.adjustStock = false"
+                        class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 text-white/70 hover:text-white transition-all">
                         <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
 
                 {{-- Body --}}
                 <div class="p-6 md:p-8">
-                    <div class="mb-6 bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center justify-between">
+                    <div
+                        class="mb-6 bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1" x-text="adjustStockForm.batch_number"></p>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1"
+                                x-text="adjustStockForm.batch_number"></p>
                             <h4 class="text-base font-black text-slate-800" x-text="adjustStockForm.medicine_name"></h4>
                         </div>
                         <div class="text-right">
                             <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Current</p>
-                            <span class="text-2xl font-black text-amber-600" x-text="adjustStockForm.current_stock"></span>
+                            <span class="text-2xl font-black text-amber-600"
+                                x-text="adjustStockForm.current_stock"></span>
                         </div>
                     </div>
 
                     <form id="adjustStockForm" @submit.prevent="submitAdjustStock" class="space-y-6">
                         <div class="grid grid-cols-2 gap-4">
                             <button type="button" @click="adjustStockForm.type = 'add'"
-                                :class="adjustStockForm.type === 'add' ? 'bg-emerald-50 text-emerald-600 border-emerald-500 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
+                                :class="adjustStockForm.type === 'add' ?
+                                    'bg-emerald-50 text-emerald-600 border-emerald-500 shadow-sm' :
+                                    'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
                                 class="px-4 py-4 rounded-xl border-2 font-black uppercase tracking-widest text-[10px] transition-all duration-300 flex flex-col items-center gap-2">
-                                <i class="fas fa-plus-circle text-xl" :class="adjustStockForm.type === 'add' ? 'text-emerald-500' : 'text-slate-300'"></i>
+                                <i class="fas fa-plus-circle text-xl"
+                                    :class="adjustStockForm.type === 'add' ? 'text-emerald-500' : 'text-slate-300'"></i>
                                 Add Stock
                             </button>
                             <button type="button" @click="adjustStockForm.type = 'subtract'"
-                                :class="adjustStockForm.type === 'subtract' ? 'bg-rose-50 text-rose-600 border-rose-500 shadow-sm' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
+                                :class="adjustStockForm.type === 'subtract' ?
+                                    'bg-rose-50 text-rose-600 border-rose-500 shadow-sm' :
+                                    'bg-white text-slate-500 border-slate-200 hover:border-slate-300'"
                                 class="px-4 py-4 rounded-xl border-2 font-black uppercase tracking-widest text-[10px] transition-all duration-300 flex flex-col items-center gap-2">
-                                <i class="fas fa-minus-circle text-xl" :class="adjustStockForm.type === 'subtract' ? 'text-rose-500' : 'text-slate-300'"></i>
+                                <i class="fas fa-minus-circle text-xl"
+                                    :class="adjustStockForm.type === 'subtract' ? 'text-rose-500' : 'text-slate-300'"></i>
                                 Subtract Stock
                             </button>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Adjustment Quantity <span class="text-rose-500">*</span></label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Adjustment
+                                Quantity <span class="text-rose-500">*</span></label>
                             <div class="relative group">
-                                <i class="fas fa-boxes absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-amber-500 transition-colors"></i>
-                                <input type="number" min="1" x-model="adjustStockForm.quantity" required placeholder="Enter amount to adjust"
+                                <i
+                                    class="fas fa-boxes absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-amber-500 transition-colors"></i>
+                                <input type="number" min="1" x-model="adjustStockForm.quantity" required
+                                    placeholder="Enter amount to adjust"
                                     class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-amber-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
-                                
-                                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+
+                                <div
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
                                     <i class="fas fa-arrow-right text-[10px] text-slate-300"></i>
-                                    <span class="text-sm font-black text-slate-800 bg-slate-200/50 px-2 rounded-md" 
+                                    <span class="text-sm font-black text-slate-800 bg-slate-200/50 px-2 rounded-md"
                                         x-text="adjustStockForm.type === 'add' ? (parseInt(adjustStockForm.current_stock) + (parseInt(adjustStockForm.quantity) || 0)) : (parseInt(adjustStockForm.current_stock) - (parseInt(adjustStockForm.quantity) || 0))">
                                     </span>
                                 </div>
@@ -1011,16 +1053,20 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Reason / Remarks <span class="text-rose-500">*</span></label>
-                            <textarea x-model="adjustStockForm.remarks" required rows="2" placeholder="Explain why stock is being adjusted..."
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Reason / Remarks
+                                <span class="text-rose-500">*</span></label>
+                            <textarea x-model="adjustStockForm.remarks" required rows="2"
+                                placeholder="Explain why stock is being adjusted..."
                                 class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-amber-400 focus:bg-white transition-all font-medium text-sm text-slate-800 outline-none ring-0 resize-none"></textarea>
                         </div>
                     </form>
                 </div>
 
                 {{-- Footer --}}
-                <div class="bg-slate-50 px-6 py-5 rounded-b-[2rem] border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
-                    <button type="button" @click="modals.adjustStock = false" class="px-6 py-2.5 rounded-xl text-slate-600 font-bold hover:bg-slate-200 transition-colors text-sm">
+                <div
+                    class="bg-slate-50 px-6 py-5 rounded-b-[2rem] border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
+                    <button type="button" @click="modals.adjustStock = false"
+                        class="px-6 py-2.5 rounded-xl text-slate-600 font-bold hover:bg-slate-200 transition-colors text-sm">
                         Cancel
                     </button>
                     <button type="button" @click="submitAdjustStock()" :disabled="isSubmitting"
@@ -1034,28 +1080,27 @@
     </div>
 
     {{-- View Batch Modal (Dynamic Content) --}}
-    <div x-show="modals.viewBatch" 
-         style="display: none"
-         class="fixed inset-0 z-[100] overflow-y-auto" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
+    <div x-show="modals.viewBatch" style="display: none" class="fixed inset-0 z-[100] overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="modals.viewBatch = false"></div>
+            <div class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm"
+                @click="modals.viewBatch = false"></div>
 
-            <div class="relative align-bottom bg-white rounded-[2rem] text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full border border-slate-100 flex flex-col h-[85vh]">
+            <div
+                class="relative align-bottom bg-white rounded-[2rem] text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl w-full border border-slate-100 flex flex-col h-[85vh]">
                 {{-- Header --}}
-                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 rounded-t-[2rem] flex items-center justify-between shrink-0">
+                <div
+                    class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 rounded-t-[2rem] flex items-center justify-between shrink-0">
                     <h3 class="text-lg font-black text-white flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                             <i class="fas fa-history text-blue-100"></i>
                         </div>
                         Batch History & Logs
                     </h3>
-                    <button @click="modals.viewBatch = false" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 text-white/70 hover:text-white transition-all">
+                    <button @click="modals.viewBatch = false"
+                        class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 text-white/70 hover:text-white transition-all">
                         <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
@@ -1063,12 +1108,16 @@
                 {{-- Body (Modern AJAX-driven Detail View) --}}
                 <div class="p-0 overflow-y-auto custom-scrollbar flex-1 relative bg-slate-50 rounded-b-[2rem]">
                     {{-- Loading State --}}
-                    <div x-show="batchLoading" class="absolute inset-0 flex flex-col items-center justify-center z-10 bg-slate-50/80 backdrop-blur-sm">
+                    <div x-show="batchLoading"
+                        class="absolute inset-0 flex flex-col items-center justify-center z-10 bg-slate-50/80 backdrop-blur-sm">
                         <div class="relative">
-                            <div class="w-16 h-16 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin"></div>
-                            <i class="fas fa-pills absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-600/30 text-xl animate-pulse"></i>
+                            <div class="w-16 h-16 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin">
+                            </div>
+                            <i
+                                class="fas fa-pills absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-600/30 text-xl animate-pulse"></i>
                         </div>
-                        <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing Data...</p>
+                        <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Synchronizing
+                            Data...</p>
                     </div>
 
                     <template x-if="batchDetail">
@@ -1076,51 +1125,74 @@
                             {{-- Quick Info Cards --}}
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Stock Remaining</p>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Stock
+                                        Remaining</p>
                                     <div class="flex items-end gap-2">
-                                        <span class="text-2xl font-black text-slate-800" x-text="batchDetail.remaining_quantity"></span>
+                                        <span class="text-2xl font-black text-slate-800"
+                                            x-text="batchDetail.remaining_quantity"></span>
                                         <span class="text-[10px] font-bold text-slate-400 pb-1">Units</span>
                                     </div>
                                 </div>
                                 <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status
+                                    </p>
                                     <template x-if="batchDetail.is_expired">
-                                        <span class="inline-flex px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase rounded-lg">Expired</span>
+                                        <span
+                                            class="inline-flex px-3 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase rounded-lg">Expired</span>
                                     </template>
                                     <template x-if="!batchDetail.is_expired && batchDetail.expiring_soon">
-                                        <span class="inline-flex px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black uppercase rounded-lg">Expiring Soon</span>
+                                        <span
+                                            class="inline-flex px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black uppercase rounded-lg">Expiring
+                                            Soon</span>
                                     </template>
                                     <template x-if="!batchDetail.is_expired && !batchDetail.expiring_soon">
-                                        <span class="inline-flex px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-lg">Active</span>
+                                        <span
+                                            class="inline-flex px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase rounded-lg">Active</span>
                                     </template>
                                 </div>
                                 <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Expiry Date</p>
-                                    <span class="text-sm font-black text-slate-700" x-text="moment(batchDetail.expiry_date).format('DD MMM YYYY')"></span>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Expiry
+                                        Date</p>
+                                    <span class="text-sm font-black text-slate-700"
+                                        x-text="moment(batchDetail.expiry_date).format('DD MMM YYYY')"></span>
                                 </div>
                                 <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Batch Number</p>
-                                    <span class="text-sm font-black text-indigo-600" x-text="batchDetail.batch_number"></span>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Batch
+                                        Number</p>
+                                    <span class="text-sm font-black text-indigo-600"
+                                        x-text="batchDetail.batch_number"></span>
                                 </div>
                             </div>
 
                             {{-- Activity Log Table --}}
                             <div class="space-y-4">
-                                <h4 class="px-2 text-xs font-black text-slate-800 uppercase tracking-[0.2em] flex items-center gap-2">
+                                <h4
+                                    class="px-2 text-xs font-black text-slate-800 uppercase tracking-[0.2em] flex items-center gap-2">
                                     <i class="fas fa-list-ul text-indigo-500 text-[10px]"></i>
                                     Activity & Transaction Log
                                 </h4>
-                                
-                                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden text-slate-700">
+
+                                <div
+                                    class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden text-slate-700">
                                     <div class="overflow-x-auto overflow-y-auto max-h-[40vh] custom-scrollbar">
                                         <table class="w-full text-left">
                                             <thead class="sticky top-0 z-10">
                                                 <tr class="bg-slate-50 border-b border-slate-100">
-                                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</th>
-                                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Action</th>
-                                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Change</th>
-                                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Balance</th>
-                                                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">User</th>
+                                                    <th
+                                                        class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                        Date</th>
+                                                    <th
+                                                        class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                        Action</th>
+                                                    <th
+                                                        class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                        Change</th>
+                                                    <th
+                                                        class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">
+                                                        Balance</th>
+                                                    <th
+                                                        class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                        User</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="divide-y divide-slate-50">
@@ -1128,43 +1200,58 @@
                                                     <tr class="hover:bg-slate-50/30 transition-colors">
                                                         <td class="px-6 py-4 whitespace-nowrap">
                                                             <div class="flex flex-col">
-                                                                <span class="text-xs font-black text-slate-700" x-text="moment(log.created_at).format('DD MMM, YYYY')"></span>
-                                                                <span class="text-[9px] font-bold text-slate-400" x-text="moment(log.created_at).format('h:mm A')"></span>
+                                                                <span class="text-xs font-black text-slate-700"
+                                                                    x-text="moment(log.created_at).format('DD MMM, YYYY')"></span>
+                                                                <span class="text-[9px] font-bold text-slate-400"
+                                                                    x-text="moment(log.created_at).format('h:mm A')"></span>
                                                             </div>
                                                         </td>
                                                         <td class="px-6 py-4 capitalize">
                                                             <div class="flex items-center gap-2">
-                                                                <div class="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)]" 
+                                                                <div class="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)]"
                                                                     :class="{
-                                                                        'bg-emerald-500 shadow-emerald-500/20': log.type === 'purchase',
-                                                                        'bg-rose-500 shadow-rose-500/20': log.type === 'dispense',
-                                                                        'bg-indigo-500 shadow-indigo-500/20': log.type === 'adjustment',
-                                                                        'bg-amber-500 shadow-amber-500/20': log.type === 'transfer'
+                                                                        'bg-emerald-500 shadow-emerald-500/20': log
+                                                                            .type === 'purchase',
+                                                                        'bg-rose-500 shadow-rose-500/20': log
+                                                                            .type === 'dispense',
+                                                                        'bg-indigo-500 shadow-indigo-500/20': log
+                                                                            .type === 'adjustment',
+                                                                        'bg-amber-500 shadow-amber-500/20': log
+                                                                            .type === 'transfer'
                                                                     }">
                                                                 </div>
-                                                                <span class="text-xs font-bold text-slate-600" x-text="log.type"></span>
+                                                                <span class="text-xs font-bold text-slate-600"
+                                                                    x-text="log.type"></span>
                                                             </div>
                                                         </td>
                                                         <td class="px-6 py-4">
-                                                            <span class="text-xs font-black" 
-                                                                :class="(['purchase', 'adjustment'].includes(log.type) && log.new_stock > log.previous_stock) || (log.type === 'transfer' && log.new_stock > log.previous_stock) ? 'text-emerald-600' : 'text-rose-600'"
+                                                            <span class="text-xs font-black"
+                                                                :class="(['purchase', 'adjustment'].includes(log.type) && log
+                                                                    .new_stock > log.previous_stock) || (log
+                                                                    .type === 'transfer' && log.new_stock > log
+                                                                    .previous_stock) ? 'text-emerald-600' :
+                                                                'text-rose-600'"
                                                                 x-text="((['purchase', 'adjustment'].includes(log.type) && log.new_stock > log.previous_stock) || (log.type === 'transfer' && log.new_stock > log.previous_stock) ? '+' : '-') + log.quantity">
                                                             </span>
                                                         </td>
                                                         <td class="px-6 py-4 text-right">
-                                                            <span class="text-xs font-black text-slate-800" x-text="log.new_stock"></span>
+                                                            <span class="text-xs font-black text-slate-800"
+                                                                x-text="log.new_stock"></span>
                                                         </td>
                                                         <td class="px-6 py-4">
                                                             <div class="flex flex-col">
-                                                                <span class="text-xs font-bold text-slate-600" x-text="log.user ? log.user.name : 'System Agent'"></span>
-                                                                <span class="text-[9px] font-medium text-slate-400 italic" x-text="log.notes || 'No notes available'"></span>
+                                                                <span class="text-xs font-bold text-slate-600"
+                                                                    x-text="log.user ? log.user.name : 'System Agent'"></span>
+                                                                <span class="text-[9px] font-medium text-slate-400 italic"
+                                                                    x-text="log.notes || 'No notes available'"></span>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 </template>
                                                 <template x-if="batchLogs.length === 0">
                                                     <tr>
-                                                        <td colspan="5" class="py-12 text-center text-slate-400 font-medium text-sm italic bg-white rounded-b-3xl">
+                                                        <td colspan="5"
+                                                            class="py-12 text-center text-slate-400 font-medium text-sm italic bg-white rounded-b-3xl">
                                                             No activity recorded for this batch yet.
                                                         </td>
                                                     </tr>
@@ -1189,196 +1276,231 @@
         </div>
     </div>
 
-        {{-- Add Stock Modal --}}
-        <div x-show="modals.addStock" 
-             style="display: none"
-             class="fixed inset-0 z-[100] overflow-y-auto" 
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-                <div class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" @click="modals.addStock = false"></div>
+    {{-- Add Stock Modal --}}
+    <div x-show="modals.addStock" style="display: none" class="fixed inset-0 z-[100] overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 transition-opacity bg-slate-900/60 " @click="modals.addStock = false"></div>
 
-                <div class="relative align-bottom bg-white rounded-[2rem] text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full border border-slate-100 flex flex-col max-h-[90vh]">
-                    {{-- Header --}}
-                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5 rounded-t-[2rem] flex items-center justify-between shrink-0">
-                        <h3 class="text-lg font-black text-white flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                                <i class="fas fa-plus text-indigo-100"></i>
-                            </div>
-                            Add New Stock Batch
-                        </h3>
-                        <button @click="modals.addStock = false" class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 text-white/70 hover:text-white transition-all">
-                            <i class="fas fa-times text-lg"></i>
-                        </button>
-                    </div>
+            <div
+                class="relative align-bottom bg-white rounded-[2rem] text-left shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full border border-slate-100 flex flex-col max-h-[90vh]">
+                {{-- Header --}}
+                <div
+                    class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5 rounded-t-[2rem] flex items-center justify-between shrink-0">
+                    <h3 class="text-lg font-black text-white flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-plus text-indigo-100"></i>
+                        </div>
+                        Add New Stock Batch
+                    </h3>
+                    <button @click="modals.addStock = false"
+                        class="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-white/20 text-white/70 hover:text-white transition-all">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
 
-                    {{-- Body --}}
-                    <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1 relative">
-                        <form id="addStockForm" @submit.prevent="submitAddStock" class="space-y-8">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {{-- Medicine Selection (Searchable Custom Picker) --}}
-                                <div class="col-span-1 md:col-span-2 space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Select Medicine <span class="text-rose-500">*</span></label>
+                {{-- Body --}}
+                <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-1 relative">
+                    <form id="addStockForm" @submit.prevent="submitAddStock" class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{-- Medicine Selection (Searchable Custom Picker) --}}
+                            <div class="col-span-1 md:col-span-2 space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Select
+                                    Medicine <span class="text-rose-500">*</span></label>
 
-                                    {{-- Trigger Button --}}
-                                    <div class="relative">
-                                        <button type="button"
-                                            @click="addStockPickerOpen = !addStockPickerOpen; if(addStockPickerOpen) $nextTick(() => $refs.medSearch?.focus())"
-                                            class="w-full px-4 py-3.5 bg-slate-50 border-2 rounded-xl transition-all font-bold text-sm text-left flex items-center justify-between gap-3"
-                                            :class="addStockPickerOpen ? 'border-indigo-400 bg-white' : 'border-slate-100 hover:border-slate-200'">
-                                            <div class="flex items-center gap-3 min-w-0 flex-1">
-                                                <i class="fas fa-pills shrink-0" :class="addStockForm.medicine_id ? 'text-indigo-400' : 'text-slate-300'"></i>
-                                                <div class="min-w-0 flex-1" x-show="addStockForm.medicine_id">
-                                                    <p class="font-black text-slate-800 truncate" x-text="addStockForm.medicine_name"></p>
-                                                    <p class="text-[10px] text-slate-400 font-medium" x-text="addStockForm.medicine_category"></p>
-                                                </div>
-                                                <span x-show="!addStockForm.medicine_id" class="text-slate-400 font-medium">Search &amp; select a medicine...</span>
+                                {{-- Trigger Button --}}
+                                <div class="relative">
+                                    <button type="button"
+                                        @click="addStockPickerOpen = !addStockPickerOpen; if(addStockPickerOpen) $nextTick(() => $refs.medSearch?.focus())"
+                                        class="w-full px-4 py-3.5 bg-slate-50 border-2 rounded-xl transition-all font-bold text-sm text-left flex items-center justify-between gap-3"
+                                        :class="addStockPickerOpen ? 'border-indigo-400 bg-white' :
+                                            'border-slate-100 hover:border-slate-200'">
+                                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                                            <i class="fas fa-pills shrink-0"
+                                                :class="addStockForm.medicine_id ? 'text-indigo-400' : 'text-slate-300'"></i>
+                                            <div class="min-w-0 flex-1" x-show="addStockForm.medicine_id">
+                                                <p class="font-black text-slate-800 truncate"
+                                                    x-text="addStockForm.medicine_name"></p>
+                                                <p class="text-[10px] text-slate-400 font-medium"
+                                                    x-text="addStockForm.medicine_category"></p>
                                             </div>
-                                            <i class="fas shrink-0 text-slate-400 transition-transform duration-200" :class="addStockPickerOpen ? 'fa-chevron-up text-indigo-500' : 'fa-chevron-down'"></i>
-                                        </button>
+                                            <span x-show="!addStockForm.medicine_id"
+                                                class="text-slate-400 font-medium">Search &amp; select a medicine...</span>
+                                        </div>
+                                        <i class="fas shrink-0 text-slate-400 transition-transform duration-200"
+                                            :class="addStockPickerOpen ? 'fa-chevron-up text-indigo-500' : 'fa-chevron-down'"></i>
+                                    </button>
 
-                                        {{-- Dropdown Panel --}}
-                                        <div x-show="addStockPickerOpen" @click.outside="addStockPickerOpen = false"
-                                            x-transition:enter="transition ease-out duration-150"
-                                            x-transition:enter-start="opacity-0 -translate-y-1"
-                                            x-transition:enter-end="opacity-100 translate-y-0"
-                                            class="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-300/40 z-[200] overflow-hidden">
+                                    {{-- Dropdown Panel --}}
+                                    <div x-show="addStockPickerOpen" @click.outside="addStockPickerOpen = false"
+                                        x-transition:enter="transition ease-out duration-150"
+                                        x-transition:enter-start="opacity-0 -translate-y-1"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        class="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-300/40 z-[200] overflow-hidden">
 
-                                            {{-- Search bar --}}
-                                            <div class="p-3 border-b border-slate-100 bg-slate-50/50">
-                                                <div class="relative">
-                                                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
-                                                    <input x-ref="medSearch" type="text" x-model="addStockMedSearch"
-                                                        placeholder="Type name or generic name..."
-                                                        class="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 outline-none focus:border-indigo-400 transition-all">
-                                                </div>
+                                        {{-- Search bar --}}
+                                        <div class="p-3 border-b border-slate-100 bg-slate-50/50">
+                                            <div class="relative">
+                                                <i
+                                                    class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                                <input x-ref="medSearch" type="text" x-model="addStockMedSearch"
+                                                    placeholder="Type name or generic name..."
+                                                    class="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 outline-none focus:border-indigo-400 transition-all">
                                             </div>
+                                        </div>
 
-                                            {{-- Category pills --}}
-                                            <div class="px-3 py-2 border-b border-slate-100 flex gap-1.5 flex-wrap bg-white">
-                                                <button type="button" @click="addStockCatFilter = ''"
+                                        {{-- Category pills --}}
+                                        <div class="px-3 py-2 border-b border-slate-100 flex gap-1.5 flex-wrap bg-white">
+                                            <button type="button" @click="addStockCatFilter = ''"
+                                                class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all"
+                                                :class="addStockCatFilter === '' ?
+                                                    'bg-indigo-600 text-white shadow-sm' :
+                                                    'bg-slate-100 text-slate-500 hover:bg-slate-200'">
+                                                All
+                                            </button>
+                                            <template x-for="cat in getAddStockCategories()" :key="cat.id">
+                                                <button type="button" @click="addStockCatFilter = cat.id"
                                                     class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all"
-                                                    :class="addStockCatFilter === '' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'">
-                                                    All
+                                                    :class="addStockCatFilter === cat.id ?
+                                                        'bg-indigo-600 text-white shadow-sm' :
+                                                        'bg-slate-100 text-slate-500 hover:bg-slate-200'"
+                                                    x-text="cat.name">
                                                 </button>
-                                                <template x-for="cat in getAddStockCategories()" :key="cat.id">
-                                                    <button type="button" @click="addStockCatFilter = cat.id"
-                                                        class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all"
-                                                        :class="addStockCatFilter === cat.id ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'"
-                                                        x-text="cat.name">
-                                                    </button>
-                                                </template>
-                                            </div>
+                                            </template>
+                                        </div>
 
-                                            {{-- Medicine list --}}
-                                            <div class="max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-50">
-                                                <template x-if="filteredMeds().length === 0">
-                                                    <div class="px-4 py-8 text-center">
-                                                        <i class="fas fa-search-minus text-3xl text-slate-200 mb-3 block"></i>
-                                                        <p class="text-sm text-slate-400 font-medium">No medicines found</p>
+                                        {{-- Medicine list --}}
+                                        <div class="max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-50">
+                                            <template x-if="filteredMeds().length === 0">
+                                                <div class="px-4 py-8 text-center">
+                                                    <i class="fas fa-search-minus text-3xl text-slate-200 mb-3 block"></i>
+                                                    <p class="text-sm text-slate-400 font-medium">No medicines found</p>
+                                                </div>
+                                            </template>
+                                            <template x-for="med in filteredMeds()" :key="med.id">
+                                                <button type="button"
+                                                    @click="addStockForm.medicine_id = med.id; addStockForm.medicine_name = med.name; addStockForm.medicine_category = med.category ? med.category.name : ''; addStockPickerOpen = false; addStockMedSearch = ''"
+                                                    class="w-full px-4 py-3 text-left transition-colors flex items-center gap-3"
+                                                    :class="addStockForm.medicine_id === med.id ? 'bg-indigo-50' :
+                                                        'hover:bg-slate-50/80'">
+                                                    <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors"
+                                                        :class="addStockForm.medicine_id === med.id ? 'bg-indigo-100' :
+                                                            'bg-slate-100'">
+                                                        <i class="fas fa-pills text-xs"
+                                                            :class="addStockForm.medicine_id === med.id ? 'text-indigo-600' :
+                                                                'text-slate-400'"></i>
                                                     </div>
-                                                </template>
-                                                <template x-for="med in filteredMeds()" :key="med.id">
-                                                    <button type="button"
-                                                        @click="addStockForm.medicine_id = med.id; addStockForm.medicine_name = med.name; addStockForm.medicine_category = med.category ? med.category.name : ''; addStockPickerOpen = false; addStockMedSearch = ''"
-                                                        class="w-full px-4 py-3 text-left transition-colors flex items-center gap-3"
-                                                        :class="addStockForm.medicine_id === med.id ? 'bg-indigo-50' : 'hover:bg-slate-50/80'">
-                                                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors"
-                                                            :class="addStockForm.medicine_id === med.id ? 'bg-indigo-100' : 'bg-slate-100'">
-                                                            <i class="fas fa-pills text-xs" :class="addStockForm.medicine_id === med.id ? 'text-indigo-600' : 'text-slate-400'"></i>
-                                                        </div>
-                                                        <div class="min-w-0 flex-1">
-                                                            <p class="font-bold text-sm text-slate-800 truncate" x-text="med.name"></p>
-                                                            <p class="text-[10px] text-slate-400 font-medium truncate"
-                                                                x-text="[med.generic_name, med.category?.name].filter(Boolean).join(' · ')"></p>
-                                                        </div>
-                                                        <i class="fas fa-check-circle text-indigo-500 text-sm shrink-0" x-show="addStockForm.medicine_id === med.id"></i>
-                                                    </button>
-                                                </template>
-                                            </div>
+                                                    <div class="min-w-0 flex-1">
+                                                        <p class="font-bold text-sm text-slate-800 truncate"
+                                                            x-text="med.name"></p>
+                                                        <p class="text-[10px] text-slate-400 font-medium truncate"
+                                                            x-text="[med.generic_name, med.category?.name].filter(Boolean).join(' · ')">
+                                                        </p>
+                                                    </div>
+                                                    <i class="fas fa-check-circle text-indigo-500 text-sm shrink-0"
+                                                        x-show="addStockForm.medicine_id === med.id"></i>
+                                                </button>
+                                            </template>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
 
-                                {{-- Batch Number --}}
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Batch Number <span class="text-rose-500">*</span></label>
-                                    <div class="relative group">
-                                        <i class="fas fa-barcode absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                                        <input type="text" x-model="addStockForm.batch_number" required placeholder="e.g. BATCH-2026-01"
-                                            class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0 uppercase placeholder:normal-case">
-                                    </div>
-                                </div>
-
-                                {{-- Expiry Date --}}
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Expiry Date <span class="text-rose-500">*</span></label>
-                                    <div class="relative group">
-                                        <i class="fas fa-calendar-alt absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                                        <input type="date" x-model="addStockForm.expiry_date" required min="{{ date('Y-m-d') }}"
-                                            class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
-                                    </div>
-                                </div>
-
-                                {{-- Unit Price --}}
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Unit Price (Cost)</label>
-                                    <div class="relative group">
-                                        <i class="fas fa-tags absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                                        <input type="number" step="0.01" min="0" x-model="addStockForm.unit_price" placeholder="0.00"
-                                            class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
-                                    </div>
-                                </div>
-
-                                {{-- Sale Price --}}
-                                <div class="space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Sale Price <span class="text-rose-500">*</span></label>
-                                    <div class="relative group">
-                                        <i class="fas fa-tag absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                                        <input type="number" step="0.01" min="0" x-model="addStockForm.sale_price" required placeholder="0.00"
-                                            class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
-                                    </div>
-                                </div>
-
-                                {{-- Initial Stock --}}
-                                <div class="space-y-2 md:col-span-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Initial Stock Quantity <span class="text-rose-500">*</span></label>
-                                    <div class="relative group">
-                                        <i class="fas fa-boxes absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                                        <input type="number" min="1" x-model="addStockForm.stock" required placeholder="Enter total quantity received"
-                                            class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
-                                    </div>
-                                </div>
-                                
-                                {{-- Notes / Remarks --}}
-                                <div class="col-span-1 md:col-span-2 space-y-2">
-                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Remarks / Supplier Notes</label>
-                                    <textarea x-model="addStockForm.remarks" rows="2" placeholder="Optional details about this batch import"
-                                        class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-medium text-sm text-slate-800 outline-none ring-0 resize-none"></textarea>
+                            {{-- Batch Number --}}
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Batch Number
+                                    <span class="text-rose-500">*</span></label>
+                                <div class="relative group">
+                                    <i
+                                        class="fas fa-barcode absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                    <input type="text" x-model="addStockForm.batch_number" required
+                                        placeholder="e.g. BATCH-2026-01"
+                                        class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0 uppercase placeholder:normal-case">
                                 </div>
                             </div>
-                        </form>
-                    </div>
 
-                    {{-- Footer --}}
-                    <div class="bg-slate-50 px-6 py-5 rounded-b-[2rem] border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
-                        <button type="button" @click="modals.addStock = false" class="px-6 py-2.5 rounded-xl text-slate-600 font-bold hover:bg-slate-200 transition-colors text-sm">
-                            Cancel
-                        </button>
-                        <button type="button" @click="submitAddStock()" :disabled="isSubmitting"
-                            class="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0">
-                            <i class="fas" :class="isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'"></i>
-                            <span x-text="isSubmitting ? 'Saving...' : 'Add Stock'"></span>
-                        </button>
-                    </div>
+                            {{-- Expiry Date --}}
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Expiry Date
+                                    <span class="text-rose-500">*</span></label>
+                                <div class="relative group">
+                                    <i
+                                        class="fas fa-calendar-alt absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                    <input type="date" x-model="addStockForm.expiry_date" required
+                                        min="{{ date('Y-m-d') }}"
+                                        class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
+                                </div>
+                            </div>
+
+                            {{-- Unit Price --}}
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Unit Price
+                                    (Cost)</label>
+                                <div class="relative group">
+                                    <i
+                                        class="fas fa-tags absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                    <input type="number" step="0.01" min="0"
+                                        x-model="addStockForm.unit_price" placeholder="0.00"
+                                        class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
+                                </div>
+                            </div>
+
+                            {{-- Sale Price --}}
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Sale Price
+                                    <span class="text-rose-500">*</span></label>
+                                <div class="relative group">
+                                    <i
+                                        class="fas fa-tag absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                    <input type="number" step="0.01" min="0"
+                                        x-model="addStockForm.sale_price" required placeholder="0.00"
+                                        class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
+                                </div>
+                            </div>
+
+                            {{-- Initial Stock --}}
+                            <div class="space-y-2 md:col-span-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Initial
+                                    Stock Quantity <span class="text-rose-500">*</span></label>
+                                <div class="relative group">
+                                    <i
+                                        class="fas fa-boxes absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                    <input type="number" min="1" x-model="addStockForm.stock" required
+                                        placeholder="Enter total quantity received"
+                                        class="w-full px-4 py-3.5 pl-11 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-bold text-sm text-slate-800 outline-none ring-0">
+                                </div>
+                            </div>
+
+                            {{-- Notes / Remarks --}}
+                            <div class="col-span-1 md:col-span-2 space-y-2">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Remarks /
+                                    Supplier Notes</label>
+                                <textarea x-model="addStockForm.remarks" rows="2" placeholder="Optional details about this batch import"
+                                    class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-indigo-400 focus:bg-white transition-all font-medium text-sm text-slate-800 outline-none ring-0 resize-none"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- Footer --}}
+                <div
+                    class="bg-slate-50 px-6 py-5 rounded-b-[2rem] border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
+                    <button type="button" @click="modals.addStock = false"
+                        class="px-6 py-2.5 rounded-xl text-slate-600 font-bold hover:bg-slate-200 transition-colors text-sm">
+                        Cancel
+                    </button>
+                    <button type="button" @click="submitAddStock()" :disabled="isSubmitting"
+                        class="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm flex items-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0">
+                        <i class="fas" :class="isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+                        <span x-text="isSubmitting ? 'Saving...' : 'Add Stock'"></span>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
     </div>{{-- /space-y-8 / inventoryManager x-data --}}
 
 @endsection
@@ -1394,7 +1516,7 @@
                 loading: false,
                 viewMode: 'table',
                 showSidebar: false,
-                
+
                 // Modals
                 modals: {
                     addStock: false,
@@ -1407,7 +1529,7 @@
                 batchDetail: null,
                 batchLogs: [],
                 batchLoading: false,
-                
+
                 stats: {
                     total: 0,
                     low_stock: 0,
@@ -1514,7 +1636,10 @@
                     const seen = new Set();
                     return this.medicinesList
                         .filter(m => m.category && m.category.id && !seen.has(m.category.id) && seen.add(m.category.id))
-                        .map(m => ({ id: m.category.id, name: m.category.name }))
+                        .map(m => ({
+                            id: m.category.id,
+                            name: m.category.name
+                        }))
                         .sort((a, b) => a.name.localeCompare(b.name));
                 },
 
@@ -1663,7 +1788,8 @@
 
                 // Submit Add Stock
                 async submitAddStock() {
-                    if (!this.addStockForm.medicine_id || !this.addStockForm.batch_number || !this.addStockForm.expiry_date || !this.addStockForm.sale_price || !this.addStockForm.stock) {
+                    if (!this.addStockForm.medicine_id || !this.addStockForm.batch_number || !this.addStockForm
+                        .expiry_date || !this.addStockForm.sale_price || !this.addStockForm.stock) {
                         showError('Please fill in all required fields.', 'Validation Error');
                         return;
                     }
@@ -1682,18 +1808,21 @@
 
                     this.isSubmitting = true;
                     try {
-                        const response = await fetch('{{ route("pharmacy.inventory.store") }}', {
+                        const response = await fetch('{{ route('pharmacy.inventory.store') }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content'),
                                 'Accept': 'application/json'
                             },
                             body: JSON.stringify(payload)
                         });
 
                         if (!response.ok) {
-                            const result = await response.json().catch(() => ({ message: 'Server error occurred' }));
+                            const result = await response.json().catch(() => ({
+                                message: 'Server error occurred'
+                            }));
                             if (result.errors) {
                                 const msgs = Object.values(result.errors).flat().join('\n');
                                 throw new Error(msgs);
@@ -1702,10 +1831,10 @@
                         }
 
                         const result = await response.json();
-                        
+
                         showSuccess('New stock batch added successfully.', 'Stock Added');
                         this.modals.addStock = false;
-                        
+
                         // Reset form
                         this.addStockForm = {
                             medicine_id: '',
@@ -1718,7 +1847,7 @@
                             stock: '',
                             remarks: ''
                         };
-                        
+
                         // Refresh inventory
                         this.fetchInventory();
                     } catch (error) {
@@ -1734,7 +1863,8 @@
                     // Safety check: Don't allow adjustments on inactive batches
                     const batch = this.medicines.find(b => b.id === this.adjustStockForm.batch_id);
                     if (batch && !batch.is_active) {
-                        showError('This batch is currently INACTIVE. You must activate it before making adjustments.', 'Activation Required');
+                        showError('This batch is currently INACTIVE. You must activate it before making adjustments.',
+                            'Activation Required');
                         return;
                     }
 
@@ -1749,28 +1879,32 @@
 
                     // Compute the final quantity the server expects
                     const currentStock = parseInt(this.adjustStockForm.current_stock) || 0;
-                    const delta       = parseInt(this.adjustStockForm.quantity) || 0;
-                    const newQuantity = this.adjustStockForm.type === 'add'
-                        ? currentStock + delta
-                        : Math.max(0, currentStock - delta);
+                    const delta = parseInt(this.adjustStockForm.quantity) || 0;
+                    const newQuantity = this.adjustStockForm.type === 'add' ?
+                        currentStock + delta :
+                        Math.max(0, currentStock - delta);
 
                     this.isSubmitting = true;
                     try {
-                        const response = await fetch(`/pharmacy/inventory/batch/${this.adjustStockForm.batch_id}/adjust`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                new_quantity: newQuantity,
-                                reason: this.adjustStockForm.remarks
-                            })
-                        });
+                        const response = await fetch(
+                            `/pharmacy/inventory/batch/${this.adjustStockForm.batch_id}/adjust`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                        'content'),
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    new_quantity: newQuantity,
+                                    reason: this.adjustStockForm.remarks
+                                })
+                            });
 
                         if (!response.ok) {
-                            const result = await response.json().catch(() => ({ message: 'Server error' }));
+                            const result = await response.json().catch(() => ({
+                                message: 'Server error'
+                            }));
                             if (result.errors) {
                                 const msgs = Object.values(result.errors).flat().join('\n');
                                 throw new Error(msgs);
@@ -1779,10 +1913,10 @@
                         }
 
                         const result = await response.json();
-                        
+
                         showSuccess(result.message || 'Stock adjusted successfully.', 'Stock Updated');
                         this.modals.adjustStock = false;
-                        
+
                         // Reset form
                         this.adjustStockForm = {
                             batch_id: null,
@@ -1793,7 +1927,7 @@
                             quantity: '',
                             remarks: ''
                         };
-                        
+
                         // Refresh inventory
                         this.fetchInventory();
                     } catch (error) {
@@ -1811,7 +1945,7 @@
                     this.batchDetail = null;
                     this.batchLogs = [];
                     this.modals.viewBatch = true;
-                    
+
                     try {
                         const response = await fetch(`/pharmacy/inventory/batch/${id}`, {
                             headers: {
@@ -1819,13 +1953,13 @@
                                 'X-Requested-With': 'XMLHttpRequest'
                             }
                         });
-                        
+
                         if (!response.ok) {
                             const errorText = await response.text();
                             console.error('Fetch error response:', errorText);
                             throw new Error('Server returned an error. Please check logs.');
                         }
-                        
+
                         const result = await response.json();
                         if (result.success) {
                             this.batchDetail = result.batch;
@@ -1842,11 +1976,16 @@
                     }
                 },
 
-                // Mock functions for missing global dependencies
-                showUpdateStockModal(id, name) {
-                    // This should be implemented or integrated with existing modal logic
-                    console.log('Update stock for batch:', id, name);
-                    // Example: window.dispatchEvent(new CustomEvent('show-stock-modal', { detail: { batchId: id, name: name } }));
+                // Open Adjust Stock Modal
+                openAdjustStockModal(batch) {
+                    this.adjustStockForm.batch_id = batch.id;
+                    this.adjustStockForm.medicine_name = batch.medicine_name;
+                    this.adjustStockForm.current_stock = batch.stock;
+                    this.adjustStockForm.batch_number = batch.batch_number;
+                    this.adjustStockForm.type = 'add';
+                    this.adjustStockForm.quantity = '';
+                    this.adjustStockForm.remarks = '';
+                    this.modals.adjustStock = true;
                 },
 
                 // Open Edit Batch Modal
@@ -1871,7 +2010,8 @@
                             method: 'PATCH',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content'),
                                 'Accept': 'application/json'
                             },
                             body: JSON.stringify(this.editBatchForm)

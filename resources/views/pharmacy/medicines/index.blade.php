@@ -97,7 +97,7 @@
                 </div>
                 <div class="p-4 text-right pt-4">
                     <p class="text-xs font-bold tracking-wider text-orange-500 uppercase">Global Inventory</p>
-                    <h4 class="text-3xl font-bold text-orange-700 drop-shadow-sm font-mono" x-text="stats.global">0</h4>
+                    <h4 class="text-3xl font-bold text-orange-700 drop-shadow-sm font-mono" x-text="stats?.global || 0">0</h4>
                 </div>
                 <div class="mx-4 mb-4 border-t border-amber-200 pt-2 pb-1">
                     <div class="flex items-center gap-2">
@@ -110,8 +110,367 @@
         </div>
 
         {{-- ═══════════════════════════════════════════════
-         MAIN CONTROL PANEL
-    ═══════════════════════════════════════════════ --}}
+             MODALS SECTION
+        ═══════════════════════════════════════════════ --}}
+
+        <!-- View Medicine Details Modal -->
+        <div x-show="modals.view" 
+            class="fixed inset-0 z-[60] overflow-y-auto" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0" 
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0">
+            
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity" @click="modals.view = false"></div>
+
+                <div class="relative bg-white/95 backdrop-blur-xl w-full max-w-5xl rounded-[3rem] shadow-[0_30px_100px_-15px_rgba(0,0,0,0.3)] border border-white/50 overflow-hidden transform transition-all"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 scale-95 translate-y-12"
+                    x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+                    
+                    <div x-show="viewLoading" class="p-20 flex flex-col items-center justify-center gap-6">
+                        <div class="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+                        <p class="text-xs font-black uppercase tracking-[0.3em] text-blue-600 animate-pulse">Decrypting Clinical Data...</p>
+                    </div>
+
+                    <div x-show="!viewLoading && selectedMedicine" class="flex flex-col">
+                        {{-- Premium Header --}}
+                        <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-10 text-white relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                                <i class="fas fa-stethoscope text-[12rem] -rotate-12"></i>
+                            </div>
+                            
+                            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+                                <div class="flex items-center gap-8">
+                                    <div class="w-24 h-24 rounded-[2rem] bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-4xl shadow-2xl border-4 border-white/10 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-pills shadow-sm"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <span class="px-3 py-1 bg-blue-500/20 backdrop-blur-md border border-blue-400/30 rounded-full text-[10px] font-black uppercase tracking-widest text-blue-300" x-text="selectedMedicine?.category?.name"></span>
+                                            <template x-if="selectedMedicine?.requires_prescription">
+                                                <span class="px-3 py-1 bg-amber-500/20 backdrop-blur-md border border-amber-400/30 rounded-full text-[10px] font-black uppercase tracking-widest text-amber-300">
+                                                    <i class="fas fa-file-medical mr-1.5"></i> Rx Required
+                                                </span>
+                                            </template>
+                                        </div>
+                                        <h2 class="text-4xl font-black tracking-tight" x-text="selectedMedicine?.name"></h2>
+                                        <p class="text-slate-400 font-bold uppercase tracking-[0.3em] text-xs mt-2" x-text="selectedMedicine?.generic_name || 'No Generic Name Assigned'"></p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-4">
+                                    <div class="text-right">
+                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Live Inventory Status</p>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-4xl font-black font-mono" :class="selectedMedicine?.totalStock <= selectedMedicine?.reorder_level ? 'text-rose-500' : 'text-emerald-400'" x-text="selectedMedicine?.batches?.reduce((acc, b) => acc + parseInt(b.remaining_quantity), 0)"></span>
+                                            <span class="text-sm font-black text-slate-400 uppercase tracking-widest" x-text="selectedMedicine?.unit"></span>
+                                        </div>
+                                    </div>
+                                    <button @click="modals.view = false" class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all border border-white/10 ml-4 group">
+                                        <i class="fas fa-times text-white/40 group-hover:text-white transition-colors"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Actionable Stats Row --}}
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-0 divide-x divide-slate-100 border-b border-slate-100 bg-white">
+                            <div class="p-8 flex flex-col items-center">
+                                <i class="fas fa-industry text-indigo-400 text-xl mb-4"></i>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Manufacturer</span>
+                                <span class="text-sm font-bold text-slate-800 text-center" x-text="selectedMedicine?.manufacturer || 'N/A'"></span>
+                            </div>
+                            <div class="p-8 flex flex-col items-center">
+                                <i class="fas fa-capsules text-blue-400 text-xl mb-4"></i>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Dosage Form</span>
+                                <span class="text-sm font-bold text-slate-800" x-text="selectedMedicine?.form?.name || 'N/A'"></span>
+                            </div>
+                            <div class="p-8 flex flex-col items-center">
+                                <i class="fas fa-bolt text-amber-400 text-xl mb-4"></i>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Concentration</span>
+                                <span class="text-sm font-bold text-slate-800" x-text="`${selectedMedicine?.strength_value || ''} ${selectedMedicine?.strength_unit || ''}`"></span>
+                            </div>
+                            <div class="p-8 flex flex-col items-center">
+                                <i class="fas fa-bell text-rose-400 text-xl mb-4"></i>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Threshold</span>
+                                <span class="text-sm font-bold text-slate-800 font-mono" x-text="`${selectedMedicine?.reorder_level} ${selectedMedicine?.unit}`"></span>
+                            </div>
+                        </div>
+
+                        {{-- Details & Batches Content --}}
+                        <div class="p-10 bg-slate-50/50 flex flex-col md:flex-row gap-8">
+                            {{-- Batch Traceability --}}
+                            <div class="flex-1 space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-1.5 h-6 bg-blue-600 rounded-full"></div>
+                                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Active Batch Traceability</h3>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" x-text="`${viewBatches.length} active batches detected`"></span>
+                                </div>
+
+                                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                                    <table class="w-full text-left">
+                                        <thead class="bg-slate-50 border-b border-slate-100">
+                                            <tr>
+                                                <th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Batch Number</th>
+                                                <th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Expiry</th>
+                                                <th class="px-6 py-4 text-center text-[10px] font-black text-slate-500 uppercase tracking-widest">Availability</th>
+                                                <th class="px-6 py-4 text-right text-[10px] font-black text-slate-500 uppercase tracking-widest">Pricing</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-50">
+                                            <template x-for="batch in viewBatches" :key="batch.id">
+                                                <tr class="hover:bg-blue-50/50 transition-all duration-300">
+                                                    <td class="px-6 py-4">
+                                                        <div class="font-mono text-xs font-bold text-blue-600" x-text="batch.batch_number"></div>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <div class="text-xs font-bold text-slate-700" x-text="moment(batch.expiry_date).format('MMM DD, YYYY')"></div>
+                                                        <div class="text-[9px] font-black uppercase mt-1" :class="moment(batch.expiry_date).isAfter(moment().add(6, 'months')) ? 'text-emerald-500' : 'text-rose-500'" x-text="moment(batch.expiry_date).fromNow()"></div>
+                                                    </td>
+                                                    <td class="px-6 py-4 text-center">
+                                                        <div class="text-sm font-black font-mono text-slate-800" x-text="batch.remaining_quantity"></div>
+                                                        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5" x-text="selectedMedicine?.unit"></div>
+                                                    </td>
+                                                    <td class="px-6 py-4 text-right">
+                                                        <div class="text-xs font-black text-indigo-600">Rs. <span x-text="batch.sale_price"></span></div>
+                                                        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">MRP per Unit</div>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <template x-if="viewBatches.length === 0">
+                                                <tr>
+                                                    <td colspan="4" class="px-6 py-12 text-center">
+                                                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300 mx-auto mb-3">
+                                                            <i class="fas fa-boxes-stacked"></i>
+                                                        </div>
+                                                        <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Zero Inventory in current branch</p>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {{-- Description Card --}}
+                            <div class="w-full md:w-80 space-y-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-1.5 h-6 bg-indigo-600 rounded-full"></div>
+                                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Clinical Notes</h3>
+                                </div>
+                                
+                                <div class="bg-indigo-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden group">
+                                    <i class="fas fa-quote-right absolute top-6 right-6 text-indigo-500 text-6xl opacity-20 transition-transform group-hover:scale-125 duration-700"></i>
+                                    <div class="relative z-10">
+                                        <p class="text-sm leading-relaxed font-medium text-indigo-50 italic" x-text="selectedMedicine?.description || 'No specific clinical instructions or indications provided for this pharmaceutical agent.'"></p>
+                                        <div class="mt-8 pt-6 border-t border-indigo-500/30">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                                                <span class="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-200">System Verified</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button @click="modals.view = false; openEditModal(selectedMedicine)" class="w-full py-5 bg-white border-2 border-slate-200 rounded-3xl text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 hover:border-blue-500 hover:text-blue-600 transition-all flex items-center justify-center gap-3">
+                                    <i class="fas fa-edit"></i> Modify Record
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div x-show="modals.addEdit" 
+            class="fixed inset-0 z-[60] overflow-y-auto" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0" 
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0">
+            
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="modals.addEdit = false"></div>
+
+                <div class="relative bg-white w-full max-w-4xl rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden transform transition-all"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 scale-95 translate-y-8"
+                    x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+                    
+                    {{-- Modal Header --}}
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-8 opacity-10">
+                            <i class="fas fa-pills text-8xl rotate-12"></i>
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between">
+                            <div class="flex items-center gap-5">
+                                <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/30 shadow-xl">
+                                    <i class="fas" :class="isEdit ? 'fa-edit' : 'fa-plus-circle'" class="text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-black text-white tracking-tight uppercase" x-text="isEdit ? 'Modify Medicine' : 'New Medicine Catalog'"></h3>
+                                    <p class="text-blue-100 text-sm font-medium opacity-80" x-text="isEdit ? 'Update clinical and inventory parameters' : 'Expand your pharmaceutical database'"></p>
+                                </div>
+                            </div>
+                            <button @click="modals.addEdit = false" class="text-white/60 hover:text-white transition-colors">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Modal Body - Multi-column Form --}}
+                    <form @submit.prevent="submitMedicine()" class="p-8 pb-10">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            
+                            {{-- Basic Identity Section --}}
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="flex items-center gap-3 border-b border-slate-100 pb-2 mb-4">
+                                    <span class="w-2 h-6 bg-blue-600 rounded-full"></span>
+                                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-400">Clinical Identity</h4>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-2">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Trade Name <span class="text-rose-500">*</span></label>
+                                        <input type="text" x-model="formData.name" placeholder="e.g. Panadol" 
+                                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                            :class="errors.name ? 'border-rose-400 focus:border-rose-500' : ''">
+                                        <template x-if="errors.name">
+                                            <p class="text-[10px] text-rose-600 font-bold mt-1 ml-1" x-text="errors.name[0]"></p>
+                                        </template>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Generic Formula</label>
+                                        <input type="text" x-model="formData.generic_name" placeholder="e.g. Paracetamol"
+                                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-500 transition-all outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-2">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Brand/Manufacturer</label>
+                                        <input type="text" x-model="formData.brand" placeholder="e.g. GSK"
+                                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-500 transition-all outline-none">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Stocking Unit <span class="text-rose-500">*</span></label>
+                                        <input type="text" x-model="formData.unit" placeholder="e.g. Tablet, Bottle"
+                                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                            :class="errors.unit ? 'border-rose-400 focus:border-rose-500' : ''">
+                                        <template x-if="errors.unit">
+                                            <p class="text-[10px] text-rose-600 font-bold mt-1 ml-1" x-text="errors.unit[0]"></p>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Form & Classification --}}
+                            <div class="space-y-6 bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100">
+                                <div class="flex items-center gap-3 border-b border-slate-200 pb-2 mb-4">
+                                    <span class="w-2 h-6 bg-indigo-600 rounded-full"></span>
+                                    <h4 class="text-xs font-black uppercase tracking-widest text-slate-400">Classification</h4>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Medicine Form</label>
+                                    <select x-model="formData.form_id" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-700 focus:border-indigo-500 outline-none appearance-none"
+                                        :class="errors.form_id ? 'border-rose-400' : ''">
+                                        <option value="">Select Form</option>
+                                        @foreach($forms ?? [] as $form)
+                                            <option value="{{ $form->id }}">{{ $form->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <template x-if="errors.form_id">
+                                        <p class="text-[10px] text-rose-600 font-bold mt-1 ml-1" x-text="errors.form_id[0]"></p>
+                                    </template>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Therapeutic Category</label>
+                                    <select x-model="formData.category_id" class="w-full bg-white border-2 border-slate-200 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-700 focus:border-indigo-500 outline-none appearance-none"
+                                        :class="errors.category_id ? 'border-rose-400' : ''">
+                                        <option value="">Select Category</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <template x-if="errors.category_id">
+                                        <p class="text-[10px] text-rose-600 font-bold mt-1 ml-1" x-text="errors.category_id[0]"></p>
+                                    </template>
+                                </div>
+                            </div>
+
+                            {{-- dosage and stock row --}}
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:col-span-3 mt-4">
+                                {{-- Dosage/Strength --}}
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Strength / Dosage</label>
+                                    <div class="flex gap-2">
+                                        <input type="number" x-model="formData.strength_value" placeholder="500" class="flex-1 bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-500 transition-all outline-none">
+                                        <select x-model="formData.strength_unit" class="w-24 bg-slate-50 border-2 border-slate-100 rounded-2xl px-3 py-3.5 text-xs font-black text-slate-600 focus:border-blue-500 outline-none">
+                                            <option value="mg">MG</option>
+                                            <option value="g">G</option>
+                                            <option value="ml">ML</option>
+                                            <option value="mcg">MCG</option>
+                                            <option value="%">%</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- Reorder Level --}}
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Low Stock Warning (Alert Level) <span class="text-rose-500">*</span></label>
+                                    <input type="number" x-model="formData.reorder_level" placeholder="10" 
+                                        class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-800 focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                        :class="errors.reorder_level ? 'border-rose-400 focus:border-rose-500' : ''">
+                                    <template x-if="errors.reorder_level">
+                                        <p class="text-[10px] text-rose-600 font-bold mt-1 ml-1" x-text="errors.reorder_level[0]"></p>
+                                    </template>
+                                </div>
+
+                                {{-- Policies --}}
+                                <div class="flex items-center gap-6 pt-6">
+                                    <label class="relative inline-flex items-center cursor-pointer group">
+                                        <input type="checkbox" x-model="formData.requires_prescription" class="sr-only peer">
+                                        <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                                        <span class="ml-3 text-[10px] font-black uppercase tracking-widest text-slate-600 group-hover:text-amber-600 transition-colors">Rx Required</span>
+                                    </label>
+
+                                    <label class="relative inline-flex items-center cursor-pointer group">
+                                        <input type="checkbox" x-model="formData.is_global" class="sr-only peer">
+                                        <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ml-3 text-[10px] font-black uppercase tracking-widest text-slate-600 group-hover:text-indigo-600 transition-colors">Global List</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Action Buttons --}}
+                        <div class="mt-12 flex justify-end items-center gap-4">
+                            <button type="button" @click="modals.addEdit = false" 
+                                class="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-all">
+                                Cancel Operation
+                            </button>
+                            <button type="submit" :disabled="isSubmitting"
+                                class="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-1 active:scale-95 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center gap-3">
+                                <span x-show="!isSubmitting" x-text="isEdit ? 'Update Medicine' : 'Catalog Medicine'"></span>
+                                <span x-show="isSubmitting" class="flex items-center gap-2">
+                                    <i class="fas fa-spinner fa-spin"></i> Processing...
+                                </span>
+                                <i x-show="!isSubmitting" class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="mt-8 grid lg:grid-cols-12 gap-6 items-start">
 
             {{-- Left Column - Catalog Table/Grid --}}
@@ -168,11 +527,11 @@
                                     </button>
                                 </div>
 
-                                <a href="{{ route('pharmacy.medicines.create') }}"
+                                <button @click="openAddModal()"
                                     class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-500/30 transition-all active:scale-95 group">
                                     <i class="fas fa-plus group-hover:rotate-180 transition-transform duration-500"></i>
                                     Add Medicine
-                                </a>
+                                </button>
                                 <button @click="showSidebar = !showSidebar"
                                     class="w-10 h-10 flex items-center justify-center bg-white border border-indigo-100 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
                                     :title="showSidebar ? 'Hide Filters' : 'Show Filters'">
@@ -355,16 +714,16 @@
                                             </td>
                                             <td class="px-5 py-4">
                                                 <div class="flex flex-wrap items-center justify-end gap-1.5 opacity-100 transition-opacity">
-                                                    <a :href="medicine.view_url"
+                                                    <button @click="openViewModal(medicine.id)"
                                                         class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100"
                                                         title="View Details">
                                                         <i class="fas fa-eye text-[10px]"></i>
-                                                    </a>
-                                                    <a :href="medicine.edit_url"
+                                                    </button>
+                                                    <button @click="openEditModal(medicine)"
                                                         class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100"
                                                         title="Modify Medicine">
                                                         <i class="fas fa-edit text-[10px]"></i>
-                                                    </a>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -471,16 +830,16 @@
                                                     <span class="text-[8px] font-black uppercase tracking-widest transition-all duration-300"
                                                         x-text="medicine.is_active ? (hover ? 'Deactivate' : 'Active') : (hover ? 'Activate' : 'Hidden')"></span>
                                                 </button>
-                                                <a :href="medicine.view_url"
+                                                <button @click="openViewModal(medicine.id)"
                                                     class="h-8 w-8 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm border border-blue-100"
                                                     title="View Details">
                                                     <i class="fas fa-eye text-[10px]"></i>
-                                                </a>
-                                                <a :href="medicine.edit_url"
+                                                </button>
+                                                <button @click="openEditModal(medicine)"
                                                     class="h-8 w-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-500 hover:text-white transition-all shadow-sm border border-indigo-100"
                                                     title="Modify Medicine">
                                                     <i class="fas fa-edit text-[10px]"></i>
-                                                </a>
+                                                </button>
                                             </div>
                                         </div>
 
@@ -678,10 +1037,42 @@
                     </div>
                 </div>
 
+            </div> {{-- ENTIRE PAGE CONTENT ENDS HERE --}}
+
+            {{-- Premium Toast Notifications --}}
+            <div class="fixed bottom-8 right-8 z-[100] flex flex-col gap-4 w-96 pointer-events-none">
+                <template x-for="note in notifications" :key="note.id">
+                    <div x-show="true" 
+                        x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0 translate-y-8 scale-90"
+                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-90 -translate-y-4"
+                        class="pointer-events-auto bg-white/90 backdrop-blur-xl border border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-3xl p-5 flex items-center gap-4 relative overflow-hidden group">
+                        
+                        <div class="absolute top-0 left-0 w-1.5 h-full" :class="note.type === 'error' ? 'bg-rose-500' : 'bg-emerald-500'"></div>
+                        
+                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" 
+                            :class="note.type === 'error' ? 'bg-rose-50' : 'bg-emerald-50'">
+                            <i class="fas" :class="note.type === 'error' ? 'fa-exclamation-circle text-rose-500' : 'fa-check-circle text-emerald-500'"></i>
+                        </div>
+                        
+                        <div class="flex-1 min-w-0">
+                            <h5 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1" x-text="note.type === 'error' ? 'Operation Failed' : 'Success'"></h5>
+                            <p class="text-xs font-bold text-slate-700 leading-tight" x-text="note.message"></p>
+                        </div>
+
+                        <button @click="removeNotification(note.id)" class="text-slate-300 hover:text-slate-500 transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </template>
             </div>
-        </div>
+        </div> {{-- MAIN x-data WRAPPER ENDS HERE --}}
 
         @push('scripts')
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
             <script>
                 function medicineCatalog() {
                     return {
@@ -711,8 +1102,47 @@
                             low_stock: 0
                         },
 
+                        // Modals State
+                        modals: {
+                            addEdit: false,
+                            view: false
+                        },
+                        isEdit: false,
+                        isSubmitting: false,
+                        formData: {
+                            id: null,
+                            name: '',
+                            generic_name: '',
+                            brand: '',
+                            manufacturer: '',
+                            form_id: '',
+                            strength_value: '',
+                            strength_unit: 'mg',
+                            unit: 'Tablet',
+                            category_id: '',
+                            description: '',
+                            reorder_level: 0,
+                            requires_prescription: false,
+                            is_global: false
+                        },
+                        selectedMedicine: null,
+                        viewLoading: false,
+                        viewBatches: [],
+                        errors: {},
+                        notifications: [],
+
                         init() {
                             this.fetchMedicines();
+                        },
+
+                        notify(message, type = 'success') {
+                            const id = Date.now();
+                            this.notifications.push({ id, message, type });
+                            setTimeout(() => this.removeNotification(id), 5000);
+                        },
+
+                        removeNotification(id) {
+                            this.notifications = this.notifications.filter(n => n.id !== id);
                         },
 
                         async fetchMedicines(page = 1) {
@@ -788,6 +1218,125 @@
                             return this.filters.direction === 'asc' ? 'fa-sort-up text-blue-600' : 'fa-sort-down text-blue-600';
                         },
 
+                        resetForm() {
+                            this.formData = {
+                                id: null,
+                                name: '',
+                                generic_name: '',
+                                brand: '',
+                                manufacturer: '',
+                                form_id: '',
+                                strength_value: '',
+                                strength_unit: 'mg',
+                                unit: 'Tablet',
+                                category_id: '',
+                                description: '',
+                                reorder_level: 0,
+                                requires_prescription: false,
+                                is_global: false
+                            };
+                            this.errors = {};
+                        },
+
+                        openAddModal() {
+                            this.isEdit = false;
+                            this.resetForm();
+                            this.modals.addEdit = true;
+                        },
+
+                        openEditModal(med) {
+                            this.isEdit = true;
+                            this.formData = {
+                                id: med.id,
+                                name: med.name,
+                                generic_name: med.generic_name,
+                                brand: med.brand,
+                                manufacturer: med.manufacturer === 'N/A' ? '' : med.manufacturer,
+                                form_id: med.form_id || '',
+                                strength_value: med.strength_value || '',
+                                strength_unit: med.strength_unit || 'mg',
+                                unit: med.unit || 'Tablet',
+                                category_id: med.category_id || '',
+                                description: med.description || '',
+                                reorder_level: med.reorder_level || 0,
+                                requires_prescription: !!med.requires_prescription,
+                                is_global: !!med.is_global
+                            };
+                            this.errors = {};
+                            this.modals.addEdit = true;
+                        },
+
+                        async openViewModal(medId) {
+                            this.viewLoading = true;
+                            this.modals.view = true;
+                            this.selectedMedicine = null;
+                            this.viewBatches = [];
+
+                            try {
+                                const response = await fetch(`/pharmacy/medicines/${medId}`, {
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    }
+                                });
+                                const result = await response.json();
+                                if (result.success) {
+                                    this.selectedMedicine = result.medicine;
+                                    this.viewBatches = result.batches;
+                                }
+                            } catch (error) {
+                                console.error('Error fetching medicine details:', error);
+                            } finally {
+                                this.viewLoading = false;
+                            }
+                        },
+
+                        async submitMedicine() {
+                            this.isSubmitting = true;
+                            this.errors = {};
+
+                            const url = this.isEdit ? `/pharmacy/medicines/${this.formData.id}` : '/pharmacy/medicines';
+                            const method = this.isEdit ? 'PATCH' : 'POST';
+
+                            try {
+                                const response = await fetch(url, {
+                                    method: method,
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: JSON.stringify(this.formData)
+                                });
+
+                                const result = await response.json();
+
+                                if (result.success) {
+                                    this.modals.addEdit = false;
+                                    this.fetchMedicines(this.pagination.current_page);
+                                    if (window.showSuccess) {
+                                        window.showSuccess(result.message);
+                                    } else {
+                                        this.notify(result.message);
+                                    }
+                                } else if (response.status === 422) {
+                                    this.errors = result.errors;
+                                } else {
+                                    throw new Error(result.message || 'Something went wrong');
+                                }
+                            } catch (error) {
+                                console.error('Error submitting medicine:', error);
+                                if (window.showError) {
+                                    window.showError(error.message);
+                                } else {
+                                    this.notify(error.message || 'An unexpected error occurred', 'error');
+                                }
+                            } finally {
+                                this.isSubmitting = false;
+                            }
+                        },
+
                         changePage(page) {
                             if (page >= 1 && page <= this.pagination.last_page) {
                                 this.fetchMedicines(page);
@@ -845,12 +1394,16 @@
 
                                 if (window.showSuccess) {
                                     showSuccess(`${medicine.name} is now ${medicine.is_active ? 'Active' : 'Hidden'}`, 'Status Updated');
+                                } else {
+                                    this.notify(`${medicine.name} is now ${medicine.is_active ? 'Active' : 'Hidden'}`);
                                 }
                             } catch (error) {
                                 medicine.is_active = original; // revert on failure
                                 console.error('Toggle status error:', error);
                                 if (window.showError) {
                                     showError(error.message || 'Failed to update status', 'Update Failed');
+                                } else {
+                                    this.notify(error.message || 'Failed to update status', 'error');
                                 }
                             }
                         }
