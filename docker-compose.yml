@@ -6,14 +6,14 @@ services:
     container_name: hms_app
     restart: always
     environment:
-      - DB_HOST=db  # Matches the service name below
+      - DB_HOST=db # Matches the service name below
       - DB_DATABASE=hms
       - DB_USERNAME=root
       - DB_PASSWORD=my-secret-pwd
     volumes:
-      - .:/var/www:delegated     # 'delegated' improves WSL write performance
-      - /var/www/vendor          # Keeps vendor folder inside the fast Linux FS
-      - /var/www/storage         # Persistence for logs/uploads
+      - .:/var/www:delegated # 'delegated' improves WSL write performance
+      - /var/www/vendor # Keeps vendor folder inside the fast Linux FS
+      - /var/www/storage # Persistence for logs/uploads
       - /var/www/bootstrap/cache
     networks:
       - hms_network
@@ -28,7 +28,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - .:/var/www:ro            # Nginx needs to see your 'public' folder
+      - .:/var/www:ro # Nginx needs to see your 'public' folder
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - hms_network
@@ -36,13 +36,8 @@ services:
       - app
 
   db:
-    image: mysql:8.0
-    command: 
-      --innodb_flush_method=nosync 
-      --innodb_flush_log_at_trx_commit=2
-      --innodb_doublewrite=0
-      --sync_binlog=0
-      --innodb_use_native_aio=0
+    image: mysql:8.4
+    command: --innodb_flush_method=nosync --innodb_flush_log_at_trx_commit=2 --innodb_doublewrite=0 --sync_binlog=0 --innodb_use_native_aio=0
     container_name: hms_database
     restart: always
     environment:
@@ -56,10 +51,10 @@ services:
       - hms_network
     # Healthcheck ensures the 'app' doesn't try to migrate before DB is ready
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmy-secret-pwd"]
-      interval: 10s    # Check every 10 seconds
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmy-secret-pwd" ]
+      interval: 10s # Check every 10 seconds
       timeout: 5s
-      retries: 15     # Allow up to 150 seconds (2.5 minutes) for first-time setup
+      retries: 15 # Allow up to 150 seconds (2.5 minutes) for first-time setup
 
 networks:
   hms_network:

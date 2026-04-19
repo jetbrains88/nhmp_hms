@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             MedicineFormSeeder::class,
             PharmacySeeder::class,         // Categories and Views
             IllnessTagSeeder::class,        // Illness/condition tags for consultation
+            MedicalSpecialtiesSeeder::class, // Medical Specialty list
             PrescriptionAbbreviationSeeder::class, // Rx abbreviations with doses_per_day
         ]);
 
